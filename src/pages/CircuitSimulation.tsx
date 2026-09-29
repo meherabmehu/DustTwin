@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Activity, Cpu, Maximize2, Minus, Monitor, Play, Plus, RotateCcw, Settings, Square, Waves, Zap } from 'lucide-react';
+import { Activity, Cpu, Monitor, Settings, Waves, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useSimulator } from '../features/circuit-simulator/useSimulator';
 import SensorInputs from '../features/circuit-simulator/SensorInputs';
@@ -10,14 +10,12 @@ import CircuitCanvas from '../features/circuit-simulator/CircuitCanvas';
 import CodePanel from '../features/circuit-simulator/CodePanel';
 import ComponentSidebar from '../features/circuit-simulator/ComponentSidebar';
 import LiveMetrics from '../features/circuit-simulator/LiveMetrics';
+import CircuitToolbar from '../features/circuit-simulator/CircuitToolbar';
 
 export default function CircuitSimulation() {
   const { state, dispatch } = useSimulator();
   const [zoom, setZoom] = useState(100);
   const running = state.simulationRunning;
-  const zones = state.zones;
-  const pumpOn = state.pumpOn;
-  const fanOn = state.fanOn;
 
   const reset = () => { dispatch({ type: 'RESET' }); setZoom(100); };
 
@@ -40,14 +38,14 @@ export default function CircuitSimulation() {
           <ComponentSidebar />
 
           <section className="circuit-workspace">
-            <div className="workspace-toolbar">
-              <button className="tool-button run" onClick={() => dispatch({ type: 'RUN' })} disabled={running}><Play size={13} fill="currentColor" />Run</button>
-              <button className="tool-button stop" onClick={() => dispatch({ type: 'STOP' })} disabled={!running && !zones.some(Boolean) && !pumpOn && !fanOn}><Square size={12} fill="currentColor" />Stop</button>
-              <button className="tool-button" onClick={reset}><RotateCcw size={13} />Reset</button>
-              <span className="toolbar-spacer" />
-              <div className="zoom-controls"><button aria-label="Zoom out" onClick={() => setZoom((v) => Math.max(70, v - 10))}><Minus size={12} /></button><span className="zoom-label">{zoom}%</span><button aria-label="Zoom in" onClick={() => setZoom((v) => Math.min(130, v + 10))}><Plus size={12} /></button></div>
-              <button className="tool-button fullscreen-btn" onClick={() => { const el = document.querySelector('.circuit-workspace'); if (el?.requestFullscreen) void el.requestFullscreen(); }} title="Fullscreen circuit"><Maximize2 size={13} /></button>
-            </div>
+            <CircuitToolbar
+              state={state}
+              zoom={zoom}
+              onZoomChange={setZoom}
+              onRun={() => dispatch({ type: 'RUN' })}
+              onStop={() => dispatch({ type: 'STOP' })}
+              onReset={reset}
+            />
             <CircuitCanvas state={state} zoom={zoom} />
           </section>
 

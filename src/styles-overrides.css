@@ -137,3 +137,10 @@
 .component-count { color: #7ca0af; font-size: 7px; font-weight: 500; letter-spacing: .04em; }
 .component-empty { margin: 14px 4px; color: #829ba7; font-size: 9px; line-height: 1.45; }
 .component-item { cursor: default; }
+
+.circuit-workspace:fullscreen { display: flex; width: 100vw; height: 100vh; min-height: 0; border: 0; border-radius: 0; background: #041827; }
+.circuit-workspace:fullscreen .workspace-toolbar { flex: 0 0 43px; }
+.circuit-workspace:fullscreen .circuit-canvas { flex: 1 1 auto; height: auto; min-height: 0; }
+.circuit-workspace:fullscreen .circuit-board-inner { min-width: 0; }
+.circuit-workspace::backdrop { background: #041827; }
+.zoom-controls button:disabled { opacity: .42; cursor: not-allowed; }
