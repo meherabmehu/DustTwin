@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { SIMULATION_THRESHOLDS } from '../config/simulationThresholds';
 import { formatElapsedTime, getRiskLevel } from '../features/circuit-simulator/simulatorEngine';
 import { useSimulator } from '../features/circuit-simulator/useSimulator';
+import SensorInputs from '../features/circuit-simulator/SensorInputs';
 
 const components = [
   { group: 'Controllers', name: 'ESP32 DevKit V1', info: 'WiFi + Bluetooth · 38 GPIO', icon: <Cpu /> },
@@ -74,7 +75,6 @@ export default function CircuitSimulation() {
   const humidity = state.humidity;
   const pumpOn = state.pumpOn;
   const fanOn = state.fanOn;
-  const pmLevel = state.pm1;
   const threshold = SIMULATION_THRESHOLDS.pm25Moderate;
   const risk = getRiskLevel(state);
 
@@ -153,10 +153,14 @@ export default function CircuitSimulation() {
           </aside>
         </div>
 
+        <section className="sensor-inputs-section" aria-label="Environmental sensor controls">
+          <SensorInputs state={state} onChange={(key, value) => dispatch({ type: 'SET_SENSOR', key, value })} />
+        </section>
+
         <section className="circuit-output">
           <article className="output-panel"><h2><Activity />Live Simulation Output <span className="status-pill" style={{ marginLeft: 'auto' }}><i />{running ? 'RUNNING' : 'STOPPED'}</span><span className={`risk-pill risk-${risk}`}>{risk.toUpperCase()} RISK</span><span className="runtime-chip">{formatElapsedTime(state.elapsedSeconds)}</span></h2><div className="output-metrics"><div className="output-metric"><small>PM2.5 · Sensor 1</small><strong>☀ {pm1} µg/m³</strong><span>Derived PM10 · {state.pm10_1} µg/m³</span></div><div className="output-metric"><small>PM2.5 · Sensor 2</small><strong>☀ {pm2} µg/m³</strong><span>Derived PM10 · {state.pm10_2} µg/m³</span></div><div className="output-metric"><small>Temperature</small><strong><Thermometer size={14} /> {temperature.toFixed(1)}°C</strong><span>{temperature >= 40 ? 'High' : 'Normal'}</span></div><div className="output-metric"><small>Humidity</small><strong><Droplet size={14} /> {humidity}%</strong><span>{humidity >= 80 ? 'High' : 'Normal'}</span></div></div></article>
           <article className="output-panel"><h2><Settings />Zone Status</h2><div className="zone-grid">{zones.map((on, i) => <button className={`zone-toggle ${on ? 'active' : ''}`} key={i} onClick={() => !autoMode && manualToggle(i)} title={autoMode ? 'Switch to Manual Mode to toggle zones' : `Toggle Zone ${i + 1}`}><span className="zone-bulb" />Zone {i + 1}<b>{on ? 'ON' : 'OFF'}</b></button>)}</div><div className="system-status-strip">{autoMode ? `Auto logic · Moderate ≥ ${threshold} · High ≥ ${SIMULATION_THRESHOLDS.pm25High} µg/m³` : 'Manual control · select a zone to toggle'}</div></article>
-          <article className="output-panel system-controls"><h2><Settings />System Controls</h2><div className="mode-row"><button className={`mode-btn ${autoMode ? 'active' : ''}`} onClick={() => dispatch({ type: 'SET_MODE', mode: 'auto' })}>Auto Mode</button><button className={`mode-btn ${!autoMode ? 'active' : ''}`} onClick={() => dispatch({ type: 'SET_MODE', mode: 'manual' })}>Manual Mode</button></div><label className="pm-range-label">PM2.5 sensor 1 input <b>{pmLevel} µg/m³</b><input aria-label="PM2.5 sensor 1 input" type="range" min="0" max="200" value={pmLevel} onChange={(e) => dispatch({ type: 'SET_SENSOR', key: 'pm1', value: Number(e.target.value) })} /></label><div className="manual-row"><button className={`small-control-btn ${zones.some(Boolean) ? 'active' : ''}`} disabled={autoMode} onClick={() => turnAll(true)}><Play size={12} fill="currentColor" />Turn All Zones ON</button><button className="small-control-btn" disabled={autoMode} onClick={() => turnAll(false)}><Square size={11} />Turn All Zones OFF</button></div><div className="manual-row"><button className={`small-control-btn ${pumpOn ? 'active' : ''}`} disabled={autoMode} onClick={() => dispatch({ type: 'SET_OUTPUT', output: 'pump', active: !pumpOn })}><Droplet size={13} />Pump {pumpOn ? 'ON' : 'OFF'}</button><button className={`small-control-btn ${fanOn ? 'active' : ''}`} disabled={autoMode} onClick={() => dispatch({ type: 'SET_OUTPUT', output: 'fan', active: !fanOn })}><Fan size={13} />Fan {fanOn ? 'ON' : 'OFF'}</button></div></article>
+          <article className="output-panel system-controls"><h2><Settings />System Controls</h2><div className="mode-row"><button className={`mode-btn ${autoMode ? 'active' : ''}`} onClick={() => dispatch({ type: 'SET_MODE', mode: 'auto' })}>Auto Mode</button><button className={`mode-btn ${!autoMode ? 'active' : ''}`} onClick={() => dispatch({ type: 'SET_MODE', mode: 'manual' })}>Manual Mode</button></div><p className="mode-description">{autoMode ? `Fixed deterministic thresholds · ${threshold} / ${SIMULATION_THRESHOLDS.pm25High} µg/m³` : 'Manual mode · set each zone, pump and fan independently'}</p><div className="manual-row"><button className={`small-control-btn ${zones.some(Boolean) ? 'active' : ''}`} disabled={autoMode} onClick={() => turnAll(true)}><Play size={12} fill="currentColor" />Turn All Zones ON</button><button className="small-control-btn" disabled={autoMode} onClick={() => turnAll(false)}><Square size={11} />Turn All Zones OFF</button></div><div className="manual-row"><button className={`small-control-btn ${pumpOn ? 'active' : ''}`} disabled={autoMode} onClick={() => dispatch({ type: 'SET_OUTPUT', output: 'pump', active: !pumpOn })}><Droplet size={13} />Pump {pumpOn ? 'ON' : 'OFF'}</button><button className={`small-control-btn ${fanOn ? 'active' : ''}`} disabled={autoMode} onClick={() => dispatch({ type: 'SET_OUTPUT', output: 'fan', active: !fanOn })}><Fan size={13} />Fan {fanOn ? 'ON' : 'OFF'}</button></div></article>
         </section>
       </div>
   );

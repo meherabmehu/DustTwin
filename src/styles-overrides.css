@@ -1,14 +1,44 @@
 
-/* Keep the wiring bench and code editor in the first desktop viewport, as in the approved circuit reference. */
-@media (min-width: 1051px) {
-  .circuit-shell { height: min(510px, calc(100vh - 275px)); min-height: 470px; }
-  .component-sidebar, .circuit-workspace, .code-panel { height: 100%; min-height: 0; }
-  .component-sidebar { overflow-y: auto; }
-  .circuit-workspace { display: flex; flex-direction: column; }
-  .circuit-canvas { height: auto; min-height: 0; flex: 1; }
-  .code-panel { display: flex; flex-direction: column; }
-  .code-view { flex: 1; min-height: 0; max-height: none; overflow: auto; }
-}
+
+/* Circuit simulator sensor input cards */
+.sensor-inputs-section { padding: 0 16px 8px; }
+.simulator-sensor-panel { margin: 0; }
+.sensor-panel-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 9px; }
+.sensor-panel-header h2 { margin: 0 0 3px; }
+.sensor-panel-header p { margin: 0; color: #91a9b6; font-size: 9px; line-height: 1.4; }
+.sensor-panel-tag { flex: 0 0 auto; padding: 5px 8px; border: 1px solid rgba(18,203,222,.35); border-radius: 999px; color: #75e7f2; background: rgba(8,73,88,.2); font-size: 8px; letter-spacing: .08em; }
+.sensor-input-grid { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 8px; }
+.sensor-control-card { min-width: 0; padding: 8px; border: 1px solid rgba(20,117,146,.37); border-radius: 7px; background: rgba(5,31,47,.76); }
+.sensor-control-heading { display: flex; align-items: center; gap: 6px; min-height: 23px; color: #dce9ee; }
+.sensor-control-heading label { min-width: 0; font-size: 9px; font-weight: 650; line-height: 1.15; }
+.sensor-control-icon { display: grid; place-items: center; flex: 0 0 auto; width: 20px; height: 20px; color: #30d7e8; }
+.sensor-control-icon svg { width: 15px; height: 15px; }
+.sensor-value-row { display: flex; align-items: baseline; gap: 5px; margin-top: 4px; }
+.sensor-number-input { width: 67px; max-width: 65%; padding: 3px 4px; border: 1px solid rgba(26,138,165,.5); border-radius: 5px; outline: none; color: #edfbff; background: #051b2b; font-size: 12px; font-weight: 700; }
+.sensor-number-input:focus { border-color: #27dcef; box-shadow: 0 0 0 2px rgba(39,220,239,.12); }
+.sensor-unit { color: #9fb5c0; font-size: 8px; white-space: nowrap; }
+.sensor-range-input { display: block; width: 100%; height: 5px; margin: 8px 0 3px; accent-color: #18d6e8; cursor: pointer; }
+.sensor-range-bounds { display: flex; justify-content: space-between; color: #6f8e9e; font-size: 7px; }
+.sensor-derived-value { display: block; margin-top: 5px; color: #8da8b5; font-size: 7.5px; }
+.sensor-derived-value b { color: #81edf2; font-weight: 600; }
+.sensor-derivation-note { margin: 7px 0 0; color: #748f9d; font-size: 8px; }
+.mode-description { margin: -2px 0 2px; color: #8ca6b3; font-size: 8px; line-height: 1.35; }
+.small-control-btn:disabled { opacity: .46; cursor: not-allowed; }
+.risk-pill { display: inline-flex; align-items: center; padding: 4px 7px; border: 1px solid rgba(28,181,190,.35); border-radius: 999px; color: #7be5dc; background: rgba(6,67,74,.22); font-size: 8px; white-space: nowrap; }
+.risk-pill.risk-moderate { color: #ffd56b; border-color: rgba(255,191,57,.45); background: rgba(92,64,10,.25); }
+.risk-pill.risk-high { color: #ff8b87; border-color: rgba(255,79,70,.5); background: rgba(94,20,24,.3); }
+.runtime-chip { color: #94adba; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px; white-space: nowrap; }
 @media (max-width: 1050px) {
-  .circuit-shell { height: auto; min-height: 0; }
+  .sensor-input-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+}
+@media (max-width: 760px) {
+  .sensor-inputs-section { padding: 0 8px 8px; }
+  .sensor-input-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .sensor-panel-header { align-items: flex-start; }
+}
+@media (max-width: 430px) {
+  .sensor-control-card { padding: 7px 6px; }
+  .sensor-panel-header { flex-direction: column; gap: 6px; }
+  .sensor-control-heading label { font-size: 8px; }
+  .sensor-number-input { width: 60px; }
 }
