@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "author": "DustTwin",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 20, "left": 20, "attrs": {} },
+    { "type": "wokwi-dht22", "id": "dht", "top": 85, "left": 310, "attrs": {} },
+    { "type": "wokwi-text", "id": "title", "top": -155, "left": 34, "attrs": { "text": "DUSTTWIN  /  AIR QUALITY + TARGETED MISTING" } },
+    { "type": "wokwi-text", "id": "sensorNote", "top": 155, "left": 290, "attrs": { "text": "Weather input\nDHT22 temperature + humidity" } }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "dht:SDA", "esp:D15", "green", [ "v0" ] ],
+    [ "dht:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "dht:GND", "esp:GND.1", "black", [ "v0" ] ]
+  ],
+  "serialMonitor": {
+    "collapse": false,
+    "convertEol": false,
+    "display": "always",
+    "newline": "lf"
+  },
+  "dependencies": {}
+}

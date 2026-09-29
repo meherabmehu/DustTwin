@@ -1,0 +1,3 @@
+# Wokwi Library List
+# DHT22 simulator support for ESP32
+DHT sensor library for ESPx
