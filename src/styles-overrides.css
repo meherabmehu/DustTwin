@@ -1,22 +1,24 @@
 
 
-/* Live output state on the schematic and in manual controls */
-.circuit-part.is-active { border-color: rgba(47,231,149,.8); box-shadow: 0 0 12px rgba(44,226,142,.22), inset 0 0 10px rgba(44,226,142,.08); }
-.circuit-part.is-active .part-art { color: #75f3ad; }
-.circuit-part.is-inactive .part-art { color: #91a6af; }
-.part-state-badge { position: absolute; z-index: 5; top: 3px; right: 4px; padding: 2px 4px; border: 1px solid rgba(118,151,164,.32); border-radius: 99px; color: #93aab3; background: rgba(2,16,25,.84); font-size: 6px; line-height: 1; font-weight: 800; letter-spacing: .04em; }
-.part-state-badge.active { border-color: rgba(61,243,115,.55); color: #7ef6a4; box-shadow: 0 0 6px rgba(61,243,115,.2); }
-.zone-status-panel .zone-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
-.zone-toggle { position: relative; grid-template-columns: 10px 1fr; grid-template-rows: auto auto; justify-items: stretch; align-items: center; gap: 2px 6px; padding: 6px; text-align: left; }
-.zone-toggle:disabled { cursor: not-allowed; }
-.zone-toggle .zone-bulb { grid-row: 1 / span 2; align-self: center; }
-.zone-copy { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
-.zone-copy b { color: #e3eef3; font-size: 8px; }
-.zone-copy small { color: #82a0ae; font-size: 7px; }
-.zone-state { grid-column: 2; color: #9eb2bc; font-size: 8px; }
-.zone-toggle.active .zone-state { color: #65f099; }
-.zone-source { grid-column: 1 / -1; margin-top: 2px; color: #8ba4b1; font-size: 6.5px; line-height: 1.15; }
-.zone-mapping-note { margin-top: 7px; color: #88a4b2; font-size: 7.5px; line-height: 1.35; }
+/* Simulated serial terminal */
+.serial-monitor-panel { grid-column: 1 / -1; min-height: 190px; }
+.serial-monitor-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.serial-monitor-header h2 { margin-bottom: 8px; }
+.serial-live-indicator { display: inline-flex; align-items: center; gap: 5px; color: #879da8; font-size: 7px; letter-spacing: .06em; white-space: nowrap; }
+.serial-live-indicator i { width: 6px; height: 6px; border-radius: 50%; background: #667780; }
+.serial-live-indicator.active { color: #78f0a0; }
+.serial-live-indicator.active i { background: #48ec7c; box-shadow: 0 0 7px #48ec7c; }
+.serial-terminal { height: 160px; overflow: auto; padding: 8px; border: 1px solid rgba(31,116,140,.34); border-radius: 6px; background: #020e17; color: #cad9df; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.serial-line, .serial-empty-line { display: grid; grid-template-columns: 63px 52px minmax(0,1fr); gap: 8px; align-items: baseline; min-height: 18px; font-size: 8px; line-height: 1.4; }
+.serial-line time, .serial-empty-line span { color: #6e94a5; }
+.serial-line > b, .serial-empty-line > b { color: #90aab6; font-size: 7px; letter-spacing: .04em; }
+.serial-line.level-success > b { color: #66e996; }
+.serial-line.level-warning > b { color: #ffc96d; }
+.serial-line p, .serial-empty-line p { margin: 0; color: #ccdde4; overflow-wrap: anywhere; }
+.serial-empty-line p { color: #849ca8; }
+.serial-monitor-footnote { margin: 5px 0 0; color: #6f8895; font-size: 7px; }
 @media (max-width: 760px) {
-  .zone-status-panel .zone-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .serial-monitor-panel { min-height: 0; }
+  .serial-terminal { height: 140px; }
+  .serial-line, .serial-empty-line { grid-template-columns: 57px 44px minmax(0,1fr); gap: 5px; font-size: 7px; }
 }

@@ -6,6 +6,7 @@ import { useSimulator } from '../features/circuit-simulator/useSimulator';
 import SensorInputs from '../features/circuit-simulator/SensorInputs';
 import SystemControls from '../features/circuit-simulator/SystemControls';
 import ZoneStatus from '../features/circuit-simulator/ZoneStatus';
+import SerialMonitor from '../features/circuit-simulator/SerialMonitor';
 import OutputStateBadge from '../features/circuit-simulator/OutputStateBadge';
 
 const components = [
@@ -164,6 +165,7 @@ export default function CircuitSimulation() {
             onSetAllZones={(active) => dispatch({ type: 'SET_ALL_ZONES', active })}
             onToggleOutput={(output, active) => dispatch({ type: 'SET_OUTPUT', output, active })}
           />
+          <SerialMonitor entries={state.serialLogs} running={running} />
         </section>
       </div>
   );
