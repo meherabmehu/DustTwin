@@ -6,6 +6,7 @@ import './index.css';
 import './styles-overrides.css';
 import './styles-serial.css';
 import './styles-simulation-polish.css';
+import './styles-circuit-polish.css';
 
 const Overview = lazy(() => import('./pages/Overview'));
 const Problem = lazy(() => import('./pages/Problem'));

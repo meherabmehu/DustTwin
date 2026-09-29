@@ -1,0 +1,29 @@
+/* Compact competition-laptop layout for the custom browser circuit simulator */
+@media (min-width: 1100px) and (max-height: 820px) {
+  .circuit-intro { min-height: 122px; padding-top: 6px; padding-bottom: 6px; gap: 14px; }
+  .circuit-title h1 { margin: 5px 0 4px; font-size: clamp(30px, 2.8vw, 42px); }
+  .circuit-title p { font-size: 11px; }
+  .circuit-feature > span { width: 43px; height: 43px; margin-bottom: 4px; }
+  .circuit-feature svg { width: 24px; height: 24px; }
+  .circuit-feature small { font-size: 8px; }
+  .circuit-tabs { height: 39px; margin-bottom: 3px; }
+  .circuit-tabs a { gap: 7px; font-size: 9px; }
+  .circuit-tabs svg { width: 18px; }
+  .circuit-shell { height: 390px; min-height: 0; grid-template-columns: 220px minmax(0, 1fr) 256px; gap: 5px; padding: 0 12px 8px; }
+  .component-sidebar { height: 100%; overflow: auto; padding: 8px; }
+  .component-group { margin: 5px 0 7px; }
+  .component-item { min-height: 39px; padding: 4px 5px; }
+  .component-thumb { width: 37px; height: 29px; }
+  .component-thumb svg { width: 18px; height: 18px; }
+  .component-search { padding: 5px 7px; margin-bottom: 6px; }
+  .circuit-workspace { min-height: 0; }
+  .circuit-canvas { height: 346px; }
+  .code-panel { height: 100%; }
+  .code-head { height: 39px; font-size: 9px; }
+  .code-view { font-size: 7px; line-height: 1.45; }
+  .sensor-inputs-section { padding-top: 0; }
+}
+
+@media (min-width: 1100px) and (max-height: 820px) and (prefers-reduced-motion: reduce) {
+  .circuit-board-inner { transition: none; }
+}
