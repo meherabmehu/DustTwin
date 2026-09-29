@@ -75,8 +75,8 @@
   ],
   "serialMonitor": {
     "collapse": false,
-    "convertEol": false,
-    "display": "always",
+    "convertEol": true,
+    "display": "terminal",
     "newline": "lf"
   },
   "dependencies": {}
