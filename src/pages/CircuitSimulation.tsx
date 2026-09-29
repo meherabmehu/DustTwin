@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react';
 import { Activity, BatteryCharging, Code2, Cpu, Droplet, Fan, Gauge, Maximize2, Minus, Monitor, Play, Plus, Power, RotateCcw, Search, Settings, Square, Thermometer, Waves, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { SIMULATION_THRESHOLDS } from '../config/simulationThresholds';
 import { formatElapsedTime, getRiskLevel } from '../features/circuit-simulator/simulatorEngine';
 import { useSimulator } from '../features/circuit-simulator/useSimulator';
 import SensorInputs from '../features/circuit-simulator/SensorInputs';
+import SystemControls from '../features/circuit-simulator/SystemControls';
+import ZoneStatus from '../features/circuit-simulator/ZoneStatus';
+import OutputStateBadge from '../features/circuit-simulator/OutputStateBadge';
 
 const components = [
   { group: 'Controllers', name: 'ESP32 DevKit V1', info: 'WiFi + Bluetooth · 38 GPIO', icon: <Cpu /> },
@@ -58,8 +60,8 @@ function InventoryGroup({ title, items }: { title: string; items: typeof compone
   return <div className="component-group"><h3>{title}<span>⌃</span></h3><div className="component-list">{items.map((item) => <div className="component-item" key={item.name}><span className="component-thumb">{item.icon}</span><span><strong>{item.name}</strong><small>{item.info}</small></span></div>)}</div></div>;
 }
 
-function CircuitPart({ className, icon, name, children }: { className: string; icon: React.ReactNode; name: string; children?: React.ReactNode }) {
-  return <div className={`circuit-part ${className}`}><div className="part-art">{children ?? icon}</div><div className="part-name">{name}</div></div>;
+function CircuitPart({ className, icon, name, children, active, showState }: { className: string; icon: React.ReactNode; name: string; children?: React.ReactNode; active?: boolean; showState?: boolean }) {
+  return <div className={`circuit-part ${className} ${showState ? (active ? 'is-active' : 'is-inactive') : ''}`} data-state={showState ? (active ? 'on' : 'off') : undefined} aria-label={showState ? `${name}: ${active ? 'ON' : 'OFF'}` : undefined}>{showState && <OutputStateBadge active={Boolean(active)} />}<div className="part-art">{children ?? icon}</div><div className="part-name">{name}</div></div>;
 }
 
 export default function CircuitSimulation() {
@@ -67,7 +69,6 @@ export default function CircuitSimulation() {
   const [zoom, setZoom] = useState(100);
   const [search, setSearch] = useState('');
   const running = state.simulationRunning;
-  const autoMode = state.mode === 'auto';
   const zones = state.zones;
   const pm1 = state.pm1;
   const pm2 = state.pm2;
@@ -75,13 +76,10 @@ export default function CircuitSimulation() {
   const humidity = state.humidity;
   const pumpOn = state.pumpOn;
   const fanOn = state.fanOn;
-  const threshold = SIMULATION_THRESHOLDS.pm25Moderate;
   const risk = getRiskLevel(state);
 
   const grouped = useMemo(() => ['Controllers', 'Sensors', 'Actuators', 'Power Modules'].map((group) => ({ group, items: components.filter((item) => item.group === group && `${item.name} ${item.info}`.toLowerCase().includes(search.toLowerCase())) })).filter((g) => g.items.length), [search]);
   const reset = () => { dispatch({ type: 'RESET' }); setZoom(100); };
-  const manualToggle = (index: number) => dispatch({ type: 'SET_ZONE', index, active: !zones[index] });
-  const turnAll = (active: boolean) => dispatch({ type: 'SET_ALL_ZONES', active });
 
   return (
     <div className="circuit-page">
@@ -125,23 +123,23 @@ export default function CircuitSimulation() {
                   <path className="wire-red" d="M242 565 H280 M419 565 H554 M674 565 H719 M765 395 V440 H830" />
                   <path className="wire-yellow" d="M242 581 H272 V541 H382 M674 581 H706 V480 H830" />
                 </svg>
-                <CircuitPart className="sensor-board pm-sensor" icon={<Gauge />} name="PM2.5 / PM10 Sensor 1"><span className="sensor-chip">PMS5003</span></CircuitPart>
-                <CircuitPart className="sensor-board pm-sensor2" icon={<Gauge />} name="PM2.5 / PM10 Sensor 2"><span className="sensor-chip">PMS5003</span></CircuitPart>
-                <CircuitPart className="dht-board" icon={<Thermometer />} name="DHT22 · T/H" />
-                <CircuitPart className="esp-board" icon={<Cpu />} name="ESP32 DevKit V1"><span className="esp-chip"><small>ESP32</small><b>◉</b><small>WiFi · BLE</small></span></CircuitPart>
-                <CircuitPart className="relay-board" icon={<Settings />} name="4 Channel Relay Module"><span className="relay-blocks"><i /><i /><i /><i /></span></CircuitPart>
+                <CircuitPart className="sensor-board pm-sensor" icon={<Gauge />} name="PM2.5 / PM10 Sensor 1" active={running} showState><span className="sensor-chip">PMS5003</span></CircuitPart>
+                <CircuitPart className="sensor-board pm-sensor2" icon={<Gauge />} name="PM2.5 / PM10 Sensor 2" active={running} showState><span className="sensor-chip">PMS5003</span></CircuitPart>
+                <CircuitPart className="dht-board" icon={<Thermometer />} name="DHT22 · T/H" active={running} showState />
+                <CircuitPart className="esp-board" icon={<Cpu />} name="ESP32 DevKit V1" active={running} showState><span className="esp-chip"><small>ESP32</small><b>◉</b><small>WiFi · BLE</small></span></CircuitPart>
+                <CircuitPart className="relay-board" icon={<Settings />} name="4 Channel Relay Module" active={zones.some(Boolean)} showState><span className="relay-blocks"><i /><i /><i /><i /></span></CircuitPart>
                 <div className="part-label" style={{ left: '78%', top: '8%' }}>Zone 1<b>12V Solenoid Valve</b></div>
                 <div className="part-label" style={{ left: '78%', top: '26%' }}>Zone 2<b>12V Solenoid Valve</b></div>
                 <div className="part-label" style={{ left: '78%', top: '44%' }}>Zone 3<b>12V Solenoid Valve</b></div>
                 <div className="part-label" style={{ left: '78%', top: '62%' }}>Zone 4<b>12V Solenoid Valve</b></div>
-                <CircuitPart className="valve-part valve-1" icon={<Power />} name="12V Valve" />
-                <CircuitPart className="valve-part valve-2" icon={<Power />} name="12V Valve" />
-                <CircuitPart className="valve-part valve-3" icon={<Power />} name="12V Valve" />
-                <CircuitPart className="valve-part valve-4" icon={<Power />} name="12V Valve" />
-                <CircuitPart className="power-part" icon={<BatteryCharging />} name="12V DC Power Supply"><span className="power-label">12V DC<br /><small>5A</small></span></CircuitPart>
-                <CircuitPart className="buck-part" icon={<Zap />} name="12V → 5V Buck Converter"><span className="buck-chip">5V OUT</span></CircuitPart>
-                <CircuitPart className="pump-part" icon={<Droplet />} name="12V DC Water Pump" />
-                <CircuitPart className="fan-part" icon={<Fan />} name="12V DC Fan" />
+                <CircuitPart className="valve-part valve-1" icon={<Power />} name="Zone 1 Valve" active={zones[0]} showState />
+                <CircuitPart className="valve-part valve-2" icon={<Power />} name="Zone 2 Valve" active={zones[1]} showState />
+                <CircuitPart className="valve-part valve-3" icon={<Power />} name="Zone 3 Valve" active={zones[2]} showState />
+                <CircuitPart className="valve-part valve-4" icon={<Power />} name="Zone 4 Valve" active={zones[3]} showState />
+                <CircuitPart className="power-part" icon={<BatteryCharging />} name="12V DC Power Supply" active showState><span className="power-label">12V DC<br /><small>5A</small></span></CircuitPart>
+                <CircuitPart className="buck-part" icon={<Zap />} name="12V → 5V Buck Converter" active={running} showState><span className="buck-chip">5V OUT</span></CircuitPart>
+                <CircuitPart className="pump-part" icon={<Droplet />} name="12V DC Water Pump" active={pumpOn} showState />
+                <CircuitPart className="fan-part" icon={<Fan />} name="12V DC Fan" active={fanOn} showState />
                 <div className="circuit-part led-bank"><div className="part-art">{zones.map((active, i) => <span className={`led-dot ${active ? (risk === 'high' ? 'danger' : 'on') : ''}`} key={i} />)}</div><div className="part-name">Zone LEDs · Z1–Z4</div></div>
               </div>
             </div>
@@ -159,8 +157,13 @@ export default function CircuitSimulation() {
 
         <section className="circuit-output">
           <article className="output-panel"><h2><Activity />Live Simulation Output <span className="status-pill" style={{ marginLeft: 'auto' }}><i />{running ? 'RUNNING' : 'STOPPED'}</span><span className={`risk-pill risk-${risk}`}>{risk.toUpperCase()} RISK</span><span className="runtime-chip">{formatElapsedTime(state.elapsedSeconds)}</span></h2><div className="output-metrics"><div className="output-metric"><small>PM2.5 · Sensor 1</small><strong>☀ {pm1} µg/m³</strong><span>Derived PM10 · {state.pm10_1} µg/m³</span></div><div className="output-metric"><small>PM2.5 · Sensor 2</small><strong>☀ {pm2} µg/m³</strong><span>Derived PM10 · {state.pm10_2} µg/m³</span></div><div className="output-metric"><small>Temperature</small><strong><Thermometer size={14} /> {temperature.toFixed(1)}°C</strong><span>{temperature >= 40 ? 'High' : 'Normal'}</span></div><div className="output-metric"><small>Humidity</small><strong><Droplet size={14} /> {humidity}%</strong><span>{humidity >= 80 ? 'High' : 'Normal'}</span></div></div></article>
-          <article className="output-panel"><h2><Settings />Zone Status</h2><div className="zone-grid">{zones.map((on, i) => <button className={`zone-toggle ${on ? 'active' : ''}`} key={i} onClick={() => !autoMode && manualToggle(i)} title={autoMode ? 'Switch to Manual Mode to toggle zones' : `Toggle Zone ${i + 1}`}><span className="zone-bulb" />Zone {i + 1}<b>{on ? 'ON' : 'OFF'}</b></button>)}</div><div className="system-status-strip">{autoMode ? `Auto logic · Moderate ≥ ${threshold} · High ≥ ${SIMULATION_THRESHOLDS.pm25High} µg/m³` : 'Manual control · select a zone to toggle'}</div></article>
-          <article className="output-panel system-controls"><h2><Settings />System Controls</h2><div className="mode-row"><button className={`mode-btn ${autoMode ? 'active' : ''}`} onClick={() => dispatch({ type: 'SET_MODE', mode: 'auto' })}>Auto Mode</button><button className={`mode-btn ${!autoMode ? 'active' : ''}`} onClick={() => dispatch({ type: 'SET_MODE', mode: 'manual' })}>Manual Mode</button></div><p className="mode-description">{autoMode ? `Fixed deterministic thresholds · ${threshold} / ${SIMULATION_THRESHOLDS.pm25High} µg/m³` : 'Manual mode · set each zone, pump and fan independently'}</p><div className="manual-row"><button className={`small-control-btn ${zones.some(Boolean) ? 'active' : ''}`} disabled={autoMode} onClick={() => turnAll(true)}><Play size={12} fill="currentColor" />Turn All Zones ON</button><button className="small-control-btn" disabled={autoMode} onClick={() => turnAll(false)}><Square size={11} />Turn All Zones OFF</button></div><div className="manual-row"><button className={`small-control-btn ${pumpOn ? 'active' : ''}`} disabled={autoMode} onClick={() => dispatch({ type: 'SET_OUTPUT', output: 'pump', active: !pumpOn })}><Droplet size={13} />Pump {pumpOn ? 'ON' : 'OFF'}</button><button className={`small-control-btn ${fanOn ? 'active' : ''}`} disabled={autoMode} onClick={() => dispatch({ type: 'SET_OUTPUT', output: 'fan', active: !fanOn })}><Fan size={13} />Fan {fanOn ? 'ON' : 'OFF'}</button></div></article>
+          <ZoneStatus state={state} onToggle={(index, active) => dispatch({ type: 'SET_ZONE', index, active })} />
+          <SystemControls
+            state={state}
+            onModeChange={(mode) => dispatch({ type: 'SET_MODE', mode })}
+            onSetAllZones={(active) => dispatch({ type: 'SET_ALL_ZONES', active })}
+            onToggleOutput={(output, active) => dispatch({ type: 'SET_OUTPUT', output, active })}
+          />
         </section>
       </div>
   );
