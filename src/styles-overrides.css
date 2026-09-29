@@ -15,14 +15,14 @@
 
 
 /* Simulated serial terminal */
-.serial-monitor-panel { grid-column: 1 / -1; min-height: 190px; }
+.serial-monitor-panel { grid-column: 1 / -1; min-height: 155px; }
 .serial-monitor-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .serial-monitor-header h2 { margin-bottom: 8px; }
 .serial-live-indicator { display: inline-flex; align-items: center; gap: 5px; color: #879da8; font-size: 7px; letter-spacing: .06em; white-space: nowrap; }
 .serial-live-indicator i { width: 6px; height: 6px; border-radius: 50%; background: #667780; }
 .serial-live-indicator.active { color: #78f0a0; }
 .serial-live-indicator.active i { background: #48ec7c; box-shadow: 0 0 7px #48ec7c; }
-.serial-terminal { height: 160px; overflow: auto; padding: 8px; border: 1px solid rgba(31,116,140,.34); border-radius: 6px; background: #020e17; color: #cad9df; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.serial-terminal { height: 120px; overflow: auto; padding: 8px; border: 1px solid rgba(31,116,140,.34); border-radius: 6px; background: #020e17; color: #cad9df; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 .serial-line, .serial-empty-line { display: grid; grid-template-columns: 63px 52px minmax(0,1fr); gap: 8px; align-items: baseline; min-height: 18px; font-size: 8px; line-height: 1.4; }
 .serial-line time, .serial-empty-line span { color: #6e94a5; }
 .serial-line > b, .serial-empty-line > b { color: #90aab6; font-size: 7px; letter-spacing: .04em; }
@@ -33,7 +33,7 @@
 .serial-monitor-footnote { margin: 5px 0 0; color: #6f8895; font-size: 7px; }
 @media (max-width: 760px) {
   .serial-monitor-panel { min-height: 0; }
-  .serial-terminal { height: 140px; }
+  .serial-terminal { height: 105px; }
   .serial-line, .serial-empty-line { grid-template-columns: 57px 44px minmax(0,1fr); gap: 5px; font-size: 7px; }
 }
 
@@ -100,7 +100,7 @@
   .sensor-panel-header { align-items: flex-start; }
   .zone-status-panel .zone-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .serial-monitor-panel { min-height: 0; }
-  .serial-terminal { height: 140px; }
+  .serial-terminal { height: 105px; }
   .serial-line, .serial-empty-line { grid-template-columns: 57px 44px minmax(0,1fr); gap: 5px; font-size: 7px; }
   .wire-legend { gap: 4px 6px; max-width: 360px; }
   .wire-legend span { font-size: 6.5px; }

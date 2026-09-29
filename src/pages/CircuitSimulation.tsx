@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Activity, Cpu, Droplet, Maximize2, Minus, Monitor, Play, Plus, RotateCcw, Settings, Square, Thermometer, Waves, Zap } from 'lucide-react';
+import { Activity, Cpu, Maximize2, Minus, Monitor, Play, Plus, RotateCcw, Settings, Square, Waves, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { formatElapsedTime, getRiskLevel } from '../features/circuit-simulator/simulatorEngine';
 import { useSimulator } from '../features/circuit-simulator/useSimulator';
 import SensorInputs from '../features/circuit-simulator/SensorInputs';
 import SystemControls from '../features/circuit-simulator/SystemControls';
@@ -10,19 +9,15 @@ import SerialMonitor from '../features/circuit-simulator/SerialMonitor';
 import CircuitCanvas from '../features/circuit-simulator/CircuitCanvas';
 import CodePanel from '../features/circuit-simulator/CodePanel';
 import ComponentSidebar from '../features/circuit-simulator/ComponentSidebar';
+import LiveMetrics from '../features/circuit-simulator/LiveMetrics';
 
 export default function CircuitSimulation() {
   const { state, dispatch } = useSimulator();
   const [zoom, setZoom] = useState(100);
   const running = state.simulationRunning;
   const zones = state.zones;
-  const pm1 = state.pm1;
-  const pm2 = state.pm2;
-  const temperature = state.temperature;
-  const humidity = state.humidity;
   const pumpOn = state.pumpOn;
   const fanOn = state.fanOn;
-  const risk = getRiskLevel(state);
 
   const reset = () => { dispatch({ type: 'RESET' }); setZoom(100); };
 
@@ -32,7 +27,7 @@ export default function CircuitSimulation() {
           <div className="circuit-title"><div className="eyebrow">CUSTOM HARDWARE SIMULATOR <span>•</span> IoT <span>FOR CLEANER, SAFER COMMUNITIES</span></div><h1>DustTwin <span>Circuit Simulation</span></h1><p>Design, simulate and test the DustTwin hardware in your browser.<br />A complete IoT dust control system with sensors, actuators and real-time feedback.</p></div>
           <div className="circuit-features">
             <Feature icon={<Monitor />} title="Browser-based" detail="No installation\nJust open and simulate" />
-            <Feature icon={<Cpu />} title="Real hardware" detail="Use actual components\nlike ESP32, sensors, relays" />
+            <Feature icon={<Cpu />} title="Hardware model" detail="ESP32, sensors and relays\nmodeled in the browser" />
             <Feature icon={<Settings />} title="Test logic" detail="Validate control logic\nand zone activation" />
             <Feature icon={<BarIcon />} title="See results" detail="Real-time sensor data\nand system behavior" />
           </div>
@@ -64,7 +59,7 @@ export default function CircuitSimulation() {
         </section>
 
         <section className="circuit-output">
-          <article className="output-panel"><h2><Activity />Live Simulation Output <span className="status-pill" style={{ marginLeft: 'auto' }}><i />{running ? 'RUNNING' : 'STOPPED'}</span><span className={`risk-pill risk-${risk}`}>{risk.toUpperCase()} RISK</span><span className="runtime-chip">{formatElapsedTime(state.elapsedSeconds)}</span></h2><div className="output-metrics"><div className="output-metric"><small>PM2.5 · Sensor 1</small><strong>☀ {pm1} µg/m³</strong><span>Derived PM10 · {state.pm10_1} µg/m³</span></div><div className="output-metric"><small>PM2.5 · Sensor 2</small><strong>☀ {pm2} µg/m³</strong><span>Derived PM10 · {state.pm10_2} µg/m³</span></div><div className="output-metric"><small>Temperature</small><strong><Thermometer size={14} /> {temperature.toFixed(1)}°C</strong><span>{temperature >= 40 ? 'High' : 'Normal'}</span></div><div className="output-metric"><small>Humidity</small><strong><Droplet size={14} /> {humidity}%</strong><span>{humidity >= 80 ? 'High' : 'Normal'}</span></div></div></article>
+          <LiveMetrics state={state} />
           <ZoneStatus state={state} onToggle={(index, active) => dispatch({ type: 'SET_ZONE', index, active })} />
           <SystemControls
             state={state}
