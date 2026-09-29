@@ -1,14 +1,154 @@
 
-/* Keep the wiring bench and code editor in the first desktop viewport, as in the approved circuit reference. */
+
+/* Real Wokwi circuit workspace */
+.circuit-shell.wokwi-shell {
+  grid-template-columns: 248px minmax(0, 1fr) 282px;
+  height: min(840px, calc(100vh - 185px));
+  min-height: 720px;
+  align-items: stretch;
+}
+.wokwi-shell .component-sidebar,
+.wokwi-shell .code-panel {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+}
+.wokwi-workspace {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: #041827;
+}
+.wokwi-workspace .workspace-toolbar {
+  flex: 0 0 auto;
+  min-height: 54px;
+  height: auto;
+  flex-wrap: nowrap;
+  gap: 7px;
+  padding: 6px 8px;
+  background: #041827;
+}
+.wokwi-toolbar-title {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+  color: #e8f5f9;
+}
+.wokwi-toolbar-title > span:last-child { display: grid; gap: 2px; min-width: 0; }
+.wokwi-toolbar-title strong { overflow: hidden; color: #eaf7fb; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.wokwi-toolbar-title small { color: #88a8b8; font-size: 7px; letter-spacing: .08em; }
+.wokwi-status-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: #f1bb50; box-shadow: 0 0 8px rgba(241,187,80,.6); }
+.wokwi-status-dot.ready { background: #43e489; box-shadow: 0 0 8px rgba(67,228,137,.65); }
+.wokwi-status-dot.error { background: #ff675f; box-shadow: 0 0 8px rgba(255,103,95,.65); }
+.wokwi-workspace .tool-button { flex: 0 0 auto; white-space: nowrap; }
+.wokwi-workspace .fullscreen-btn { margin-left: 0; }
+.wokwi-fallback-link { text-decoration: none; }
+.wokwi-frame-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: #071d2c;
+}
+.wokwi-frame {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #071d2c;
+}
+.wokwi-frame-state {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  color: #e8f6fa;
+  background: radial-gradient(ellipse at 50% 38%, rgba(7,69,91,.48), rgba(2,16,27,.98) 70%);
+  text-align: center;
+}
+.wokwi-frame-state strong { font-size: 15px; }
+.wokwi-frame-state p { max-width: 470px; margin: 0; color: #b4c9d2; font-size: 11px; line-height: 1.5; }
+.wokwi-frame-state.error > svg { color: #ffb957; }
+.wokwi-frame-state.error > div { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 5px; }
+.wokwi-frame-state.error a { text-decoration: none; }
+.wokwi-spinner { width: 32px; height: 32px; border: 3px solid rgba(33,213,235,.2); border-top-color: #2ce2f2; border-radius: 50%; animation: wokwi-spin .85s linear infinite; }
+@keyframes wokwi-spin { to { transform: rotate(360deg); } }
+.wokwi-shell .sidebar-title { gap: 6px; }
+.inventory-count { display: grid; width: 20px; height: 20px; place-items: center; border: 1px solid rgba(18,157,189,.34); border-radius: 50%; color: var(--cyan); font-size: 9px; }
+.substitute-note { display: flex; align-items: flex-start; gap: 7px; margin-top: 12px; padding: 9px 8px; border: 1px solid rgba(242,181,72,.26); border-radius: 7px; background: rgba(76,54,12,.14); color: #d6c9a5; font-size: 8px; line-height: 1.4; }
+.substitute-note svg { flex: 0 0 auto; color: #f0be59; }
+.empty-search { color: #91aab8; font-size: 10px; }
+.wokwi-guide-panel { display: flex; flex-direction: column; }
+.wokwi-guide-panel .code-head { flex: 0 0 auto; justify-content: space-between; }
+.logic-badge { padding: 4px 6px; border: 1px solid rgba(40,220,139,.32); border-radius: 999px; color: #81f0ad; font-size: 7px; letter-spacing: .06em; }
+.wokwi-guide-body { flex: 1 1 auto; padding: 10px; overflow-y: auto; }
+.guide-lead { margin: 0 0 13px; color: #c3d5dd; font-size: 10px; line-height: 1.45; }
+.wokwi-guide-body h3 { display: flex; align-items: center; gap: 6px; margin: 12px 0 7px; color: var(--cyan); font-size: 10px; }
+.wokwi-guide-body h3 svg { flex: 0 0 auto; }
+.threshold-rule { margin: 6px 0; padding: 7px 8px; border-left: 2px solid #29cee1; border-radius: 0 6px 6px 0; background: rgba(6,45,61,.6); }
+.threshold-rule.high { border-left-color: #f4a64b; }
+.threshold-rule > span { color: #e8f6fa; font-size: 9px; font-weight: 800; }
+.threshold-rule p { margin: 3px 0 0; color: #a9bdc8; font-size: 8px; line-height: 1.4; }
+.guide-caution { margin: 7px 0 12px; color: #dfa957; font-size: 8px; line-height: 1.4; }
+.pin-map { display: grid; gap: 1px; list-style: none; padding: 0; margin: 0; }
+.pin-map li { display: flex; justify-content: space-between; gap: 6px; padding: 5px 4px; border-bottom: 1px solid rgba(28,105,128,.2); color: #b3c7d0; font-size: 8px; }
+.pin-map b { color: #e4f3f7; font-size: 8px; text-align: right; }
+.terminal-hint { margin: 0 0 7px; color: #aebfc9; font-size: 8px; line-height: 1.4; }
+.command-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.command-grid > span { display: flex; align-items: center; gap: 5px; min-height: 26px; padding: 4px 5px; border: 1px solid rgba(22,116,142,.3); border-radius: 5px; color: #c5d4db; font-size: 7px; }
+.command-grid kbd { min-width: 22px; padding: 2px 3px; border: 1px solid rgba(26,200,224,.38); border-radius: 4px; color: #72e5f1; background: #071b29; font: 700 8px ui-monospace, SFMono-Regular, Menlo, monospace; text-align: center; }
+.physical-note { display: flex; align-items: flex-start; gap: 6px; margin-top: 13px; padding: 8px; border: 1px solid rgba(48,212,132,.23); border-radius: 6px; background: rgba(13,63,46,.2); color: #acd8bf; font-size: 8px; line-height: 1.4; }
+.physical-note svg { flex: 0 0 auto; color: #67e69f; }
+.wokwi-info-grid { align-items: stretch; }
+.wokwi-info-grid .output-panel { padding: 12px; }
+.wokwi-info-grid .output-panel > p { margin: 0; color: #b6c7d0; font-size: 9px; line-height: 1.5; }
+.output-chip-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.output-chip-row span { padding: 4px 6px; border: 1px solid rgba(24,132,158,.34); border-radius: 5px; color: #83dfea; background: rgba(5,38,54,.55); font-size: 7px; }
+.test-steps { display: grid; gap: 5px; margin: 0; padding-left: 16px; color: #bdcbd3; font-size: 8px; line-height: 1.4; }
+.limits-note { margin-top: 8px !important; color: #83dfea !important; font-size: 8px !important; }
+.wokwi-workspace:fullscreen { width: 100vw; height: 100vh; min-height: 0; border: 0; border-radius: 0; background: #041827; }
+.wokwi-workspace:fullscreen .workspace-toolbar { min-height: 58px; }
 @media (min-width: 1051px) {
-  .circuit-shell { height: min(510px, calc(100vh - 275px)); min-height: 470px; }
-  .component-sidebar, .circuit-workspace, .code-panel { height: 100%; min-height: 0; }
-  .component-sidebar { overflow-y: auto; }
-  .circuit-workspace { display: flex; flex-direction: column; }
-  .circuit-canvas { height: auto; min-height: 0; flex: 1; }
-  .code-panel { display: flex; flex-direction: column; }
-  .code-view { flex: 1; min-height: 0; max-height: none; overflow: auto; }
+  .circuit-shell.wokwi-shell { height: min(840px, calc(100vh - 185px)); min-height: 720px; }
+}
+@media (max-width: 1250px) and (min-width: 1051px) {
+  .circuit-shell.wokwi-shell { grid-template-columns: 215px minmax(0, 1fr) 270px; }
+  .wokwi-workspace .tool-button { padding: 7px 8px; }
+  .fullscreen-label { max-width: 100px; overflow: hidden; text-overflow: ellipsis; }
 }
 @media (max-width: 1050px) {
-  .circuit-shell { height: auto; min-height: 0; }
+  .circuit-shell.wokwi-shell { grid-template-columns: 205px minmax(0, 1fr); height: auto; min-height: 0; }
+  .wokwi-workspace { height: 760px; min-height: 700px; }
+  .wokwi-shell .code-panel { grid-column: 1 / -1; height: auto; min-height: 0; }
+  .wokwi-shell .component-sidebar { height: auto; max-height: 760px; }
+  .wokwi-guide-body { max-height: 520px; }
+  .wokwi-info-grid { grid-template-columns: 1fr 1fr; }
+  .wokwi-info-grid .output-panel:last-child { grid-column: 1 / -1; }
+}
+@media (max-width: 760px) {
+  .circuit-shell.wokwi-shell { display: flex; flex-direction: column; height: auto; min-height: 0; }
+  .wokwi-shell .component-sidebar { order: 2; max-height: 340px; padding: 10px; }
+  .wokwi-shell .wokwi-workspace { order: 1; width: 100%; height: min(760px, 82vh); min-height: 620px; }
+  .wokwi-shell .code-panel { order: 3; height: auto; min-height: 0; }
+  .wokwi-guide-body { max-height: none; }
+  .wokwi-workspace .workspace-toolbar { min-height: 88px; flex-wrap: wrap; gap: 6px; }
+  .wokwi-toolbar-title { flex: 1 1 100%; }
+  .wokwi-workspace .toolbar-spacer { display: none; }
+  .wokwi-workspace .tool-button { padding: 7px 8px; font-size: 8px; }
+  .fullscreen-label { max-width: 102px; overflow: hidden; text-overflow: ellipsis; }
+  .wokwi-frame-wrap { min-height: 0; }
+  .wokwi-info-grid { grid-template-columns: 1fr; }
+  .wokwi-info-grid .output-panel:last-child { grid-column: auto; }
+  .wokwi-info-grid .output-panel { padding: 10px; }
 }

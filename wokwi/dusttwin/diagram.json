@@ -23,7 +23,7 @@
     { "type": "wokwi-resistor", "id": "pumpR", "top": 563, "left": 560, "attrs": { "value": "330" } },
     { "type": "wokwi-led", "id": "fanLed", "top": 555, "left": 690, "attrs": { "color": "orange", "label": "FAN OUTPUT" } },
     { "type": "wokwi-resistor", "id": "fanR", "top": 563, "left": 750, "attrs": { "value": "330" } },
-    { "type": "wokwi-text", "id": "title", "top": -190, "left": -245, "attrs": { "text": "DUSTTWIN  /  PREDICTIVE BOUNDARY DUST CONTROL" } },
+    { "type": "wokwi-text", "id": "title", "top": -190, "left": -245, "attrs": { "text": "DUSTTWIN  /  THRESHOLD-BASED BOUNDARY DUST CONTROL" } },
     { "type": "wokwi-text", "id": "pm1Label", "top": -80, "left": -300, "attrs": { "text": "PM Sensor 1 (Simulated)\nTurn knob to change PM" } },
     { "type": "wokwi-text", "id": "pm2Label", "top": 60, "left": -300, "attrs": { "text": "PM Sensor 2 (Simulated)\nTurn knob to change PM" } },
     { "type": "wokwi-text", "id": "weatherLabel", "top": 245, "left": 220, "attrs": { "text": "WEATHER INPUT\nDHT22 temperature + humidity" } },
