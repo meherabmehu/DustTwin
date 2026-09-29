@@ -65,7 +65,7 @@ export default function CircuitSimulation() {
             onSetAllZones={(active) => dispatch({ type: 'SET_ALL_ZONES', active })}
             onToggleOutput={(output, active) => dispatch({ type: 'SET_OUTPUT', output, active })}
           />
-          <SerialMonitor entries={state.serialLogs} running={running} />
+          <SerialMonitor entries={state.serialLogs} running={running} onClear={() => dispatch({ type: 'CLEAR_LOGS' })} />
         </section>
       </div>
   );

@@ -119,3 +119,14 @@ test('Reset restores defaults and elapsed time formatting is stable', () => {
   assert.equal(formatElapsedTime(3661), '01:01:01');
   assert.equal(formatElapsedTime(9), '00:00:09');
 });
+
+test('Serial Monitor can clear its buffer without changing simulator outputs', () => {
+  let state = act(createInitialSimulatorState(), { type: 'RUN' });
+  const outputs = { zones: state.zones, pumpOn: state.pumpOn, fanOn: state.fanOn };
+  state = act(state, { type: 'CLEAR_LOGS' });
+  assert.deepEqual(state.serialLogs, []);
+  assert.deepEqual({ zones: state.zones, pumpOn: state.pumpOn, fanOn: state.fanOn }, outputs);
+  assert.equal(act(state, { type: 'CLEAR_LOGS' }), state);
+  for (let i = 0; i < 5; i++) state = act(state, { type: 'TICK' });
+  assert.ok(state.serialLogs.some((entry) => entry.message.startsWith('PM 1:')));
+});

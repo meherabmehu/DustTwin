@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { SiteFooter, SiteHeader } from './components/SiteChrome';
 import './index.css';
 import './styles-overrides.css';
+import './styles-serial.css';
 
 const Overview = lazy(() => import('./pages/Overview'));
 const Problem = lazy(() => import('./pages/Problem'));

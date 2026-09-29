@@ -1,0 +1,13 @@
+/* Serial monitor controls and contained auto-scroll */
+.serial-monitor-actions { display: flex; align-items: center; gap: 8px; }
+.serial-clear-button { display: inline-flex; align-items: center; gap: 4px; min-height: 24px; padding: 3px 7px; border: 1px solid rgba(38,139,162,.4); border-radius: 5px; color: #9fc0cc; background: rgba(5,30,44,.78); font-size: 8px; cursor: pointer; }
+.serial-clear-button:hover:not(:disabled) { border-color: rgba(29,218,236,.72); color: #d9f8fc; }
+.serial-clear-button:disabled { opacity: .45; cursor: not-allowed; }
+.serial-clear-button:focus-visible { outline: 2px solid rgba(38,226,244,.84); outline-offset: 2px; }
+.serial-line time, .serial-empty-line time { color: #85adbc; font-variant-numeric: tabular-nums; }
+.serial-terminal { overscroll-behavior: contain; scroll-behavior: auto; }
+@media (max-width: 760px) {
+  .serial-monitor-actions { gap: 5px; }
+  .serial-live-indicator { font-size: 6px; }
+  .serial-clear-button { padding: 3px 5px; }
+}

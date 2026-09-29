@@ -38,6 +38,7 @@ export type SimulatorAction =
   | { type: 'RUN' }
   | { type: 'STOP' }
   | { type: 'RESET' }
+  | { type: 'CLEAR_LOGS' }
   | { type: 'TICK' }
   | { type: 'SET_MODE'; mode: ControlMode }
   | { type: 'SET_SENSOR'; key: SensorInputKey; value: number }

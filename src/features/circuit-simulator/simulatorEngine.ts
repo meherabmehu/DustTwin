@@ -132,6 +132,8 @@ export function simulatorReducer(state: SimulatorState, action: SimulatorAction)
       const initial = createInitialSimulatorState();
       return appendLogs(initial, [{ message: 'Simulation reset to default values', level: 'success' }]);
     }
+    case 'CLEAR_LOGS':
+      return state.serialLogs.length ? { ...state, serialLogs: [] } : state;
     case 'TICK': {
       if (!state.simulationRunning) return state;
       const candidate = { ...state, elapsedSeconds: state.elapsedSeconds + 1 };
