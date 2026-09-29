@@ -17,6 +17,17 @@ export const ZONE_GPIO_MAP = Object.freeze({
 
 export const RELAY_GPIO_MAP = ZONE_GPIO_MAP;
 
+/** Pin labels used by the schematic and Arduino-style reference code. */
+export const SIMULATION_PIN_MAP = Object.freeze({
+  pmSensor1: Object.freeze({ rx: 16, tx: 17 }),
+  pmSensor2: Object.freeze({ rx: 25, tx: 26 }),
+  dht22: 4,
+  relayZones: ZONE_GPIO_MAP,
+  ledZones: Object.freeze({ zone1: 32, zone2: 33, zone3: 27, zone4: 14 }),
+  pump: 22,
+  fan: 23,
+});
+
 export const SIMULATION_INPUT_LIMITS = Object.freeze({
   pm25: { min: 0, max: 200, step: 1 },
   temperature: { min: 10, max: 50, step: 0.1 },

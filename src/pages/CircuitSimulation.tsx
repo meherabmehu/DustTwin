@@ -7,7 +7,7 @@ import SensorInputs from '../features/circuit-simulator/SensorInputs';
 import SystemControls from '../features/circuit-simulator/SystemControls';
 import ZoneStatus from '../features/circuit-simulator/ZoneStatus';
 import SerialMonitor from '../features/circuit-simulator/SerialMonitor';
-import OutputStateBadge from '../features/circuit-simulator/OutputStateBadge';
+import CircuitCanvas from '../features/circuit-simulator/CircuitCanvas';
 
 const components = [
   { group: 'Controllers', name: 'ESP32 DevKit V1', info: 'WiFi + Bluetooth · 38 GPIO', icon: <Cpu /> },
@@ -61,10 +61,6 @@ function InventoryGroup({ title, items }: { title: string; items: typeof compone
   return <div className="component-group"><h3>{title}<span>⌃</span></h3><div className="component-list">{items.map((item) => <div className="component-item" key={item.name}><span className="component-thumb">{item.icon}</span><span><strong>{item.name}</strong><small>{item.info}</small></span></div>)}</div></div>;
 }
 
-function CircuitPart({ className, icon, name, children, active, showState }: { className: string; icon: React.ReactNode; name: string; children?: React.ReactNode; active?: boolean; showState?: boolean }) {
-  return <div className={`circuit-part ${className} ${showState ? (active ? 'is-active' : 'is-inactive') : ''}`} data-state={showState ? (active ? 'on' : 'off') : undefined} aria-label={showState ? `${name}: ${active ? 'ON' : 'OFF'}` : undefined}>{showState && <OutputStateBadge active={Boolean(active)} />}<div className="part-art">{children ?? icon}</div><div className="part-name">{name}</div></div>;
-}
-
 export default function CircuitSimulation() {
   const { state, dispatch } = useSimulator();
   const [zoom, setZoom] = useState(100);
@@ -113,37 +109,7 @@ export default function CircuitSimulation() {
               <div className="zoom-controls"><button aria-label="Zoom out" onClick={() => setZoom((v) => Math.max(70, v - 10))}><Minus size={12} /></button><span className="zoom-label">{zoom}%</span><button aria-label="Zoom in" onClick={() => setZoom((v) => Math.min(130, v + 10))}><Plus size={12} /></button></div>
               <button className="tool-button fullscreen-btn" onClick={() => { const el = document.querySelector('.circuit-workspace'); if (el?.requestFullscreen) void el.requestFullscreen(); }} title="Fullscreen circuit"><Maximize2 size={13} /></button>
             </div>
-            <div className="circuit-canvas">
-              <div className="circuit-board-inner" style={{ '--board-zoom': zoom / 100 } as React.CSSProperties}>
-                <svg className="wire-layer" viewBox="0 0 1000 650" preserveAspectRatio="none" aria-hidden="true">
-                  <path className="wire-red" d="M205 153 H295 V168 H380 M205 300 H314 V201 H380 M530 196 H610 V105 H830 M530 245 H588 V218 H830 M530 294 H591 V337 H830 M530 340 H602 V455 H830" />
-                  <path className="wire-yellow" d="M205 177 H305 V192 H380 M205 325 H330 V219 H380 M264 474 H340 V345 H380 M530 220 H598 V135 H830 M530 270 H606 V253 H830 M530 315 H615 V372 H830" />
-                  <path className="wire-blue" d="M205 201 H324 V239 H380 M205 348 H343 V265 H380 M530 244 H622 V166 H830 M530 290 H635 V281 H830" />
-                  <path className="wire-green" d="M530 316 H627 V402 H830 M530 346 H638 V485 H830 M490 400 V535 H410 M455 400 V548 H245" />
-                  <path className="wire-black" d="M150 565 H285 M412 565 H560 M675 566 H724 M842 566 H872 M765 398 V565 M720 398 V566" />
-                  <path className="wire-red" d="M242 565 H280 M419 565 H554 M674 565 H719 M765 395 V440 H830" />
-                  <path className="wire-yellow" d="M242 581 H272 V541 H382 M674 581 H706 V480 H830" />
-                </svg>
-                <CircuitPart className="sensor-board pm-sensor" icon={<Gauge />} name="PM2.5 / PM10 Sensor 1" active={running} showState><span className="sensor-chip">PMS5003</span></CircuitPart>
-                <CircuitPart className="sensor-board pm-sensor2" icon={<Gauge />} name="PM2.5 / PM10 Sensor 2" active={running} showState><span className="sensor-chip">PMS5003</span></CircuitPart>
-                <CircuitPart className="dht-board" icon={<Thermometer />} name="DHT22 · T/H" active={running} showState />
-                <CircuitPart className="esp-board" icon={<Cpu />} name="ESP32 DevKit V1" active={running} showState><span className="esp-chip"><small>ESP32</small><b>◉</b><small>WiFi · BLE</small></span></CircuitPart>
-                <CircuitPart className="relay-board" icon={<Settings />} name="4 Channel Relay Module" active={zones.some(Boolean)} showState><span className="relay-blocks"><i /><i /><i /><i /></span></CircuitPart>
-                <div className="part-label" style={{ left: '78%', top: '8%' }}>Zone 1<b>12V Solenoid Valve</b></div>
-                <div className="part-label" style={{ left: '78%', top: '26%' }}>Zone 2<b>12V Solenoid Valve</b></div>
-                <div className="part-label" style={{ left: '78%', top: '44%' }}>Zone 3<b>12V Solenoid Valve</b></div>
-                <div className="part-label" style={{ left: '78%', top: '62%' }}>Zone 4<b>12V Solenoid Valve</b></div>
-                <CircuitPart className="valve-part valve-1" icon={<Power />} name="Zone 1 Valve" active={zones[0]} showState />
-                <CircuitPart className="valve-part valve-2" icon={<Power />} name="Zone 2 Valve" active={zones[1]} showState />
-                <CircuitPart className="valve-part valve-3" icon={<Power />} name="Zone 3 Valve" active={zones[2]} showState />
-                <CircuitPart className="valve-part valve-4" icon={<Power />} name="Zone 4 Valve" active={zones[3]} showState />
-                <CircuitPart className="power-part" icon={<BatteryCharging />} name="12V DC Power Supply" active showState><span className="power-label">12V DC<br /><small>5A</small></span></CircuitPart>
-                <CircuitPart className="buck-part" icon={<Zap />} name="12V → 5V Buck Converter" active={running} showState><span className="buck-chip">5V OUT</span></CircuitPart>
-                <CircuitPart className="pump-part" icon={<Droplet />} name="12V DC Water Pump" active={pumpOn} showState />
-                <CircuitPart className="fan-part" icon={<Fan />} name="12V DC Fan" active={fanOn} showState />
-                <div className="circuit-part led-bank"><div className="part-art">{zones.map((active, i) => <span className={`led-dot ${active ? (risk === 'high' ? 'danger' : 'on') : ''}`} key={i} />)}</div><div className="part-name">Zone LEDs · Z1–Z4</div></div>
-              </div>
-            </div>
+            <CircuitCanvas state={state} zoom={zoom} />
           </section>
 
           <aside className="code-panel">

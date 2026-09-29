@@ -1,4 +1,18 @@
 
+/* Keep the wiring bench and code editor in the first desktop viewport, as in the approved circuit reference. */
+@media (min-width: 1051px) {
+  .circuit-shell { height: min(510px, calc(100vh - 275px)); min-height: 470px; }
+  .component-sidebar, .circuit-workspace, .code-panel { height: 100%; min-height: 0; }
+  .component-sidebar { overflow-y: auto; }
+  .circuit-workspace { display: flex; flex-direction: column; }
+  .circuit-canvas { height: auto; min-height: 0; flex: 1; }
+  .code-panel { display: flex; flex-direction: column; }
+  .code-view { flex: 1; min-height: 0; max-height: none; overflow: auto; }
+}
+@media (max-width: 1050px) {
+  .circuit-shell { height: auto; min-height: 0; }
+}
+
 
 /* Simulated serial terminal */
 .serial-monitor-panel { grid-column: 1 / -1; min-height: 190px; }
@@ -22,5 +36,98 @@
   .serial-terminal { height: 140px; }
   .serial-line, .serial-empty-line { grid-template-columns: 57px 44px minmax(0,1fr); gap: 5px; font-size: 7px; }
 }
+
+.tool-button:disabled { opacity: .44; cursor: not-allowed; }
+
+/* Pin-accurate color-coded wiring and hardware artwork */
+.wire-layer .wire-zone-active { stroke-width: 4.5; filter: url(#wireGlow); }
+.wire-bundle.wire-flowing .wire-blue,
+.wire-bundle.wire-flowing .wire-green { stroke-dasharray: 7 8; animation: wire-flow 1.15s linear infinite; }
+.wire-layer .wire-zone-active { stroke-dasharray: 6 5; animation: wire-flow .85s linear infinite; }
+.wire-pin-labels text { fill: #bbd3dd; stroke: #031521; stroke-width: 3px; paint-order: stroke; font: 700 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .025em; }
+@keyframes wire-flow { to { stroke-dashoffset: -30; } }
+.wire-legend { position: absolute; z-index: 8; top: 8px; left: 8px; display: flex; flex-wrap: wrap; gap: 4px 9px; max-width: min(360px, calc(100% - 16px)); padding: 6px 8px; border: 1px solid rgba(33,139,164,.38); border-radius: 6px; background: rgba(2,17,28,.86); box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+.wire-legend span { display: inline-flex; align-items: center; gap: 4px; color: #c2d4dc; font-size: 7px; white-space: nowrap; }
+.wire-legend i { width: 10px; height: 3px; border-radius: 3px; }
+.legend-red { background: #ff353a; }.legend-yellow { background: #ffcd29; }.legend-black { background: #788993; }.legend-blue { background: #21b7f3; }.legend-green { background: #40e878; }
+.sensor-chip { display: grid; place-items: center; width: 78%; min-height: 25px; border: 1px solid rgba(151,210,219,.37); border-radius: 3px; color: #d8e8e8; background: repeating-linear-gradient(0deg,rgba(20,87,88,.72) 0 4px,#092f32 4px 7px); font-size: 6px; text-align: center; }
+.esp-chip { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; width: 63%; height: 76%; border: 1px solid #557380; border-radius: 5px; background: linear-gradient(140deg,#132f3b,#07141e); box-shadow: inset 0 0 7px rgba(22,192,217,.12); }
+.esp-chip small { color: #8cb5c2; font-size: 7px; }.esp-chip b { color: #20d8e9; font-size: 21px; line-height: 1; text-shadow: 0 0 7px rgba(32,216,233,.55); }
+.relay-blocks { display: grid; grid-template-columns: repeat(2,1fr); gap: 5px; width: 75%; height: 64%; }
+.relay-channel { position: relative; display: block; border: 1px solid #75a7b0; border-radius: 3px; background: linear-gradient(145deg,#0b394c,#061b27); }
+.relay-channel::after { content: ""; position: absolute; right: 3px; top: 3px; width: 5px; height: 5px; border-radius: 50%; background: #586a71; }
+.relay-channel.active::after { background: #43f27a; box-shadow: 0 0 7px #43f27a; }
+.power-label { color: #e2f4fa; font: 800 9px ui-monospace, SFMono-Regular, Menlo, monospace; text-align: center; }.power-label small { color: #91adb8; font-size: 7px; }
+.buck-chip { padding: 4px 6px; border: 1px solid rgba(244,194,91,.52); border-radius: 3px; color: #ffe09c; background: rgba(84,57,11,.5); font: 700 7px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.circuit-canvas { isolation: isolate; }
+@media (max-width: 760px) {
+  .wire-legend { gap: 4px 6px; max-width: 360px; }
+  .wire-legend span { font-size: 6.5px; }
+}
+
+/* Editable sensor inputs */
+.sensor-inputs-section { padding: 0 16px 8px; }
+.simulator-sensor-panel { margin: 0; }
+.sensor-panel-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 9px; }
+.sensor-panel-header h2 { margin: 0 0 3px; }
+.sensor-panel-header p { margin: 0; color: #91a9b6; font-size: 9px; line-height: 1.4; }
+.sensor-panel-tag { flex: 0 0 auto; padding: 5px 8px; border: 1px solid rgba(18,203,222,.35); border-radius: 999px; color: #75e7f2; background: rgba(8,73,88,.2); font-size: 8px; letter-spacing: .08em; }
+.sensor-input-grid { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 8px; }
+.sensor-control-card { min-width: 0; padding: 8px; border: 1px solid rgba(20,117,146,.37); border-radius: 7px; background: rgba(5,31,47,.76); }
+.sensor-control-heading { display: flex; align-items: center; gap: 6px; min-height: 23px; color: #dce9ee; }
+.sensor-control-heading label { min-width: 0; font-size: 9px; font-weight: 650; line-height: 1.15; }
+.sensor-control-icon { display: grid; place-items: center; flex: 0 0 auto; width: 20px; height: 20px; color: #30d7e8; }
+.sensor-control-icon svg { width: 15px; height: 15px; }
+.sensor-value-row { display: flex; align-items: baseline; gap: 5px; margin-top: 4px; }
+.sensor-number-input { width: 67px; max-width: 65%; padding: 3px 4px; border: 1px solid rgba(26,138,165,.5); border-radius: 5px; outline: none; color: #edfbff; background: #051b2b; font-size: 12px; font-weight: 700; }
+.sensor-number-input:focus { border-color: #27dcef; box-shadow: 0 0 0 2px rgba(39,220,239,.12); }
+.sensor-unit { color: #9fb5c0; font-size: 8px; white-space: nowrap; }
+.sensor-range-input { display: block; width: 100%; height: 5px; margin: 8px 0 3px; accent-color: #18d6e8; cursor: pointer; }
+.sensor-range-bounds { display: flex; justify-content: space-between; color: #6f8e9e; font-size: 7px; }
+.sensor-derived-value { display: block; margin-top: 5px; color: #8da8b5; font-size: 7.5px; }
+.sensor-derived-value b { color: #81edf2; font-weight: 600; }
+.sensor-derivation-note { margin: 7px 0 0; color: #748f9d; font-size: 8px; }
+.mode-description { margin: -2px 0 2px; color: #8ca6b3; font-size: 8px; line-height: 1.35; }
+.small-control-btn:disabled { opacity: .46; cursor: not-allowed; }
+.risk-pill { display: inline-flex; align-items: center; padding: 4px 7px; border: 1px solid rgba(28,181,190,.35); border-radius: 999px; color: #7be5dc; background: rgba(6,67,74,.22); font-size: 8px; white-space: nowrap; }
+.risk-pill.risk-moderate { color: #ffd56b; border-color: rgba(255,191,57,.45); background: rgba(92,64,10,.25); }
+.risk-pill.risk-high { color: #ff8b87; border-color: rgba(255,79,70,.5); background: rgba(94,20,24,.3); }
+.runtime-chip { color: #94adba; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px; white-space: nowrap; }
+@media (max-width: 1050px) { .sensor-input-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } }
+@media (max-width: 760px) {
+  .sensor-inputs-section { padding: 0 8px 8px; }
+  .sensor-input-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .sensor-panel-header { align-items: flex-start; }
+  .zone-status-panel .zone-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .serial-monitor-panel { min-height: 0; }
+  .serial-terminal { height: 140px; }
+  .serial-line, .serial-empty-line { grid-template-columns: 57px 44px minmax(0,1fr); gap: 5px; font-size: 7px; }
+  .wire-legend { gap: 4px 6px; max-width: 360px; }
+  .wire-legend span { font-size: 6.5px; }
+}
+@media (max-width: 430px) {
+  .sensor-control-card { padding: 7px 6px; }
+  .sensor-panel-header { flex-direction: column; gap: 6px; }
+  .sensor-control-heading label { font-size: 8px; }
+  .sensor-number-input { width: 60px; }
+}
+
+/* Live relay, LED and actuator state */
+.circuit-part.is-active { border-color: rgba(47,231,149,.8); box-shadow: 0 0 12px rgba(44,226,142,.22), inset 0 0 10px rgba(44,226,142,.08); }
+.circuit-part.is-active .part-art { color: #75f3ad; }
+.circuit-part.is-inactive .part-art { color: #91a6af; }
+.part-state-badge { position: absolute; z-index: 5; top: 3px; right: 4px; padding: 2px 4px; border: 1px solid rgba(118,151,164,.32); border-radius: 99px; color: #93aab3; background: rgba(2,16,25,.84); font-size: 6px; line-height: 1; font-weight: 800; letter-spacing: .04em; }
+.part-state-badge.active { border-color: rgba(61,243,115,.55); color: #7ef6a4; box-shadow: 0 0 6px rgba(61,243,115,.2); }
+.zone-status-panel .zone-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.zone-toggle { position: relative; grid-template-columns: 10px 1fr; grid-template-rows: auto auto; justify-items: stretch; align-items: center; gap: 2px 6px; padding: 6px; text-align: left; }
+.zone-toggle:disabled { cursor: not-allowed; }
+.zone-toggle .zone-bulb { grid-row: 1 / span 2; align-self: center; }
+.zone-copy { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.zone-copy b { color: #e3eef3; font-size: 8px; }
+.zone-copy small { color: #82a0ae; font-size: 7px; }
+.zone-state { grid-column: 2; color: #9eb2bc; font-size: 8px; }
+.zone-toggle.active .zone-state { color: #65f099; }
+.zone-source { grid-column: 1 / -1; margin-top: 2px; color: #8ba4b1; font-size: 6.5px; line-height: 1.15; }
+.zone-mapping-note { margin-top: 7px; color: #88a4b2; font-size: 7.5px; line-height: 1.35; }
 
 .tool-button:disabled { opacity: .44; cursor: not-allowed; }

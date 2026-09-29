@@ -1,0 +1,94 @@
+import type { CSSProperties, ReactNode } from 'react';
+import { BatteryCharging, Cpu, Droplet, Fan, Gauge, Power, Settings, Thermometer, Zap } from 'lucide-react';
+import { getRiskLevel } from './simulatorEngine';
+import type { SimulatorState } from './simulatorTypes';
+import OutputStateBadge from './OutputStateBadge';
+import WiringLayer from './WiringLayer';
+
+type Props = { state: SimulatorState; zoom: number };
+
+type PartProps = {
+  className: string;
+  icon: ReactNode;
+  name: string;
+  children?: ReactNode;
+  active?: boolean;
+  showState?: boolean;
+};
+
+function CircuitPart({ className, icon, name, children, active = false, showState = false }: PartProps) {
+  return (
+    <div
+      className={`circuit-part ${className} ${showState ? (active ? 'is-active' : 'is-inactive') : ''}`}
+      data-state={showState ? (active ? 'on' : 'off') : undefined}
+      role={showState ? 'img' : undefined}
+      aria-label={showState ? `${name}: ${active ? 'ON' : 'OFF'}` : undefined}
+    >
+      {showState && <OutputStateBadge active={active} />}
+      <div className="part-art">{children ?? icon}</div>
+      <div className="part-name">{name}</div>
+    </div>
+  );
+}
+
+function WireLegend() {
+  return (
+    <div className="wire-legend" aria-label="Wire color key">
+      <span><i className="legend-red" />12V</span>
+      <span><i className="legend-yellow" />5V</span>
+      <span><i className="legend-black" />GND</span>
+      <span><i className="legend-blue" />UART</span>
+      <span><i className="legend-green" />GPIO</span>
+    </div>
+  );
+}
+
+export default function CircuitCanvas({ state, zoom }: Props) {
+  const risk = getRiskLevel(state);
+  const anyZoneActive = state.zones.some(Boolean);
+  return (
+    <div className="circuit-canvas" aria-label="Interactive DustTwin circuit schematic">
+      <div className="circuit-board-inner" style={{ '--board-zoom': zoom / 100 } as CSSProperties}>
+        <WiringLayer state={state} />
+        <CircuitPart className="sensor-board pm-sensor" icon={<Gauge />} name="PM2.5 / PM10 Sensor 1" active={state.simulationRunning} showState>
+          <span className="sensor-chip">PMS5003 · UART1</span>
+        </CircuitPart>
+        <CircuitPart className="sensor-board pm-sensor2" icon={<Gauge />} name="PM2.5 / PM10 Sensor 2" active={state.simulationRunning} showState>
+          <span className="sensor-chip">PMS5003 · UART2</span>
+        </CircuitPart>
+        <CircuitPart className="dht-board" icon={<Thermometer />} name="DHT22 · T/H · GPIO4" active={state.simulationRunning} showState />
+        <CircuitPart className="esp-board" icon={<Cpu />} name="ESP32 DevKit V1" active={state.simulationRunning} showState>
+          <span className="esp-chip"><small>ESP32</small><b>◉</b><small>WiFi · BLE</small></span>
+        </CircuitPart>
+        <CircuitPart className="relay-board" icon={<Settings />} name="4 Channel Relay Module" active={anyZoneActive} showState>
+          <span className="relay-blocks">{state.zones.map((active, index) => <i className={active ? 'relay-channel active' : 'relay-channel'} key={index} title={`Relay ${index + 1}: ${active ? 'ON' : 'OFF'}`} />)}</span>
+        </CircuitPart>
+        {state.zones.map((active, index) => (
+          <CircuitPart
+            className={`valve-part valve-${index + 1}`}
+            icon={<Power />}
+            name={`Zone ${index + 1} Valve`}
+            active={active}
+            showState
+            key={index}
+          />
+        ))}
+        <CircuitPart className="power-part" icon={<BatteryCharging />} name="12V DC Power Supply" active showState>
+          <span className="power-label">12V DC<br /><small>5A</small></span>
+        </CircuitPart>
+        <CircuitPart className="buck-part" icon={<Zap />} name="12V → 5V Buck Converter" active={state.simulationRunning} showState>
+          <span className="buck-chip">5V OUT</span>
+        </CircuitPart>
+        <CircuitPart className="pump-part" icon={<Droplet />} name="12V DC Water Pump · GPIO22" active={state.pumpOn} showState />
+        <CircuitPart className="fan-part" icon={<Fan />} name="12V DC Fan · GPIO23" active={state.fanOn} showState />
+        <div className="circuit-part led-bank" role="img" aria-label={`Zone indicator LEDs, air quality ${risk}`}>
+          <div className="part-art">
+            {state.zones.map((active, index) => <span className={`led-dot ${active ? (risk === 'high' ? 'danger' : 'on') : ''}`} key={index} title={`Zone ${index + 1} LED ${active ? 'ON' : 'OFF'}`} />)}
+          </div>
+          <div className="part-name">Z1–Z4 LEDs</div>
+        </div>
+      </div>
+      <WireLegend />
+    </div>
+  );
+}
