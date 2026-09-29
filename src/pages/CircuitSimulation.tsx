@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
-import { Activity, BatteryCharging, Code2, Cpu, Droplet, Fan, Gauge, Maximize2, Minus, Monitor, Play, Plus, Power, RotateCcw, Search, Settings, Square, Thermometer, Waves, Zap } from 'lucide-react';
+import { Activity, BatteryCharging, Cpu, Droplet, Fan, Gauge, Maximize2, Minus, Monitor, Play, Plus, Power, RotateCcw, Search, Settings, Square, Thermometer, Waves, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { SIMULATION_PIN_MAP } from '../config/simulationThresholds';
 import { formatElapsedTime, getRiskLevel } from '../features/circuit-simulator/simulatorEngine';
 import { useSimulator } from '../features/circuit-simulator/useSimulator';
 import SensorInputs from '../features/circuit-simulator/SensorInputs';
@@ -8,53 +9,19 @@ import SystemControls from '../features/circuit-simulator/SystemControls';
 import ZoneStatus from '../features/circuit-simulator/ZoneStatus';
 import SerialMonitor from '../features/circuit-simulator/SerialMonitor';
 import CircuitCanvas from '../features/circuit-simulator/CircuitCanvas';
+import CodePanel from '../features/circuit-simulator/CodePanel';
 
 const components = [
   { group: 'Controllers', name: 'ESP32 DevKit V1', info: 'WiFi + Bluetooth · 38 GPIO', icon: <Cpu /> },
-  { group: 'Sensors', name: 'PM2.5 Sensor 1', info: 'PMS5003 · UART (RX 16 / TX 17)', icon: <Gauge /> },
-  { group: 'Sensors', name: 'PM2.5 Sensor 2', info: 'PMS5003 · UART (RX 25 / TX 26)', icon: <Gauge /> },
-  { group: 'Sensors', name: 'DHT22', info: 'Temperature & Humidity · GPIO 4', icon: <Thermometer /> },
-  { group: 'Actuators', name: '4 Channel Relay Module', info: '12V · GPIO 5, 18, 19, 21', icon: <Settings /> },
-  { group: 'Actuators', name: '12V DC Water Pump', info: 'Submersible · Inline', icon: <Droplet /> },
+  { group: 'Sensors', name: 'PM2.5 Sensor 1', info: `PMS5003 · UART (RX ${SIMULATION_PIN_MAP.pmSensor1.rx} / TX ${SIMULATION_PIN_MAP.pmSensor1.tx})`, icon: <Gauge /> },
+  { group: 'Sensors', name: 'PM2.5 Sensor 2', info: `PMS5003 · UART (RX ${SIMULATION_PIN_MAP.pmSensor2.rx} / TX ${SIMULATION_PIN_MAP.pmSensor2.tx})`, icon: <Gauge /> },
+  { group: 'Sensors', name: 'DHT22', info: `Temperature & Humidity · GPIO ${SIMULATION_PIN_MAP.dht22}`, icon: <Thermometer /> },
+  { group: 'Actuators', name: '4 Channel Relay Module', info: `12V · GPIO ${Object.values(SIMULATION_PIN_MAP.relayZones).join(', ')}`, icon: <Settings /> },
+  { group: 'Actuators', name: '12V DC Water Pump', info: `Driver · GPIO ${SIMULATION_PIN_MAP.pump}`, icon: <Droplet /> },
   { group: 'Actuators', name: '12V Solenoid Valves × 4', info: 'Normally Closed · Zone control', icon: <Power /> },
-  { group: 'Actuators', name: '12V DC Fan', info: 'Cooling fan · 80mm', icon: <Fan /> },
+  { group: 'Actuators', name: '12V DC Fan', info: `Cooling fan · GPIO ${SIMULATION_PIN_MAP.fan}`, icon: <Fan /> },
   { group: 'Power Modules', name: '12V to 5V Buck Converter', info: 'DC-DC Step Down', icon: <BatteryCharging /> },
   { group: 'Power Modules', name: '12V Power Supply', info: 'AC to DC Adapter', icon: <Zap /> },
-];
-
-const code = [
-  ['// DustTwin deterministic threshold control', 'comment'],
-  ['// Reference sketch; the browser engine is implemented in TypeScript.', 'comment'],
-  ['', 'plain'],
-  ['#include <HardwareSerial.h>', 'keyword'],
-  ['#include <DHT.h>', 'keyword'],
-  ['', 'plain'],
-  ['#define DHT_PIN 4', 'keyword'],
-  ['#define PM1_RX 16', 'keyword'],
-  ['#define PM1_TX 17', 'keyword'],
-  ['#define PM2_RX 25', 'keyword'],
-  ['#define PM2_TX 26', 'keyword'],
-  ['', 'plain'],
-  ['#define RELAY_ZONE_1 5', 'keyword'],
-  ['#define RELAY_ZONE_2 18', 'keyword'],
-  ['#define RELAY_ZONE_3 19', 'keyword'],
-  ['#define RELAY_ZONE_4 21', 'keyword'],
-  ['', 'plain'],
-  ['const int PM25_MODERATE = 40;  // µg/m³', 'code'],
-  ['const int PM25_HIGH = 75;      // µg/m³', 'code'],
-  ['', 'plain'],
-  ['void loop() {', 'fn'],
-  ['  const int pm1 = readPM25(sensor1);', 'code'],
-  ['  const int pm2 = readPM25(sensor2);', 'code'],
-  ['  const bool z1 = pm1 >= PM25_MODERATE;', 'code'],
-  ['  const bool z2 = pm1 >= PM25_HIGH;', 'code'],
-  ['  const bool z3 = pm2 >= PM25_MODERATE;', 'code'],
-  ['  const bool z4 = pm2 >= PM25_HIGH;', 'code'],
-  ['  setZones(z1, z2, z3, z4);', 'code'],
-  ['  setPump(z1 || z2 || z3 || z4);', 'code'],
-  ['  setFan(pm1 >= PM25_HIGH || pm2 >= PM25_HIGH);', 'code'],
-  ['  delay(1000);', 'code'],
-  ['}', 'fn'],
 ];
 
 function InventoryGroup({ title, items }: { title: string; items: typeof components }) {
@@ -112,10 +79,7 @@ export default function CircuitSimulation() {
             <CircuitCanvas state={state} zoom={zoom} />
           </section>
 
-          <aside className="code-panel">
-            <div className="code-head"><span><Code2 size={15} />ESP32 Code (Arduino)</span><div className="code-actions"><span>↻</span><span>□</span></div></div>
-            <div className="code-view">{code.map(([line, kind], i) => <code className="code-line" key={`${i}-${line}`}><span className="line-no">{i + 1}</span><span className={kind === 'keyword' ? 'code-keyword' : kind === 'comment' ? 'code-comment' : kind === 'fn' ? 'code-fn' : kind === 'string' ? 'code-string' : 'code-code'}>{line}</span></code>)}</div>
-          </aside>
+          <CodePanel />
         </div>
 
         <section className="sensor-inputs-section" aria-label="Environmental sensor controls">

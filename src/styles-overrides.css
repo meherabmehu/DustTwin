@@ -131,3 +131,5 @@
 .zone-mapping-note { margin-top: 7px; color: #88a4b2; font-size: 7.5px; line-height: 1.35; }
 
 .tool-button:disabled { opacity: .44; cursor: not-allowed; }
+
+.code-reference-tag { padding: 4px 6px; border: 1px solid rgba(26,144,168,.38); border-radius: 999px; color: #79dbe7; background: rgba(5,49,63,.28); font-size: 6px; letter-spacing: .08em; white-space: nowrap; }
