@@ -1,66 +1,54 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Activity, BatteryCharging, Cable, Check, Code2, Cpu, Droplet, Fan, Gauge, Lightbulb, Maximize2, Minus, Monitor, Play, Plus, Power, RotateCcw, Search, Settings, Square, Thermometer, Waves, Wind, Zap } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Activity, BatteryCharging, Code2, Cpu, Droplet, Fan, Gauge, Maximize2, Minus, Monitor, Play, Plus, Power, RotateCcw, Search, Settings, Square, Thermometer, Waves, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { SIMULATION_THRESHOLDS } from '../config/simulationThresholds';
+import { formatElapsedTime, getRiskLevel } from '../features/circuit-simulator/simulatorEngine';
+import { useSimulator } from '../features/circuit-simulator/useSimulator';
 
 const components = [
   { group: 'Controllers', name: 'ESP32 DevKit V1', info: 'WiFi + Bluetooth · 38 GPIO', icon: <Cpu /> },
-  { group: 'Sensors', name: 'PM2.5 / PM10 Sensor', info: 'Plantower PMS5003 · UART (TX/RX)', icon: <Gauge /> },
-  { group: 'Sensors', name: 'DHT22', info: 'Temperature & Humidity · Digital', icon: <Thermometer /> },
-  { group: 'Actuators', name: '4 Channel Relay Module', info: '12V · High/Low Trigger', icon: <Settings /> },
+  { group: 'Sensors', name: 'PM2.5 Sensor 1', info: 'PMS5003 · UART (RX 16 / TX 17)', icon: <Gauge /> },
+  { group: 'Sensors', name: 'PM2.5 Sensor 2', info: 'PMS5003 · UART (RX 25 / TX 26)', icon: <Gauge /> },
+  { group: 'Sensors', name: 'DHT22', info: 'Temperature & Humidity · GPIO 4', icon: <Thermometer /> },
+  { group: 'Actuators', name: '4 Channel Relay Module', info: '12V · GPIO 5, 18, 19, 21', icon: <Settings /> },
   { group: 'Actuators', name: '12V DC Water Pump', info: 'Submersible · Inline', icon: <Droplet /> },
-  { group: 'Actuators', name: '12V Solenoid Valve', info: 'Normally Closed · Zone control', icon: <Power /> },
+  { group: 'Actuators', name: '12V Solenoid Valves × 4', info: 'Normally Closed · Zone control', icon: <Power /> },
   { group: 'Actuators', name: '12V DC Fan', info: 'Cooling fan · 80mm', icon: <Fan /> },
   { group: 'Power Modules', name: '12V to 5V Buck Converter', info: 'DC-DC Step Down', icon: <BatteryCharging /> },
   { group: 'Power Modules', name: '12V Power Supply', info: 'AC to DC Adapter', icon: <Zap /> },
 ];
 
 const code = [
-  ['// DustTwin - Air Quality Monitoring & Zone Control', 'comment'],
-  ['// ESP32, PM2.5 Sensors, DHT22, 4-channel Relays', 'comment'],
+  ['// DustTwin deterministic threshold control', 'comment'],
+  ['// Reference sketch; the browser engine is implemented in TypeScript.', 'comment'],
   ['', 'plain'],
-  ['#include <WiFi.h>', 'keyword'],
   ['#include <HardwareSerial.h>', 'keyword'],
   ['#include <DHT.h>', 'keyword'],
   ['', 'plain'],
-  ['// Pin definitions', 'comment'],
   ['#define DHT_PIN 4', 'keyword'],
-  ['#define DHT_TYPE DHT22', 'keyword'],
-  ['', 'plain'],
   ['#define PM1_RX 16', 'keyword'],
   ['#define PM1_TX 17', 'keyword'],
   ['#define PM2_RX 25', 'keyword'],
   ['#define PM2_TX 26', 'keyword'],
   ['', 'plain'],
-  ['#define RELAY_1 5', 'keyword'],
-  ['#define RELAY_2 18', 'keyword'],
-  ['#define RELAY_3 19', 'keyword'],
-  ['#define RELAY_4 21', 'keyword'],
+  ['#define RELAY_ZONE_1 5', 'keyword'],
+  ['#define RELAY_ZONE_2 18', 'keyword'],
+  ['#define RELAY_ZONE_3 19', 'keyword'],
+  ['#define RELAY_ZONE_4 21', 'keyword'],
   ['', 'plain'],
-  ['#define LED_1 32', 'keyword'],
-  ['#define LED_2 33', 'keyword'],
-  ['#define LED_3 27', 'keyword'],
-  ['#define LED_4 14', 'keyword'],
-  ['', 'plain'],
-  ['// Thresholds', 'comment'],
-  ['const int PM25_THRESHOLD = 50;  // μg/m³', 'code'],
-  ['const float TEMP_THRESHOLD = 40.0;  // °C', 'code'],
-  ['const int HUMIDITY_THRESHOLD = 80;  // %RH', 'code'],
-  ['', 'plain'],
-  ['HardwareSerial pm1Serial(1);', 'code'],
-  ['HardwareSerial pm2Serial(2);', 'code'],
-  ['DHT dht(DHT_PIN, DHT_TYPE);', 'code'],
-  ['', 'plain'],
-  ['void setup() {', 'fn'],
-  ['  Serial.begin(115200);', 'code'],
-  ['  pinMode(RELAY_1, OUTPUT);', 'code'],
-  ['  pm1Serial.begin(9600, SERIAL_8N1, PM1_RX, PM1_TX);', 'code'],
-  ['  dht.begin();', 'code'],
-  ['}', 'fn'],
+  ['const int PM25_MODERATE = 40;  // µg/m³', 'code'],
+  ['const int PM25_HIGH = 75;      // µg/m³', 'code'],
   ['', 'plain'],
   ['void loop() {', 'fn'],
-  ['  readSensors();', 'code'],
-  ['  updateDustTwinPrediction();', 'code'],
-  ['  controlMistingZones();', 'code'],
+  ['  const int pm1 = readPM25(sensor1);', 'code'],
+  ['  const int pm2 = readPM25(sensor2);', 'code'],
+  ['  const bool z1 = pm1 >= PM25_MODERATE;', 'code'],
+  ['  const bool z2 = pm1 >= PM25_HIGH;', 'code'],
+  ['  const bool z3 = pm2 >= PM25_MODERATE;', 'code'],
+  ['  const bool z4 = pm2 >= PM25_HIGH;', 'code'],
+  ['  setZones(z1, z2, z3, z4);', 'code'],
+  ['  setPump(z1 || z2 || z3 || z4);', 'code'],
+  ['  setFan(pm1 >= PM25_HIGH || pm2 >= PM25_HIGH);', 'code'],
   ['  delay(1000);', 'code'],
   ['}', 'fn'],
 ];
@@ -74,43 +62,26 @@ function CircuitPart({ className, icon, name, children }: { className: string; i
 }
 
 export default function CircuitSimulation() {
-  const [running, setRunning] = useState(true);
-  const [autoMode, setAutoMode] = useState(true);
-  const [zones, setZones] = useState([false, true, false, true]);
-  const [pmLevel, setPmLevel] = useState(38);
-  const [threshold, setThreshold] = useState(50);
-  const [pm1, setPm1] = useState(28);
-  const [pm2, setPm2] = useState(32);
-  const [temperature, setTemperature] = useState(28.4);
-  const [humidity, setHumidity] = useState(62);
-  const [pumpOn, setPumpOn] = useState(true);
-  const [fanOn, setFanOn] = useState(false);
+  const { state, dispatch } = useSimulator();
   const [zoom, setZoom] = useState(100);
   const [search, setSearch] = useState('');
-
-  useEffect(() => {
-    if (!running) return;
-    const timer = window.setInterval(() => {
-      const jitter = Math.round(Math.sin(Date.now() / 1500) * 5);
-      const value1 = Math.max(5, pmLevel + jitter);
-      const value2 = Math.max(5, Math.round(pmLevel * .91 - jitter / 2));
-      setPm1(value1);
-      setPm2(value2);
-      setTemperature((v) => Math.round((v + Math.sin(Date.now() / 6000) * .025) * 10) / 10);
-      if (autoMode) {
-        const a = value1 >= threshold;
-        const b = value2 >= threshold;
-        setZones([a, b, value1 >= threshold * 1.3, value2 >= threshold * 1.25]);
-        setPumpOn(a || b || value1 >= threshold * 1.3 || value2 >= threshold * 1.25);
-      }
-    }, 950);
-    return () => window.clearInterval(timer);
-  }, [running, autoMode, pmLevel, threshold]);
+  const running = state.simulationRunning;
+  const autoMode = state.mode === 'auto';
+  const zones = state.zones;
+  const pm1 = state.pm1;
+  const pm2 = state.pm2;
+  const temperature = state.temperature;
+  const humidity = state.humidity;
+  const pumpOn = state.pumpOn;
+  const fanOn = state.fanOn;
+  const pmLevel = state.pm1;
+  const threshold = SIMULATION_THRESHOLDS.pm25Moderate;
+  const risk = getRiskLevel(state);
 
   const grouped = useMemo(() => ['Controllers', 'Sensors', 'Actuators', 'Power Modules'].map((group) => ({ group, items: components.filter((item) => item.group === group && `${item.name} ${item.info}`.toLowerCase().includes(search.toLowerCase())) })).filter((g) => g.items.length), [search]);
-  const reset = () => { setRunning(true); setPmLevel(38); setThreshold(50); setPm1(28); setPm2(32); setTemperature(28.4); setHumidity(62); setZones([false, true, false, true]); setAutoMode(true); setPumpOn(true); setFanOn(false); setZoom(100); };
-  const manualToggle = (index: number) => setZones((prev) => prev.map((state, i) => i === index ? !state : state));
-  const turnAll = (state: boolean) => { setZones([state, state, state, state]); setPumpOn(state); };
+  const reset = () => { dispatch({ type: 'RESET' }); setZoom(100); };
+  const manualToggle = (index: number) => dispatch({ type: 'SET_ZONE', index, active: !zones[index] });
+  const turnAll = (active: boolean) => dispatch({ type: 'SET_ALL_ZONES', active });
 
   return (
     <div className="circuit-page">
@@ -136,8 +107,8 @@ export default function CircuitSimulation() {
 
           <section className="circuit-workspace">
             <div className="workspace-toolbar">
-              <button className="tool-button run" onClick={() => setRunning(true)}><Play size={13} fill="currentColor" />Run</button>
-              <button className="tool-button stop" onClick={() => setRunning(false)}><Square size={12} fill="currentColor" />Stop</button>
+              <button className="tool-button run" onClick={() => dispatch({ type: 'RUN' })} disabled={running}><Play size={13} fill="currentColor" />Run</button>
+              <button className="tool-button stop" onClick={() => dispatch({ type: 'STOP' })} disabled={!running}><Square size={12} fill="currentColor" />Stop</button>
               <button className="tool-button" onClick={reset}><RotateCcw size={13} />Reset</button>
               <span className="toolbar-spacer" />
               <div className="zoom-controls"><button aria-label="Zoom out" onClick={() => setZoom((v) => Math.max(70, v - 10))}><Minus size={12} /></button><span className="zoom-label">{zoom}%</span><button aria-label="Zoom in" onClick={() => setZoom((v) => Math.min(130, v + 10))}><Plus size={12} /></button></div>
@@ -171,7 +142,7 @@ export default function CircuitSimulation() {
                 <CircuitPart className="buck-part" icon={<Zap />} name="12V → 5V Buck Converter"><span className="buck-chip">5V OUT</span></CircuitPart>
                 <CircuitPart className="pump-part" icon={<Droplet />} name="12V DC Water Pump" />
                 <CircuitPart className="fan-part" icon={<Fan />} name="12V DC Fan" />
-                <div className="circuit-part led-bank"><div className="part-art">{zones.map((active, i) => <span className={`led-dot ${active ? (pm1 > threshold * 1.35 ? 'danger' : 'on') : ''}`} key={i} />)}</div><div className="part-name">Zone LEDs · Z1–Z4</div></div>
+                <div className="circuit-part led-bank"><div className="part-art">{zones.map((active, i) => <span className={`led-dot ${active ? (risk === 'high' ? 'danger' : 'on') : ''}`} key={i} />)}</div><div className="part-name">Zone LEDs · Z1–Z4</div></div>
               </div>
             </div>
           </section>
@@ -183,9 +154,9 @@ export default function CircuitSimulation() {
         </div>
 
         <section className="circuit-output">
-          <article className="output-panel"><h2><Activity />Live Simulation Output <span className="status-pill" style={{ marginLeft: 'auto' }}><i />{running ? 'RUNNING' : 'STOPPED'}</span></h2><div className="output-metrics"><div className="output-metric"><small>PM-1 (Zone 1)</small><strong>☀ {pm1} μg/m³</strong><span>{pm1 >= threshold ? 'Elevated' : 'Good'}</span></div><div className="output-metric"><small>PM-2 (Zone 2)</small><strong>☀ {pm2} μg/m³</strong><span>{pm2 >= threshold ? 'Elevated' : 'Good'}</span></div><div className="output-metric"><small>Temperature</small><strong><Thermometer size={14} /> {temperature.toFixed(1)}°C</strong><span>Normal</span></div><div className="output-metric"><small>Humidity</small><strong><Droplet size={14} /> {humidity}%</strong><span>Normal</span></div></div></article>
-          <article className="output-panel"><h2><Settings />Zone Status</h2><div className="zone-grid">{zones.map((on, i) => <button className={`zone-toggle ${on ? 'active' : ''}`} key={i} onClick={() => !autoMode && manualToggle(i)} title={autoMode ? 'Switch to Manual Mode to toggle zones' : `Toggle Zone ${i + 1}`}><span className="zone-bulb" />Zone {i + 1}<b>{on ? 'ON' : 'OFF'}</b></button>)}</div><div className="system-status-strip">{autoMode ? 'Auto logic: PM threshold ' + threshold + ' μg/m³' : 'Manual control · select a zone to toggle'}</div></article>
-          <article className="output-panel system-controls"><h2><Settings />System Controls</h2><div className="mode-row"><button className={`mode-btn ${autoMode ? 'active' : ''}`} onClick={() => setAutoMode(true)}>Auto Mode</button><button className={`mode-btn ${!autoMode ? 'active' : ''}`} onClick={() => setAutoMode(false)}>Manual Mode</button></div><label className="pm-range-label">Simulated PM level <b>{pmLevel} μg/m³</b><input type="range" min="5" max="120" value={pmLevel} onChange={(e) => setPmLevel(Number(e.target.value))} /></label><label className="pm-range-label">Auto trigger threshold <b>{threshold} μg/m³</b><input type="range" min="20" max="100" value={threshold} onChange={(e) => setThreshold(Number(e.target.value))} /></label><div className="manual-row"><button className={`small-control-btn ${zones.some(Boolean) ? 'active' : ''}`} onClick={() => turnAll(true)}><Play size={12} fill="currentColor" />Turn All Zones ON</button><button className="small-control-btn" onClick={() => turnAll(false)}><Square size={11} />Turn All Zones OFF</button></div><div className="manual-row"><button className={`small-control-btn ${pumpOn ? 'active' : ''}`} onClick={() => setPumpOn((v) => !v)}><Droplet size={13} />Pump {pumpOn ? 'ON' : 'OFF'}</button><button className={`small-control-btn ${fanOn ? 'active' : ''}`} onClick={() => setFanOn((v) => !v)}><Fan size={13} />Fan {fanOn ? 'ON' : 'OFF'}</button></div></article>
+          <article className="output-panel"><h2><Activity />Live Simulation Output <span className="status-pill" style={{ marginLeft: 'auto' }}><i />{running ? 'RUNNING' : 'STOPPED'}</span><span className={`risk-pill risk-${risk}`}>{risk.toUpperCase()} RISK</span><span className="runtime-chip">{formatElapsedTime(state.elapsedSeconds)}</span></h2><div className="output-metrics"><div className="output-metric"><small>PM2.5 · Sensor 1</small><strong>☀ {pm1} µg/m³</strong><span>Derived PM10 · {state.pm10_1} µg/m³</span></div><div className="output-metric"><small>PM2.5 · Sensor 2</small><strong>☀ {pm2} µg/m³</strong><span>Derived PM10 · {state.pm10_2} µg/m³</span></div><div className="output-metric"><small>Temperature</small><strong><Thermometer size={14} /> {temperature.toFixed(1)}°C</strong><span>{temperature >= 40 ? 'High' : 'Normal'}</span></div><div className="output-metric"><small>Humidity</small><strong><Droplet size={14} /> {humidity}%</strong><span>{humidity >= 80 ? 'High' : 'Normal'}</span></div></div></article>
+          <article className="output-panel"><h2><Settings />Zone Status</h2><div className="zone-grid">{zones.map((on, i) => <button className={`zone-toggle ${on ? 'active' : ''}`} key={i} onClick={() => !autoMode && manualToggle(i)} title={autoMode ? 'Switch to Manual Mode to toggle zones' : `Toggle Zone ${i + 1}`}><span className="zone-bulb" />Zone {i + 1}<b>{on ? 'ON' : 'OFF'}</b></button>)}</div><div className="system-status-strip">{autoMode ? `Auto logic · Moderate ≥ ${threshold} · High ≥ ${SIMULATION_THRESHOLDS.pm25High} µg/m³` : 'Manual control · select a zone to toggle'}</div></article>
+          <article className="output-panel system-controls"><h2><Settings />System Controls</h2><div className="mode-row"><button className={`mode-btn ${autoMode ? 'active' : ''}`} onClick={() => dispatch({ type: 'SET_MODE', mode: 'auto' })}>Auto Mode</button><button className={`mode-btn ${!autoMode ? 'active' : ''}`} onClick={() => dispatch({ type: 'SET_MODE', mode: 'manual' })}>Manual Mode</button></div><label className="pm-range-label">PM2.5 sensor 1 input <b>{pmLevel} µg/m³</b><input aria-label="PM2.5 sensor 1 input" type="range" min="0" max="200" value={pmLevel} onChange={(e) => dispatch({ type: 'SET_SENSOR', key: 'pm1', value: Number(e.target.value) })} /></label><div className="manual-row"><button className={`small-control-btn ${zones.some(Boolean) ? 'active' : ''}`} disabled={autoMode} onClick={() => turnAll(true)}><Play size={12} fill="currentColor" />Turn All Zones ON</button><button className="small-control-btn" disabled={autoMode} onClick={() => turnAll(false)}><Square size={11} />Turn All Zones OFF</button></div><div className="manual-row"><button className={`small-control-btn ${pumpOn ? 'active' : ''}`} disabled={autoMode} onClick={() => dispatch({ type: 'SET_OUTPUT', output: 'pump', active: !pumpOn })}><Droplet size={13} />Pump {pumpOn ? 'ON' : 'OFF'}</button><button className={`small-control-btn ${fanOn ? 'active' : ''}`} disabled={autoMode} onClick={() => dispatch({ type: 'SET_OUTPUT', output: 'fan', active: !fanOn })}><Fan size={13} />Fan {fanOn ? 'ON' : 'OFF'}</button></div></article>
         </section>
       </div>
   );
