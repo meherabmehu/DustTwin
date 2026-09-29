@@ -1,4 +1,5 @@
 import { Activity, Droplet, Thermometer } from 'lucide-react';
+import { SIMULATION_THRESHOLDS } from '../../config/simulationThresholds';
 import { formatElapsedTime, getRiskLevel } from './simulatorEngine';
 import type { SimulatorState } from './simulatorTypes';
 
@@ -28,12 +29,12 @@ export default function LiveMetrics({ state }: Props) {
         <div className="output-metric">
           <small>Temperature</small>
           <strong><Thermometer size={14} /> {state.temperature.toFixed(1)}°C</strong>
-          <span>{state.temperature >= 40 ? 'High' : 'Normal'}</span>
+          <span>{state.temperature >= SIMULATION_THRESHOLDS.temperatureWarningC ? 'High' : 'Normal'}</span>
         </div>
         <div className="output-metric">
           <small>Humidity</small>
           <strong><Droplet size={14} /> {state.humidity}%</strong>
-          <span>{state.humidity >= 80 ? 'High' : 'Normal'}</span>
+          <span>{state.humidity >= SIMULATION_THRESHOLDS.humidityWarningPercent ? 'High' : 'Normal'}</span>
         </div>
       </div>
     </article>

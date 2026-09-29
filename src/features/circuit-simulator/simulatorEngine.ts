@@ -140,7 +140,7 @@ export function simulatorReducer(state: SimulatorState, action: SimulatorAction)
       return appendLogs(next, [
         { message: `PM 1: ${next.pm1} µg/m³ (derived PM10 ${next.pm10_1} µg/m³)` },
         { message: `PM 2: ${next.pm2} µg/m³ (derived PM10 ${next.pm10_2} µg/m³)` },
-        { message: `DHT22: ${next.temperature.toFixed(1)} °C, ${next.humidity}% RH` },
+        { message: `DHT22: ${next.temperature.toFixed(1)} °C [${next.temperature >= SIMULATION_THRESHOLDS.temperatureWarningC ? 'HIGH' : 'OK'}], ${next.humidity}% RH [${next.humidity >= SIMULATION_THRESHOLDS.humidityWarningPercent ? 'HIGH' : 'OK'}]` },
         { message: `Wind input: ${next.windSpeed.toFixed(1)} m/s at ${next.windDirection}°` },
       ]);
     }

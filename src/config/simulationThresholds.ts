@@ -6,6 +6,8 @@ export const SIMULATION_THRESHOLDS = Object.freeze({
   pm25Moderate: 40,
   pm25High: 75,
   pm10Factor: 1.65,
+  temperatureWarningC: 40,
+  humidityWarningPercent: 80,
 });
 
 export const ZONE_GPIO_MAP = Object.freeze({

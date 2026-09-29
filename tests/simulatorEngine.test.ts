@@ -82,6 +82,15 @@ test('sensor inputs clamp to their configured limits and round consistently', ()
   assert.equal(state.windDirection, 359);
 });
 
+test('temperature and humidity status thresholds are reflected in periodic serial output', () => {
+  let state = createInitialSimulatorState();
+  state = act(state, { type: 'SET_SENSOR', key: 'temperature', value: 40 });
+  state = act(state, { type: 'SET_SENSOR', key: 'humidity', value: 80 });
+  state = act(state, { type: 'RUN' });
+  for (let i = 0; i < 5; i++) state = act(state, { type: 'TICK' });
+  assert.ok(state.serialLogs.some((entry) => entry.message.includes('DHT22: 40.0 °C [HIGH], 80% RH [HIGH]')));
+});
+
 test('Stop de-energizes outputs, freezes elapsed time, and logs the safety action', () => {
   let state = act(createInitialSimulatorState(), { type: 'RUN' });
   state = act(state, { type: 'TICK' });
