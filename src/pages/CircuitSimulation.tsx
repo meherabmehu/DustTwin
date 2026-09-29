@@ -107,7 +107,7 @@ export default function CircuitSimulation() {
           <section className="circuit-workspace">
             <div className="workspace-toolbar">
               <button className="tool-button run" onClick={() => dispatch({ type: 'RUN' })} disabled={running}><Play size={13} fill="currentColor" />Run</button>
-              <button className="tool-button stop" onClick={() => dispatch({ type: 'STOP' })} disabled={!running}><Square size={12} fill="currentColor" />Stop</button>
+              <button className="tool-button stop" onClick={() => dispatch({ type: 'STOP' })} disabled={!running && !zones.some(Boolean) && !pumpOn && !fanOn}><Square size={12} fill="currentColor" />Stop</button>
               <button className="tool-button" onClick={reset}><RotateCcw size={13} />Reset</button>
               <span className="toolbar-spacer" />
               <div className="zoom-controls"><button aria-label="Zoom out" onClick={() => setZoom((v) => Math.max(70, v - 10))}><Minus size={12} /></button><span className="zoom-label">{zoom}%</span><button aria-label="Zoom in" onClick={() => setZoom((v) => Math.min(130, v + 10))}><Plus size={12} /></button></div>

@@ -22,3 +22,5 @@
   .serial-terminal { height: 140px; }
   .serial-line, .serial-empty-line { grid-template-columns: 57px 44px minmax(0,1fr); gap: 5px; font-size: 7px; }
 }
+
+.tool-button:disabled { opacity: .44; cursor: not-allowed; }

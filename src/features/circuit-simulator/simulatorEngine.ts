@@ -120,8 +120,13 @@ export function simulatorReducer(state: SimulatorState, action: SimulatorAction)
       return commitOutputs(state, candidate, [{ message: 'DustTwin browser simulator started', level: 'success' }]);
     }
     case 'STOP': {
-      if (!state.simulationRunning) return state;
-      return appendLogs({ ...state, simulationRunning: false }, [{ message: 'Simulation paused' }]);
+      const outputsActive = state.zones.some(Boolean) || state.pumpOn || state.fanOn;
+      if (!state.simulationRunning && !outputsActive) return state;
+      const stopped: SimulatorState = { ...state, simulationRunning: false, zones: [false, false, false, false], pumpOn: false, fanOn: false };
+      return appendLogs(stopped, [
+        { message: 'Simulation stopped; all relays and actuators de-energized', level: 'warning' },
+        ...outputTransitionLogs(state, stopped),
+      ]);
     }
     case 'RESET': {
       const initial = createInitialSimulatorState();
