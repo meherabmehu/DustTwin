@@ -99,11 +99,6 @@
   .sensor-input-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .sensor-panel-header { align-items: flex-start; }
   .zone-status-panel .zone-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .serial-monitor-panel { min-height: 0; }
-  .serial-terminal { height: 105px; }
-  .serial-line, .serial-empty-line { grid-template-columns: 57px 44px minmax(0,1fr); gap: 5px; font-size: 7px; }
-  .wire-legend { gap: 4px 6px; max-width: 360px; }
-  .wire-legend span { font-size: 6.5px; }
 }
 @media (max-width: 430px) {
   .sensor-control-card { padding: 7px 6px; }
@@ -144,3 +139,9 @@
 .circuit-workspace:fullscreen .circuit-board-inner { min-width: 0; }
 .circuit-workspace::backdrop { background: #041827; }
 .zoom-controls button:disabled { opacity: .42; cursor: not-allowed; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wire-bundle.wire-flowing .wire-blue,
+  .wire-bundle.wire-flowing .wire-green,
+  .wire-layer .wire-zone-active { animation: none; }
+}
