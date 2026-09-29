@@ -1,4 +1,4 @@
-/* Match the prototype's display-only sample-cycle control to the site UI */
+/* Match the prototype status badge to the existing site UI */
 .prototype-live-toggle {
   display: inline-flex;
   align-items: center;
@@ -18,4 +18,3 @@
 .prototype-live-toggle:focus-visible { outline: 2px solid rgba(38,226,244,.84); outline-offset: 2px; }
 .prototype-live-dot { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: #81939b; }
 .prototype-live-dot.live { background: #39ed7a; box-shadow: 0 0 7px rgba(57,237,122,.8); }
-.prototype-demo-note { display: block; margin-top: 5px; color: #8fa9b8; font-size: 7px; line-height: 1.35; }
