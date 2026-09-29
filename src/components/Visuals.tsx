@@ -7,20 +7,38 @@ export type MapVisualProps = {
   windSpeed?: number;
   windDirection?: number;
   activeZone?: string;
+  mistingActive?: boolean;
   readings?: [number, number, number];
+  hotReadingIndex?: number;
+  escapeDirection?: string;
+  plumeLength?: number;
+  problemLabel?: string;
   showLegend?: boolean;
   showWind?: boolean;
   problem?: boolean;
   compact?: boolean;
 };
 
+const compassPoints = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+const compassLabel = (degrees: number) => compassPoints[Math.round((((degrees % 360) + 360) % 360) / 45) % compassPoints.length];
+
 export function DustMap({
   className = '', intensity = 68, windSpeed = 4.2, windDirection = 315,
-  activeZone = 'Zone C', readings = [28, 18, 82], showLegend = true,
-  showWind = true, problem = false,
+  activeZone = 'Zone C', mistingActive = true, readings = [28, 18, 82],
+  hotReadingIndex = 2, escapeDirection, plumeLength, problemLabel = 'Dust plume beyond site boundary',
+  showLegend = true, showWind = true, problem = false,
 }: MapVisualProps) {
-  const plumeWidth = 0.58 + intensity / 420 + windSpeed / 16;
+  const boundedIntensity = Math.min(100, Math.max(0, intensity));
+  const plumeWidth = plumeLength === undefined
+    ? 0.58 + boundedIntensity / 420 + windSpeed / 16
+    : 0.52 + Math.min(100, Math.max(20, plumeLength)) / 120;
   const plumeAngle = windDirection - 315;
+  const plumeOpacity = 0.32 + boundedIntensity / 155;
+  const getSensorLabel = (index: number, position: string) => (
+    <div className={`sensor-label ${position} ${hotReadingIndex === index ? 'hot' : ''}`}>
+      <span className={`sensor-dot ${hotReadingIndex === index ? 'red' : 'green'}`} />PM2.5<br /><strong>{readings[index]} μg/m³</strong>
+    </div>
+  );
   return (
     <div className={`dust-map ${problem ? 'problem-map' : ''} ${className}`} aria-label="Illustrative construction site dust map">
       <div className="map-photo" />
@@ -41,7 +59,7 @@ export function DustMap({
         </defs>
         <path d="M210 135 L343 49 L635 60 L781 132 L824 298 L721 427 L446 442 L224 352 L152 244 Z" fill="rgba(0,14,26,.12)" stroke="url(#boundaryGlow)" strokeWidth="3" strokeDasharray="1 0" />
         <path d="M210 135 L343 49 L635 60 L781 132 L824 298 L721 427 L446 442 L224 352 L152 244 Z" fill="none" stroke="#0ce9ff" strokeWidth="10" opacity=".18" filter="url(#plumeSoft)" />
-        <g transform={`translate(570 244) rotate(${plumeAngle}) scale(${plumeWidth} 1)`}>
+        <g className="dust-plume" transform={`translate(570 244) rotate(${plumeAngle}) scale(${plumeWidth} 1)`} opacity={plumeOpacity}>
           <path d="M-115 -8 C-60 -54 3 -64 56 -39 C105 -14 147 -28 190 -10 C244 12 281 25 317 12 C280 49 233 58 193 43 C146 25 100 59 54 49 C6 38 -58 59 -115 -8Z" fill="url(#plumeGrad)" opacity=".45" filter="url(#plumeBlur)" />
           <path d="M-104 0 C-56 -38 -5 -45 42 -27 C90 -8 132 -24 174 -7 C217 10 259 21 301 8 C267 37 224 44 183 31 C139 17 99 44 49 35 C6 27 -48 46 -104 0Z" fill="url(#plumeGrad)" opacity=".84" filter="url(#plumeSoft)" />
           <path d="M-90 1 C-49 -22 -8 -26 30 -17 C74 -6 112 -17 153 -4 C196 9 232 14 276 7 C240 26 202 29 164 20 C125 11 88 30 47 24 C8 17 -38 29 -90 1Z" fill="url(#plumeGrad)" opacity=".48" />
@@ -65,15 +83,18 @@ export function DustMap({
         </g>
       </svg>
       <div className="map-stamp north-stamp"><span>N</span><Compass size={21} /></div>
-      {showWind && <div className="wind-card"><Wind size={23} /><div><small>Wind Direction</small><b>{windDirection === 315 ? 'NW' : windDirection === 90 ? 'E' : windDirection === 0 ? 'N' : `${windDirection}°`} ({windDirection}°)</b><small>Wind Speed</small><b>{windSpeed.toFixed(1)} m/s</b></div></div>}
-      <div className="sensor-label sensor-a"><span className="sensor-dot green" />PM2.5<br /><strong>{readings[0]} μg/m³</strong></div>
-      <div className="sensor-label sensor-b"><span className="sensor-dot green" />PM2.5<br /><strong>{readings[1]} μg/m³</strong></div>
-      <div className="sensor-label sensor-c hot"><span className="sensor-dot red" />PM2.5<br /><strong>{readings[2]} μg/m³</strong></div>
-      <div className="zone-label"><span className="zone-icon"><Droplets size={16} /></span><span>Misting {activeZone}<b>ACTIVE</b></span></div>
-      <div className="map-zone standby zone-a">Zone A<br /><b>STANDBY</b></div>
-      <div className="map-zone standby zone-b">Zone B<br /><b>STANDBY</b></div>
+      {showWind && <div className="wind-card"><Wind size={23} /><div><small>Wind Direction</small><b>{compassLabel(windDirection)} ({windDirection}°)</b><small>Wind Speed</small><b>{windSpeed.toFixed(1)} m/s</b></div></div>}
+      {getSensorLabel(0, 'sensor-a')}
+      {getSensorLabel(1, 'sensor-b')}
+      {getSensorLabel(2, 'sensor-c')}
+      <div className={`zone-label ${mistingActive ? 'is-active' : 'is-standby'}`} aria-label={mistingActive ? `${activeZone} misting active` : 'Misting on standby'}>
+        <span className="zone-icon"><Droplets size={16} /></span><span>{mistingActive ? `Misting ${activeZone}` : 'Misting standby'}<b>{mistingActive ? 'ACTIVE' : 'STANDBY'}</b></span>
+      </div>
+      <div className={`map-zone zone-a ${mistingActive && activeZone === 'Zone A' ? 'active' : ''}`}>Zone A<br /><b>{mistingActive && activeZone === 'Zone A' ? 'ACTIVE' : 'STANDBY'}</b></div>
+      <div className={`map-zone zone-b ${mistingActive && activeZone === 'Zone B' ? 'active' : ''}`}>Zone B<br /><b>{mistingActive && activeZone === 'Zone B' ? 'ACTIVE' : 'STANDBY'}</b></div>
       {showLegend && <div className="map-legend"><small>Predicted Dust Concentration (μg/m³)</small><div className="legend-gradient" /><div className="legend-ticks"><span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100+</span></div><div className="legend-keys"><span><i className="key-square" /> Site Boundary</span><span><i className="key-mist" /> Misting Zone (Active)</span></div></div>}
-      {problem && <div className="escape-alert"><ArrowDownRight size={17} />Dust plume beyond<br />site boundary</div>}
+      {escapeDirection && <div className={`escape-alert escape-prediction ${problem ? 'high-risk' : ''}`}><ArrowDownRight size={17} aria-hidden="true" /><span><small>Predicted escape</small><b>{escapeDirection} Boundary</b><strong>{problem ? problemLabel : 'Moderate modelled risk'}</strong></span></div>}
+      {!escapeDirection && problem && <div className="escape-alert"><ArrowDownRight size={17} />{problemLabel}</div>}
       <div className="map-live"><Activity size={15} /> LIVE DIGITAL TWIN</div>
     </div>
   );

@@ -20,8 +20,8 @@ export function BoundaryLineChart({ data, tall = false, showAxis = true }: { dat
           <XAxis dataKey="time" tick={{ fill: '#8fa8b9', fontSize: 9 }} axisLine={{ stroke: '#24465a' }} tickLine={false} interval="preserveStartEnd" />
           <YAxis tick={{ fill: '#8fa8b9', fontSize: 9 }} axisLine={false} tickLine={false} width={32} domain={[0, 'auto']} />
           <Tooltip contentStyle={tooltipStyle} labelStyle={{ color: '#9db3c1' }} />
-          <Line type="monotone" dataKey="baseline" stroke="#fb5c67" strokeWidth={1.6} strokeDasharray="5 4" dot={false} activeDot={{ r: 3 }} />
-          <Line type="monotone" dataKey="twin" stroke="#15dff3" strokeWidth={2.5} dot={false} activeDot={{ r: 3, fill: '#15dff3' }} />
+          <Line type="monotone" dataKey="baseline" stroke="#fb5c67" strokeWidth={1.6} strokeDasharray="5 4" dot={false} activeDot={{ r: 3 }} isAnimationActive animationDuration={420} animationEasing="ease-out" />
+          <Line type="monotone" dataKey="twin" stroke="#15dff3" strokeWidth={2.5} dot={false} activeDot={{ r: 3, fill: '#15dff3' }} isAnimationActive animationDuration={420} animationEasing="ease-out" />
         </ComposedChart>
       </ResponsiveContainer>
     </div>
@@ -54,7 +54,7 @@ export function ComparisonBars({ data, keys = ['baseline', 'continuous', 'reacti
           {!compact && <XAxis dataKey="label" tick={{ fill: '#9fb4c3', fontSize: 9 }} axisLine={{ stroke: '#24465a' }} tickLine={false} />}
           <YAxis tick={{ fill: '#8fa8b9', fontSize: 9 }} axisLine={false} tickLine={false} width={32} />
           <Tooltip contentStyle={tooltipStyle} />
-          {keys.map((key, index) => <Bar key={key} dataKey={key} fill={colors[index % colors.length]} radius={[3, 3, 0, 0]} maxBarSize={compact ? 17 : 33} />)}
+          {keys.map((key, index) => <Bar key={key} dataKey={key} fill={colors[index % colors.length]} radius={[3, 3, 0, 0]} maxBarSize={compact ? 17 : 33} isAnimationActive animationDuration={420} animationEasing="ease-out" />)}
         </BarChart>
       </ResponsiveContainer>
     </div>
