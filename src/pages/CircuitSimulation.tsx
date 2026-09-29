@@ -1,7 +1,6 @@
-import { useMemo, useState } from 'react';
-import { Activity, BatteryCharging, Cpu, Droplet, Fan, Gauge, Maximize2, Minus, Monitor, Play, Plus, Power, RotateCcw, Search, Settings, Square, Thermometer, Waves, Zap } from 'lucide-react';
+import { useState } from 'react';
+import { Activity, Cpu, Droplet, Maximize2, Minus, Monitor, Play, Plus, RotateCcw, Settings, Square, Thermometer, Waves, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { SIMULATION_PIN_MAP } from '../config/simulationThresholds';
 import { formatElapsedTime, getRiskLevel } from '../features/circuit-simulator/simulatorEngine';
 import { useSimulator } from '../features/circuit-simulator/useSimulator';
 import SensorInputs from '../features/circuit-simulator/SensorInputs';
@@ -10,28 +9,11 @@ import ZoneStatus from '../features/circuit-simulator/ZoneStatus';
 import SerialMonitor from '../features/circuit-simulator/SerialMonitor';
 import CircuitCanvas from '../features/circuit-simulator/CircuitCanvas';
 import CodePanel from '../features/circuit-simulator/CodePanel';
-
-const components = [
-  { group: 'Controllers', name: 'ESP32 DevKit V1', info: 'WiFi + Bluetooth · 38 GPIO', icon: <Cpu /> },
-  { group: 'Sensors', name: 'PM2.5 Sensor 1', info: `PMS5003 · UART (RX ${SIMULATION_PIN_MAP.pmSensor1.rx} / TX ${SIMULATION_PIN_MAP.pmSensor1.tx})`, icon: <Gauge /> },
-  { group: 'Sensors', name: 'PM2.5 Sensor 2', info: `PMS5003 · UART (RX ${SIMULATION_PIN_MAP.pmSensor2.rx} / TX ${SIMULATION_PIN_MAP.pmSensor2.tx})`, icon: <Gauge /> },
-  { group: 'Sensors', name: 'DHT22', info: `Temperature & Humidity · GPIO ${SIMULATION_PIN_MAP.dht22}`, icon: <Thermometer /> },
-  { group: 'Actuators', name: '4 Channel Relay Module', info: `12V · GPIO ${Object.values(SIMULATION_PIN_MAP.relayZones).join(', ')}`, icon: <Settings /> },
-  { group: 'Actuators', name: '12V DC Water Pump', info: `Driver · GPIO ${SIMULATION_PIN_MAP.pump}`, icon: <Droplet /> },
-  { group: 'Actuators', name: '12V Solenoid Valves × 4', info: 'Normally Closed · Zone control', icon: <Power /> },
-  { group: 'Actuators', name: '12V DC Fan', info: `Cooling fan · GPIO ${SIMULATION_PIN_MAP.fan}`, icon: <Fan /> },
-  { group: 'Power Modules', name: '12V to 5V Buck Converter', info: 'DC-DC Step Down', icon: <BatteryCharging /> },
-  { group: 'Power Modules', name: '12V Power Supply', info: 'AC to DC Adapter', icon: <Zap /> },
-];
-
-function InventoryGroup({ title, items }: { title: string; items: typeof components }) {
-  return <div className="component-group"><h3>{title}<span>⌃</span></h3><div className="component-list">{items.map((item) => <div className="component-item" key={item.name}><span className="component-thumb">{item.icon}</span><span><strong>{item.name}</strong><small>{item.info}</small></span></div>)}</div></div>;
-}
+import ComponentSidebar from '../features/circuit-simulator/ComponentSidebar';
 
 export default function CircuitSimulation() {
   const { state, dispatch } = useSimulator();
   const [zoom, setZoom] = useState(100);
-  const [search, setSearch] = useState('');
   const running = state.simulationRunning;
   const zones = state.zones;
   const pm1 = state.pm1;
@@ -42,7 +24,6 @@ export default function CircuitSimulation() {
   const fanOn = state.fanOn;
   const risk = getRiskLevel(state);
 
-  const grouped = useMemo(() => ['Controllers', 'Sensors', 'Actuators', 'Power Modules'].map((group) => ({ group, items: components.filter((item) => item.group === group && `${item.name} ${item.info}`.toLowerCase().includes(search.toLowerCase())) })).filter((g) => g.items.length), [search]);
   const reset = () => { dispatch({ type: 'RESET' }); setZoom(100); };
 
   return (
@@ -61,11 +42,7 @@ export default function CircuitSimulation() {
         </nav>
 
         <div className="circuit-shell">
-          <aside className="component-sidebar">
-            <h2 className="sidebar-title"><span><Settings size={15} /> Components</span><span style={{ color: 'var(--cyan)' }}>×</span></h2>
-            <label className="component-search"><Search size={14} /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search components..." /></label>
-            {grouped.map((entry) => <InventoryGroup key={entry.group} title={entry.group} items={entry.items} />)}
-          </aside>
+          <ComponentSidebar />
 
           <section className="circuit-workspace">
             <div className="workspace-toolbar">
