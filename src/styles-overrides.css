@@ -1,0 +1,14 @@
+
+/* Keep the wiring bench and code editor in the first desktop viewport, as in the approved circuit reference. */
+@media (min-width: 1051px) {
+  .circuit-shell { height: min(510px, calc(100vh - 275px)); min-height: 470px; }
+  .component-sidebar, .circuit-workspace, .code-panel { height: 100%; min-height: 0; }
+  .component-sidebar { overflow-y: auto; }
+  .circuit-workspace { display: flex; flex-direction: column; }
+  .circuit-canvas { height: auto; min-height: 0; flex: 1; }
+  .code-panel { display: flex; flex-direction: column; }
+  .code-view { flex: 1; min-height: 0; max-height: none; overflow: auto; }
+}
+@media (max-width: 1050px) {
+  .circuit-shell { height: auto; min-height: 0; }
+}
