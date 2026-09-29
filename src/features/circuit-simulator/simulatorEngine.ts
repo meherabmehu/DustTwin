@@ -5,7 +5,7 @@ import type { LogLevel, RiskLevel, SensorInputKey, SimulatorAction, SimulatorSta
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 export function derivePm10(pm25: number): number {
-  return Math.round(clamp(pm25 * SIMULATION_THRESHOLDS.pm10Factor, 0, 300));
+  return Math.round(Math.max(0, pm25 * SIMULATION_THRESHOLDS.pm10Factor));
 }
 
 export function getRiskLevel(state: Pick<SimulatorState, 'pm1' | 'pm2'>): RiskLevel {
