@@ -93,35 +93,37 @@ export default function SimulationMap({ prediction, input, view, onViewChange }:
 
       <svg className={`sim-map-overlay sim-map-overlay-${view}`} viewBox="0 0 1000 600" preserveAspectRatio="none" role="img" aria-label={`Construction site map. Dust source ${input.dustIntensity} percent; modeled wind toward ${directionLabel(input.windDirection)}.`}>
         <defs>
+          {/* Industrial digital twin concentration heatmap: Very High (red) -> High (orange) -> Med (yellow) -> Low (cyan/blue) */}
           <linearGradient id="site-plume-heat" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="0" stopColor="#ff4a37" stopOpacity=".96" />
-            <stop offset=".2" stopColor="#ff7c2d" stopOpacity=".9" />
-            <stop offset=".46" stopColor="#ffd646" stopOpacity=".8" />
-            <stop offset=".71" stopColor="#4bdedb" stopOpacity=".6" />
-            <stop offset=".9" stopColor="#239ed5" stopOpacity=".26" />
-            <stop offset="1" stopColor="#21c9ed" stopOpacity=".02" />
+            <stop offset="0" stopColor="#ff2218" stopOpacity=".98" />
+            <stop offset=".14" stopColor="#ff5a1e" stopOpacity=".95" />
+            <stop offset=".3" stopColor="#ff8c26" stopOpacity=".9" />
+            <stop offset=".48" stopColor="#ffd836" stopOpacity=".84" />
+            <stop offset=".68" stopColor="#3de4df" stopOpacity=".65" />
+            <stop offset=".86" stopColor="#1eb4e8" stopOpacity=".3" />
+            <stop offset="1" stopColor="#1ec4ed" stopOpacity=".02" />
           </linearGradient>
           <linearGradient id="site-plume-spine" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="0" stopColor="#f94336" stopOpacity=".92" />
-            <stop offset=".22" stopColor="#ff7130" stopOpacity=".94" />
-            <stop offset=".5" stopColor="#ffd43f" stopOpacity=".88" />
-            <stop offset=".76" stopColor="#4bdde0" stopOpacity=".65" />
-            <stop offset=".92" stopColor="#25a8d8" stopOpacity=".28" />
-            <stop offset="1" stopColor="#1ccbe9" stopOpacity=".03" />
+            <stop offset="0" stopColor="#ff2818" stopOpacity=".96" />
+            <stop offset=".18" stopColor="#ff6524" stopOpacity=".96" />
+            <stop offset=".42" stopColor="#ffd234" stopOpacity=".9" />
+            <stop offset=".68" stopColor="#3fe2e4" stopOpacity=".7" />
+            <stop offset=".88" stopColor="#1fb0e2" stopOpacity=".32" />
+            <stop offset="1" stopColor="#18ceea" stopOpacity=".03" />
           </linearGradient>
           <radialGradient id="site-plume-core" cx="30%" cy="50%" r="78%" fx="20%" fy="50%">
-            <stop offset="0" stopColor="#f92832" stopOpacity="1" />
-            <stop offset=".22" stopColor="#ff5928" stopOpacity=".98" />
-            <stop offset=".46" stopColor="#ff962d" stopOpacity=".86" />
-            <stop offset=".67" stopColor="#ffd34b" stopOpacity=".64" />
-            <stop offset=".85" stopColor="#61dce0" stopOpacity=".28" />
-            <stop offset="1" stopColor="#45dbeb" stopOpacity="0" />
+            <stop offset="0" stopColor="#ff1f18" stopOpacity="1" />
+            <stop offset=".22" stopColor="#ff501e" stopOpacity=".98" />
+            <stop offset=".46" stopColor="#ff8f24" stopOpacity=".88" />
+            <stop offset=".67" stopColor="#ffd43c" stopOpacity=".68" />
+            <stop offset=".85" stopColor="#58e0e2" stopOpacity=".32" />
+            <stop offset="1" stopColor="#3ee0f0" stopOpacity="0" />
           </radialGradient>
           <radialGradient id="site-dust-source">
-            <stop offset="0" stopColor="#fff5b8" />
-            <stop offset=".32" stopColor="#ffba48" />
-            <stop offset=".62" stopColor="#ff583b" stopOpacity=".85" />
-            <stop offset="1" stopColor="#ff5139" stopOpacity="0" />
+            <stop offset="0" stopColor="#fff8c8" />
+            <stop offset=".3" stopColor="#ffc048" />
+            <stop offset=".62" stopColor="#ff502e" stopOpacity=".9" />
+            <stop offset="1" stopColor="#ff452c" stopOpacity="0" />
           </radialGradient>
           <filter id="site-plume-soft" x="-35%" y="-80%" width="180%" height="260%"><feGaussianBlur stdDeviation="11" /></filter>
           <filter id="site-glow"><feGaussianBlur stdDeviation="3" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
