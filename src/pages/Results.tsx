@@ -3,26 +3,55 @@ import { Activity, Clock3, Droplets, ShieldCheck, Users, TrendingDown } from 'lu
 import { Link } from 'react-router-dom';
 import { CTAButton, Eyebrow, SectionHeading } from '../components/SiteChrome';
 import { CheckList } from '../components/Cards';
-import { BoundaryLineChart, ComparisonBars, Sparkline } from '../components/Charts';
+import { ComparisonBars, Sparkline } from '../components/Charts';
 import { DustMap } from '../components/Visuals';
 import { computeResultsSummary } from '../features/results/resultsEngine';
 
-const comparisonSeries = Array.from({ length: 18 }, (_, i) => ({
-  time: `${String(Math.floor(i / 3) * 4).padStart(2, '0')}:00`,
-  baseline: Math.round(70 + Math.sin(i * .52) * 28 + Math.cos(i * .25) * 13),
-  twin: Math.round(30 + Math.sin(i * .48) * 12 + Math.cos(i * .3) * 6),
-}));
-const comparisonBars = [{ label: 'Illustrative', baseline: 48, continuous: 18, reactive: 12, predictive: 4 }];
-const waterBars = [{ label: 'L / day', baseline: 0, continuous: 320, reactive: 210, predictive: 120 }];
-const receptorLines = comparisonSeries.map((row, i) => ({ ...row, twin: Math.max(5, row.twin * .58), baseline: row.baseline * .72 }));
-
 export default function Results() {
-  const { prediction, summary } = useMemo(() => computeResultsSummary(), []);
+  const { prediction, strategyResults, summary } = useMemo(() => computeResultsSummary(), []);
+
   const mapReadings: [number, number, number] = [
     Math.round(prediction.sensors[0].forecastPm25),
     Math.round(prediction.sensors[1].forecastPm25),
     Math.round(prediction.sensors[3].forecastPm25),
   ];
+
+  const noControl = strategyResults.find((s) => s.strategy === 'noControl')!;
+  const continuous = strategyResults.find((s) => s.strategy === 'continuous')!;
+  const reactive = strategyResults.find((s) => s.strategy === 'reactive')!;
+  const predictive = strategyResults.find((s) => s.strategy === 'predictive')!;
+
+  const pm25Bars = [{
+    label: 'PM2.5',
+    baseline: noControl.boundaryPm25,
+    continuous: continuous.boundaryPm25,
+    reactive: reactive.boundaryPm25,
+    predictive: predictive.boundaryPm25,
+  }];
+
+  const pm10Bars = [{
+    label: 'PM10',
+    baseline: noControl.boundaryPm10,
+    continuous: continuous.boundaryPm10,
+    reactive: reactive.boundaryPm10,
+    predictive: predictive.boundaryPm10,
+  }];
+
+  const exceedanceBars = [{
+    label: 'Exceedance',
+    baseline: noControl.exceedanceMinutes,
+    continuous: continuous.exceedanceMinutes,
+    reactive: reactive.exceedanceMinutes,
+    predictive: predictive.exceedanceMinutes,
+  }];
+
+  const waterBars = [{
+    label: 'Water',
+    baseline: noControl.waterUsedL,
+    continuous: continuous.waterUsedL,
+    reactive: reactive.waterUsedL,
+    predictive: predictive.waterUsedL,
+  }];
 
   const resultMetrics = [
     {
@@ -94,12 +123,33 @@ export default function Results() {
       </section>
 
       <section className="strategy-section section-wrap">
-        <div className="section-heading-row"><h2>Strategy <span>Comparison</span></h2><p>Fixed illustrative examples compare control strategies; this is not a field study.</p><div className="strategy-legend"><span><i style={{ background: '#8a929f' }} />No Control</span><span><i style={{ background: '#ff723c' }} />Continuous Spraying</span><span><i style={{ background: '#ffca2f' }} />Reactive Spraying</span><span><i style={{ background: '#16d9ed' }} />Illustrative DustTwin response</span></div></div>
+        <div className="section-heading-row">
+          <h2>Strategy <span>Comparison</span></h2>
+          <p>Deterministic four-strategy comparison over the shared 8-minute scenario window.</p>
+          <div className="strategy-legend">
+            <span><i style={{ background: '#8a929f' }} />No Control</span>
+            <span><i style={{ background: '#ff723c' }} />Continuous Spraying</span>
+            <span><i style={{ background: '#ffca2f' }} />Reactive Spraying</span>
+            <span><i style={{ background: '#16d9ed' }} />DustTwin Predictive</span>
+          </div>
+        </div>
         <div className="strategy-charts">
-          <article className="strategy-chart-card"><h3>Average PM10 at <span>Site Boundary</span><small> (μg/m³)</small></h3><BoundaryLineChart data={comparisonSeries} /></article>
-          <article className="strategy-chart-card"><h3>Boundary Exceedance Time <small>(% of time &gt; 50 μg/m³)</small></h3><ComparisonBars data={comparisonBars} compact /></article>
-          <article className="strategy-chart-card"><h3><Droplets size={15} /> Water Use <small>(m³ per day)</small></h3><ComparisonBars data={waterBars} compact /></article>
-          <article className="strategy-chart-card"><h3>PM10 at Nearest Community <span>Receptor</span></h3><BoundaryLineChart data={receptorLines} /></article>
+          <article className="strategy-chart-card">
+            <h3>Highest-Risk Boundary <span>PM2.5</span><small> (μg/m³)</small></h3>
+            <ComparisonBars data={pm25Bars} compact />
+          </article>
+          <article className="strategy-chart-card">
+            <h3>Highest-Risk Boundary <span>PM10</span><small> (μg/m³)</small></h3>
+            <ComparisonBars data={pm10Bars} compact />
+          </article>
+          <article className="strategy-chart-card">
+            <h3>Boundary Exceedance <span>Time</span><small> (min &gt; 40 μg/m³)</small></h3>
+            <ComparisonBars data={exceedanceBars} compact />
+          </article>
+          <article className="strategy-chart-card">
+            <h3><Droplets size={15} /> Projected <span>Water Use</span><small> (L / 8 min)</small></h3>
+            <ComparisonBars data={waterBars} compact />
+          </article>
         </div>
       </section>
 
@@ -109,7 +159,26 @@ export default function Results() {
           <article className="benefit-card" style={{ backgroundImage: 'linear-gradient(100deg,rgba(3,21,34,.98),rgba(3,21,34,.75)),url(/images/tabletop-prototype.jpg)' }}><h3>For <span>Operations</span></h3><CheckList items={['Proactive, data-driven decisions', 'Lower water and operating costs', 'Compliance support and reporting']} /></article>
           <article className="benefit-card" style={{ backgroundImage: 'linear-gradient(100deg,rgba(3,21,34,.96),rgba(3,21,34,.67)),url(/images/dusty-site.jpg)' }}><h3>For the <span>Environment</span></h3><CheckList items={['Lower water use', 'Reduced air pollution', 'Smaller environmental footprint']} /></article>
         </div></div>
-        <article className="case-study" id="case-study"><div className="case-head"><div><h3>Scenario Preview: <span>Dust Control</span></h3><small>Illustrative comparison · no measured field deployment</small></div><Link to="/simulation" className="topic-tag">View Simulation <TrendingDown size={12} /></Link></div><div className="case-scenes"><div className="case-scene" style={{ backgroundImage: 'url(/images/dusty-site.jpg)' }}><small>Example · No Control</small><span>Illustrative dust plume</span></div><div className="case-arrow">›</div><div className="case-scene" style={{ backgroundImage: 'url(/images/site-aerial.jpg)' }}><small>Example · DustTwin response</small><span>Targeted misting preview</span></div></div></article>
+        <article className="case-study" id="case-study">
+          <div className="case-head">
+            <div>
+              <h3>Scenario Preview: <span>Dust Control</span></h3>
+              <small>Benchmark comparison: NW wind at 4.2 m/s, 70% dust intensity</small>
+            </div>
+            <Link to="/simulation" className="topic-tag">View Simulation <TrendingDown size={12} /></Link>
+          </div>
+          <div className="case-scenes">
+            <div className="case-scene" style={{ backgroundImage: 'url(/images/dusty-site.jpg)' }}>
+              <small>Baseline · No Control</small>
+              <span>Unabated boundary plume ({summary.noControlPm25.toFixed(1)} µg/m³)</span>
+            </div>
+            <div className="case-arrow">›</div>
+            <div className="case-scene" style={{ backgroundImage: 'url(/images/site-aerial.jpg)' }}>
+              <small>DustTwin · Predictive</small>
+              <span>Targeted Zones {summary.activeZoneIds.join(' & ')} ({summary.predictivePm25.toFixed(1)} µg/m³)</span>
+            </div>
+          </div>
+        </article>
       </section>
     </>
   );
