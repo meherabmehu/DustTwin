@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Activity, Cpu, Monitor, Settings, Waves, Zap } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Activity, Cpu, Monitor, Settings } from 'lucide-react';
 import { useSimulator } from '../features/circuit-simulator/useSimulator';
 import SensorInputs from '../features/circuit-simulator/SensorInputs';
 import SystemControls from '../features/circuit-simulator/SystemControls';
@@ -30,9 +29,6 @@ export default function CircuitSimulation() {
             <Feature icon={<BarIcon />} title="See results" detail="Real-time sensor data\nand system behavior" />
           </div>
         </section>
-        <nav className="circuit-tabs" aria-label="DustTwin demo modules">
-          <Link to="/"><Waves />Overview</Link><Link to="/simulation"><Activity />Live Simulation</Link><Link to="/results"><BarIcon />Analytics Dashboard</Link><Link className="active" to="/circuit-simulation"><Cpu />Circuit Simulation</Link><Link to="/prototype"><Zap />Prototype Model</Link><Link to="/results"><Activity />Results & Impact</Link>
-        </nav>
 
         <div className="circuit-shell">
           <ComponentSidebar />
