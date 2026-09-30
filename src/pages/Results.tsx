@@ -16,20 +16,34 @@ const comparisonBars = [{ label: 'Illustrative', baseline: 48, continuous: 18, r
 const waterBars = [{ label: 'L / day', baseline: 0, continuous: 320, reactive: 210, predictive: 120 }];
 const receptorLines = comparisonSeries.map((row, i) => ({ ...row, twin: Math.max(5, row.twin * .58), baseline: row.baseline * .72 }));
 
-const resultMetrics = [
-  { icon: <Activity />, title: 'PM Reduction', subtitle: 'Illustrative average PM10 at site boundary', value: '−78%', foot: 'Example vs. no control', base: 68 },
-  { icon: <ShieldCheck />, title: 'Boundary Exceedance Time', subtitle: 'Illustrative time above a threshold', value: '−92%', foot: 'Example vs. no control', base: 48 },
-  { icon: <Droplets />, title: 'Water Use Reduction', subtitle: 'Illustrative targeted application', value: '−62%', foot: 'Example vs. continuous spraying', base: 58 },
-  { icon: <Clock3 />, title: 'Prediction Lead Time', subtitle: 'Illustrative advance notice of dust', value: '+45 min', foot: 'Example scenario timing', base: 39 },
-  { icon: <Users />, title: 'Protected Public Area', subtitle: 'Illustrative PM10 at a community receptor', value: '3.2×', foot: 'Example vs. no control', base: 43 },
-];
-
 export default function Results() {
-  const { prediction } = useMemo(() => computeResultsSummary(), []);
+  const { prediction, summary } = useMemo(() => computeResultsSummary(), []);
   const mapReadings: [number, number, number] = [
     Math.round(prediction.sensors[0].forecastPm25),
     Math.round(prediction.sensors[1].forecastPm25),
     Math.round(prediction.sensors[3].forecastPm25),
+  ];
+
+  const resultMetrics = [
+    {
+      icon: <Activity />,
+      title: 'PM Reduction',
+      subtitle: 'Highest-risk boundary PM2.5 vs No Control',
+      value: `−${summary.pmReductionPercent}%`,
+      foot: `${summary.noControlPm25.toFixed(1)} → ${summary.predictivePm25.toFixed(1)} µg/m³ modeled response`,
+      base: 35,
+    },
+    {
+      icon: <ShieldCheck />,
+      title: 'Boundary Exceedance Time',
+      subtitle: 'Time above threshold vs No Control',
+      value: `−${summary.exceedanceReductionPercent}%`,
+      foot: `${summary.noControlExceedance.toFixed(1)} min → ${summary.predictiveExceedance.toFixed(1)} min modeled window`,
+      base: 10,
+    },
+    { icon: <Droplets />, title: 'Water Use Reduction', subtitle: 'Illustrative targeted application', value: '−62%', foot: 'Example vs. continuous spraying', base: 58 },
+    { icon: <Clock3 />, title: 'Prediction Lead Time', subtitle: 'Illustrative advance notice of dust', value: '+45 min', foot: 'Example scenario timing', base: 39 },
+    { icon: <Users />, title: 'Protected Public Area', subtitle: 'Illustrative PM10 at a community receptor', value: '3.2×', foot: 'Example vs. no control', base: 43 },
   ];
 
   return (
