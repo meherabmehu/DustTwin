@@ -49,8 +49,22 @@ export default function Results() {
       foot: `${summary.continuousWater.toFixed(1)} L → ${summary.predictiveWater.toFixed(1)} L modeled usage`,
       base: 15,
     },
-    { icon: <Clock3 />, title: 'Prediction Lead Time', subtitle: 'Illustrative advance notice of dust', value: '+45 min', foot: 'Example scenario timing', base: 39 },
-    { icon: <Users />, title: 'Protected Public Area', subtitle: 'Illustrative PM10 at a community receptor', value: '3.2×', foot: 'Example vs. no control', base: 43 },
+    {
+      icon: <Clock3 />,
+      title: 'Prediction Lead Time',
+      subtitle: 'Advance notice of boundary arrival',
+      value: `${summary.leadTimeSeconds} sec`,
+      foot: 'Derived from distance / wind velocity',
+      base: 26,
+    },
+    {
+      icon: <Users />,
+      title: 'Targeted Zones Used',
+      subtitle: 'Active targeted zones vs total zones',
+      value: `${summary.activeZonesCount} / ${summary.totalZonesCount} zones`,
+      foot: `Active: Zones ${summary.activeZoneIds.join(' & ')} for NW wind`,
+      base: 50,
+    },
   ];
 
   return (
