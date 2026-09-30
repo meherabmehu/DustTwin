@@ -152,30 +152,38 @@ export default function SimulationMap({ prediction, input, view, onViewChange }:
         <g className={`zone-mist zone-mist-A ${activeZones.has('A') ? 'is-active' : ''}`}>
           <path className="zone-mist-glow" d="M380 135 Q420 194 455 232 M540 130 Q560 190 566 230" />
           <path className="zone-mist-flow" d="M380 135 Q420 194 455 232 M540 130 Q560 190 566 230" />
-          <circle className="zone-mist-emitter" cx="380" cy="135" r="4" /><circle className="zone-mist-emitter" cx="540" cy="130" r="4" />
-          <circle className="zone-mist-particle" cx="405" cy="172" r="2" /><circle className="zone-mist-particle" cx="430" cy="204" r="1.5" />
-          <circle className="zone-mist-particle" cx="547" cy="169" r="1.8" /><circle className="zone-mist-particle" cx="560" cy="203" r="1.4" />
+          <path className="zone-mist-spray" d="M375 137 Q415 198 448 238 M385 133 Q425 190 462 226 M535 132 Q555 192 560 234 M545 128 Q565 188 572 226" />
+          <circle className="zone-mist-emitter" cx="380" cy="135" r="4.5" /><circle className="zone-mist-emitter" cx="540" cy="130" r="4.5" />
+          <circle className="zone-mist-particle" cx="405" cy="172" r="2.2" /><circle className="zone-mist-particle" cx="430" cy="204" r="1.8" />
+          <circle className="zone-mist-particle" cx="547" cy="169" r="2.2" /><circle className="zone-mist-particle" cx="560" cy="203" r="1.6" />
+          <circle className="zone-mist-particle" cx="445" cy="222" r="1.5" /><circle className="zone-mist-particle" cx="565" cy="225" r="1.5" />
         </g>
         <g className={`zone-mist zone-mist-B ${activeZones.has('B') ? 'is-active' : ''}`}>
           <path className="zone-mist-glow" d="M860 236 Q800 254 760 281 M875 365 Q815 355 770 333" />
           <path className="zone-mist-flow" d="M860 236 Q800 254 760 281 M875 365 Q815 355 770 333" />
-          <circle className="zone-mist-emitter" cx="860" cy="236" r="4" /><circle className="zone-mist-emitter" cx="875" cy="365" r="4" />
-          <circle className="zone-mist-particle" cx="826" cy="251" r="2" /><circle className="zone-mist-particle" cx="790" cy="269" r="1.5" />
-          <circle className="zone-mist-particle" cx="835" cy="359" r="1.8" /><circle className="zone-mist-particle" cx="800" cy="344" r="1.4" />
+          <path className="zone-mist-spray" d="M858 230 Q796 250 754 275 M862 242 Q804 258 766 287 M872 360 Q811 350 765 327 M878 370 Q819 360 775 339" />
+          <circle className="zone-mist-emitter" cx="860" cy="236" r="4.5" /><circle className="zone-mist-emitter" cx="875" cy="365" r="4.5" />
+          <circle className="zone-mist-particle" cx="826" cy="251" r="2.2" /><circle className="zone-mist-particle" cx="790" cy="269" r="1.8" />
+          <circle className="zone-mist-particle" cx="835" cy="359" r="2.2" /><circle className="zone-mist-particle" cx="800" cy="344" r="1.6" />
+          <circle className="zone-mist-particle" cx="768" cy="285" r="1.5" /><circle className="zone-mist-particle" cx="778" cy="336" r="1.5" />
         </g>
         <g className={`zone-mist zone-mist-C ${activeZones.has('C') ? 'is-active' : ''}`}>
           <path className="zone-mist-glow" d="M395 477 Q430 415 466 393 M570 481 Q560 425 555 395" />
           <path className="zone-mist-flow" d="M395 477 Q430 415 466 393 M570 481 Q560 425 555 395" />
-          <circle className="zone-mist-emitter" cx="395" cy="477" r="4" /><circle className="zone-mist-emitter" cx="570" cy="481" r="4" />
-          <circle className="zone-mist-particle" cx="418" cy="438" r="2" /><circle className="zone-mist-particle" cx="443" cy="411" r="1.5" />
-          <circle className="zone-mist-particle" cx="563" cy="446" r="1.8" /><circle className="zone-mist-particle" cx="558" cy="416" r="1.4" />
+          <path className="zone-mist-spray" d="M390 475 Q426 411 460 388 M400 479 Q434 419 472 398 M565 483 Q555 423 550 392 M575 479 Q565 427 560 398" />
+          <circle className="zone-mist-emitter" cx="395" cy="477" r="4.5" /><circle className="zone-mist-emitter" cx="570" cy="481" r="4.5" />
+          <circle className="zone-mist-particle" cx="418" cy="438" r="2.2" /><circle className="zone-mist-particle" cx="443" cy="411" r="1.8" />
+          <circle className="zone-mist-particle" cx="563" cy="446" r="2.2" /><circle className="zone-mist-particle" cx="558" cy="416" r="1.6" />
+          <circle className="zone-mist-particle" cx="460" cy="397" r="1.5" /><circle className="zone-mist-particle" cx="555" cy="402" r="1.5" />
         </g>
         <g className={`zone-mist zone-mist-D ${activeZones.has('D') ? 'is-active' : ''}`}>
           <path className="zone-mist-glow" d="M184 235 Q250 248 278 278 M181 365 Q250 350 276 326" />
           <path className="zone-mist-flow" d="M184 235 Q250 248 278 278 M181 365 Q250 350 276 326" />
-          <circle className="zone-mist-emitter" cx="184" cy="235" r="4" /><circle className="zone-mist-emitter" cx="181" cy="365" r="4" />
-          <circle className="zone-mist-particle" cx="225" cy="244" r="2" /><circle className="zone-mist-particle" cx="254" cy="260" r="1.5" />
-          <circle className="zone-mist-particle" cx="226" cy="354" r="1.8" /><circle className="zone-mist-particle" cx="254" cy="340" r="1.4" />
+          <path className="zone-mist-spray" d="M182 230 Q246 242 272 270 M186 240 Q254 254 284 286 M179 370 Q246 356 270 332 M183 360 Q254 344 282 320" />
+          <circle className="zone-mist-emitter" cx="184" cy="235" r="4.5" /><circle className="zone-mist-emitter" cx="181" cy="365" r="4.5" />
+          <circle className="zone-mist-particle" cx="225" cy="244" r="2.2" /><circle className="zone-mist-particle" cx="254" cy="260" r="1.8" />
+          <circle className="zone-mist-particle" cx="226" cy="354" r="2.2" /><circle className="zone-mist-particle" cx="254" cy="340" r="1.6" />
+          <circle className="zone-mist-particle" cx="272" cy="275" r="1.5" /><circle className="zone-mist-particle" cx="270" cy="328" r="1.5" />
         </g>
 
         <line className="sim-wind-vector" x1={sourceX} y1={sourceY} x2={plumeEndX} y2={plumeEndY} markerEnd="url(#site-wind-arrow)" />
