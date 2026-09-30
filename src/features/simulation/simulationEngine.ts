@@ -123,7 +123,7 @@ function buildDecision(
   const reasons: string[] = [
     `Dust source intensity is ${dustLevel} at ${input.dustIntensity}%; wind (${input.windSpeed.toFixed(1)} m/s toward ${directionLabel(input.windDirection)}) carries plume toward ${boundaryNames || 'site boundaries'}.`,
     highestSensor
-      ? `${highestSensor.sensorName} has the highest predicted exposure at ${highestSensor.forecastPm25} µg/m³ PM2.5 (moderate threshold: ${PM25_MODERATE_THRESHOLD} µg/m³).`
+      ? `${highestSensor.sensorName} has the highest predicted PM at ${highestSensor.pm25} µg/m³ PM2.5 (moderate threshold: ${PM25_MODERATE_THRESHOLD} µg/m³).`
       : 'Boundary sensors monitor PM2.5 and derived PM10 readings across all quadrants.',
     leadTimeSeconds !== null
       ? `Boundary threshold exceedance predicted in ${leadTimeSeconds < 60 ? `${leadTimeSeconds} s` : `${(leadTimeSeconds / 60).toFixed(1)} min`} before dust escape.`
