@@ -1,10 +1,53 @@
-import { MAX_ACTIVE_ZONES } from '../../config/waterSystem';
-import { PM25_MODERATE_THRESHOLD, SENSOR_RELEASE_THRESHOLD_PM25, STRATEGY_LABELS, ZONE_TO_BOUNDARY } from './simulationConfig';
-import { advanceSensorReadings, createInitialReadings, derivePm10, getSensorReadings } from './sensorModel';
+import {
+  HIGH_FLOW_LPM,
+  LOW_FLOW_LPM,
+  MAX_ACTIVE_ZONES,
+  MAX_FLOW_LPM,
+  MODERATE_FLOW_LPM,
+  NOZZLES_PER_ZONE,
+} from '../../config/waterSystemConfig';
+import {
+  AMBIENT_PM25_UG_M3,
+  PM25_MODERATE_THRESHOLD,
+  SENSOR_RELEASE_THRESHOLD_PM25,
+  STRATEGY_LABELS,
+  ZONE_TO_BOUNDARY,
+} from './simulationConfig';
+import {
+  advanceSensorReadings,
+  createInitialReadings,
+  derivePm10,
+  getRiskStatus,
+  getSensorBaseline,
+  getSensorReadings,
+} from './sensorModel';
 import { getPlumeEstimate, normalizeBearing } from './plumeModel';
-import { formatBoundaryList, getHighestRisk, getPredictedBoundaries, getPredictiveZonesWithFeedback, getPrimaryBoundary, getZonesForStrategy } from './zoneLogic';
-import { calculateActiveNozzles, calculateFlowRateLpm, calculateWaterUseL } from './waterModel';
-import type { BoundaryId, ControlStrategy, SimulationInput, SimulationPrediction, SimulationRunState, ZoneId } from './simulationTypes';
+import {
+  formatBoundaryList,
+  getHighestRisk,
+  getPredictedBoundaries,
+  getPredictiveZonesWithFeedback,
+  getPrimaryBoundary,
+  getZonesForStrategy,
+} from './zoneLogic';
+import {
+  calculateActiveNozzles,
+  calculateFlowRateLpm,
+  calculateWaterUseL,
+  estimateMistingDurationSeconds,
+  getRequiredFlowPerZone,
+} from './waterModel';
+import { calculateCombinedRisk, type RiskBreakdown } from './riskModel';
+import type {
+  BoundaryId,
+  ControlStrategy,
+  SensorReading,
+  SimulationInput,
+  SimulationPrediction,
+  SimulationRunState,
+  ZoneId,
+} from './simulationTypes';
+import type { BoundaryTrendPoint } from './BoundaryTrendChart';
 
 const round = (value: number) => Math.round(value);
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
@@ -58,72 +101,93 @@ function buildChart(
   });
 }
 
+/**
+ * Deterministic explanation of the scenario result for judges and operators.
+ */
 function buildDecision(
+  input: SimulationInput,
   strategy: ControlStrategy,
-  running: boolean,
+  riskBreakdown: RiskBreakdown,
+  highestSensor: SensorReading | null,
   activeZoneIds: readonly ZoneId[],
   predictedBoundaries: readonly BoundaryId[],
-  heldOffBoundaries: readonly BoundaryId[],
+  flowPerZoneLpm: number,
+  leadTimeSeconds: number | null,
 ): { decision: string; reasons: string[] } {
   const zoneNames = activeZoneIds.map((zone) => `Zone ${zone}`).join(', ');
   const boundaryNames = formatBoundaryList(predictedBoundaries);
+  const dustLevel = input.dustIntensity >= 75 ? 'high' : input.dustIntensity >= 40 ? 'moderate' : 'low';
+  const flowLabel =
+    flowPerZoneLpm >= 1.00 ? 'maximum' : flowPerZoneLpm >= 0.75 ? 'high' : flowPerZoneLpm >= 0.50 ? 'moderate' : 'low';
 
-  if (!running) {
-    return {
-      decision: 'Paused — pump and misting outputs are off.',
-      reasons: ['The simulation clock is paused, so readings, active time, and water use are held.', 'Resume to continue the deterministic sensor and control loop.'],
-    };
+  const reasons: string[] = [
+    `Dust source intensity is ${dustLevel} at ${input.dustIntensity}%; wind (${input.windSpeed.toFixed(1)} m/s toward ${directionLabel(input.windDirection)}) carries plume toward ${boundaryNames || 'site boundaries'}.`,
+    highestSensor
+      ? `${highestSensor.sensorName} has the highest predicted exposure at ${highestSensor.forecastPm25} µg/m³ PM2.5 (moderate threshold: ${PM25_MODERATE_THRESHOLD} µg/m³).`
+      : 'Boundary sensors monitor PM2.5 and derived PM10 readings across all quadrants.',
+    leadTimeSeconds !== null
+      ? `Boundary threshold exceedance predicted in ${leadTimeSeconds < 60 ? `${leadTimeSeconds} s` : `${(leadTimeSeconds / 60).toFixed(1)} min`} before dust escape.`
+      : 'No boundary threshold exceedance predicted under current scenario conditions.',
+    activeZoneIds.length
+      ? strategy === 'continuous'
+        ? 'Continuous suppression running across all four zones (A, B, C, D).'
+        : `Targeted suppression activated for ${zoneNames}; unaffected boundaries remain on standby.`
+      : 'Misting is on standby; no suppression zone is active.',
+    activeZoneIds.length
+      ? `${flowLabel.charAt(0).toUpperCase() + flowLabel.slice(1)} flow (${flowPerZoneLpm.toFixed(2)} L/min per zone) selected based on ${riskBreakdown.status} risk to conserve water.`
+      : 'Water flow is 0.00 L/min to prevent unnecessary water usage.',
+  ];
+
+  let decision = 'Misting standby — risk below boundary threshold.';
+  if (strategy === 'continuous') {
+    decision = 'Continuous suppression — all four zones are spraying.';
+  } else if (strategy === 'noControl') {
+    decision = 'Monitoring only — suppression is disabled.';
+  } else if (activeZoneIds.length > 0) {
+    decision = `Targeted suppression — ${zoneNames} activated ahead of boundary risk.`;
   }
 
-  switch (strategy) {
-    case 'noControl':
-      return {
-        decision: 'Monitoring only — suppression is disabled.',
-        reasons: predictedBoundaries.length
-          ? [`Forecast sensors show ${boundaryNames} at or above ${PM25_MODERATE_THRESHOLD} µg/m³ PM2.5.`, 'No Control keeps every misting zone off for comparison.']
-          : [`All four forecast sensors are below ${PM25_MODERATE_THRESHOLD} µg/m³ PM2.5.`, 'No Control keeps every misting zone off.'],
-      };
-    case 'continuous':
-      return {
-        decision: 'Continuous response — all four zones are spraying.',
-        reasons: ['Continuous strategy deliberately runs Zones A, B, C, and D while the simulation is running.', 'Water is accumulated from configured flow × active nozzles × elapsed misting time.'],
-      };
-    case 'reactive':
-      return activeZoneIds.length
-        ? {
-          decision: `Reactive trigger — ${zoneNames} activated after sensor threshold exceedance.`,
-          reasons: [`A live boundary sensor crossed the moderate threshold (${PM25_MODERATE_THRESHOLD} µg/m³ PM2.5).`, `${activeZoneIds.length} matching boundary zone${activeZoneIds.length === 1 ? '' : 's'} are active; other zones remain on standby.`],
-        }
-        : {
-          decision: 'Reactive standby — waiting for a measured boundary threshold crossing.',
-          reasons: [`Reactive control uses live sensor readings, not the wind-direction selection.`, `No current boundary sensor has crossed ${PM25_MODERATE_THRESHOLD} µg/m³ PM2.5.`],
-        };
-    case 'predictive':
-    default:
-      return activeZoneIds.length
-        ? {
-          decision: `Predictive response — targeting ${zoneNames} ahead of the forecast boundary risk.`,
-          reasons: [
-            `${boundaryNames} forecast at or above ${PM25_MODERATE_THRESHOLD} µg/m³ PM2.5 from the modeled plume and sensor readings.`,
-            `${activeZoneIds.length} boundary-matched zone${activeZoneIds.length === 1 ? '' : 's'} selected; unaffected boundaries stay on standby.`,
-            ...(heldOffBoundaries.length ? [`${formatBoundaryList(heldOffBoundaries)} zone feedback is on hold below ${SENSOR_RELEASE_THRESHOLD_PM25} µg/m³ until its live sensor re-crosses ${PM25_MODERATE_THRESHOLD} µg/m³.`] : []),
-          ],
-        }
-        : heldOffBoundaries.length
-          ? {
-            decision: 'Predictive hold — live sensor feedback reached the misting release level.',
-            reasons: [`${formatBoundaryList(heldOffBoundaries)} sensor feedback fell to ${SENSOR_RELEASE_THRESHOLD_PM25} µg/m³ PM2.5 or lower.`, `Those zones stay off until a live sensor rises to ${PM25_MODERATE_THRESHOLD} µg/m³; the plume forecast continues to be monitored.`],
-          }
-          : {
-            decision: 'Predictive standby — no boundary threshold crossing is forecast.',
-            reasons: [`All modeled boundary forecasts are below ${PM25_MODERATE_THRESHOLD} µg/m³ PM2.5.`, 'No misting zone is activated while the projected boundary risk is low.'],
-          };
-  }
+  return { decision, reasons };
 }
 
 /**
- * Single deterministic inference path for the simulation route. The service adapter delegates
- * here so a future ML/API predictor can replace this implementation without moving UI formulas.
+ * Generates deterministic 0s - 60s scenario projection points for the Boundary PM Trend chart.
+ * Replaces live ticking with an explainable physical scenario model.
+ */
+export function generateScenarioTrendPoints(
+  sensors: readonly SensorReading[],
+  activeZoneIds: readonly ZoneId[],
+): BoundaryTrendPoint[] {
+  const activeBoundaries = new Set(activeZoneIds.map((zone) => ZONE_TO_BOUNDARY[zone]));
+  const timeSteps = [0, 10, 20, 30, 40, 60];
+
+  return timeSteps.map((seconds) => {
+    const readings = {} as BoundaryTrendPoint['readings'];
+    for (const sensor of sensors) {
+      const isMisting = activeBoundaries.has(sensor.id);
+      let pm25 = sensor.forecastPm25;
+      if (isMisting) {
+        // Exponential knockdown under active misting
+        const targetPm = AMBIENT_PM25_UG_M3 + (sensor.forecastPm25 - AMBIENT_PM25_UG_M3) * 0.24;
+        pm25 = Math.round(targetPm + (sensor.forecastPm25 - targetPm) * Math.exp(-0.065 * seconds));
+      }
+      readings[sensor.id] = {
+        pm25,
+        pm10: derivePm10(pm25),
+      };
+    }
+    return {
+      elapsedSeconds: seconds,
+      label: `${seconds} sec`,
+      readings,
+      activeZoneIds: [...activeZoneIds],
+    };
+  });
+}
+
+/**
+ * Single deterministic inference path for the simulation route.
+ * Input-driven: evaluates once per scenario execution.
  */
 export function predictSimulation(
   rawInput: SimulationInput,
@@ -133,37 +197,80 @@ export function predictSimulation(
   runState?: Partial<SimulationRunState>,
 ): SimulationPrediction {
   const input = normalizeSimulationInput(rawInput);
-  const noControlReadings = getSensorReadings(input, currentPm25, []);
-  const predictedBoundaries = getPredictedBoundaries(noControlReadings);
-  const predictedZoneIds = getZonesForStrategy('predictive', noControlReadings, predictedBoundaries);
-  const feedback = strategy === 'predictive'
-    ? getPredictiveZonesWithFeedback(predictedBoundaries, currentPm25, runState?.activeZoneIds ?? [], runState?.heldOffBoundaries ?? [])
-    : { zoneIds: getZonesForStrategy(strategy, noControlReadings, predictedBoundaries), heldOffBoundaries: runState?.heldOffBoundaries ?? [] };
-  const selectedZones = feedback.zoneIds.slice(0, MAX_ACTIVE_ZONES);
-  const heldOffBoundaries = feedback.heldOffBoundaries;
-  const activeZoneIds = running ? selectedZones : [];
-  const activeBoundaryIds = activeZoneIds.map((zone) => ZONE_TO_BOUNDARY[zone]);
-  const sensors = getSensorReadings(input, currentPm25, activeBoundaryIds);
+  const baseline = getSensorBaseline(input);
   const plume = getPlumeEstimate(input);
-  const risk = getHighestRisk(noControlReadings, true);
-  const currentRisk = getHighestRisk(sensors, false);
-  const baselinePm25 = maximumBy(sensors, (sensor) => sensor.forecastPm25);
-  const baselinePm10 = derivePm10(baselinePm25);
-  const projectedPm25 = maximumBy(sensors, (sensor) => sensor.projectedPm25);
-  const projectedPm10 = derivePm10(projectedPm25);
-  const currentBoundaryPm25 = maximumBy(sensors, (sensor) => sensor.pm25);
-  const currentBoundaryPm10 = derivePm10(currentBoundaryPm25);
+
+  // Raw forecast readings without misting to determine true boundary exposure
+  const noControlReadings = getSensorReadings(input, baseline, []);
+  const liveSensors = getSensorReadings(input, currentPm25, []);
+  const peakBaselinePm25 = maximumBy(noControlReadings, (s) => s.forecastPm25);
+
+  // Combined Multi-Factor Risk Calculation
+  const riskBreakdown = calculateCombinedRisk(input, peakBaselinePm25);
+  const risk = riskBreakdown.status;
+  const riskIndex = riskBreakdown.score;
+
+  // Boundary prediction: only predict if combined risk is above LOW
+  const predictedBoundaries = risk === 'LOW' ? [] : getPredictedBoundaries(noControlReadings);
   const primaryBoundary = predictedBoundaries.length ? getPrimaryBoundary(noControlReadings) : null;
-  const leadTimeSeconds = predictedBoundaries.length
-    ? Math.max(1, Math.round(Math.min(...sensors.filter((sensor) => predictedBoundaries.includes(sensor.id)).map((sensor) => sensor.distanceM / plume.effectiveVelocityMps))))
+
+  // Zone selection based on control strategy and sensor feedback
+  const feedback = strategy === 'predictive'
+    ? (risk === 'LOW'
+        ? { zoneIds: [] as ZoneId[], heldOffBoundaries: [] as BoundaryId[] }
+        : getPredictiveZonesWithFeedback(predictedBoundaries, currentPm25, runState?.activeZoneIds ?? [], runState?.heldOffBoundaries ?? []))
+    : {
+        zoneIds: getZonesForStrategy(strategy, liveSensors, predictedBoundaries),
+        heldOffBoundaries: runState?.heldOffBoundaries ?? [],
+      };
+
+  const selectedZones = feedback.zoneIds;
+  const heldOffBoundaries = feedback.heldOffBoundaries;
+  const activeZoneIds = running ? selectedZones.slice(0, MAX_ACTIVE_ZONES) : [];
+  const activeBoundaryIds = activeZoneIds.map((zone) => ZONE_TO_BOUNDARY[zone]);
+
+  // Boundary sensors under the current scenario strategy
+  const sensors = getSensorReadings(input, currentPm25, activeBoundaryIds);
+
+  // The most exposed / highest-risk boundary sensor
+  const leadingSensor = sensors.find((s) => s.id === primaryBoundary)
+    ?? sensors.reduce((max, s) => s.pm25 > max.pm25 ? s : max, sensors[0]);
+
+  // Projected PM in Live Analytics MUST show the highest-risk boundary sensor reading
+  const projectedPm25 = leadingSensor ? leadingSensor.pm25 : peakBaselinePm25;
+  const projectedPm10 = leadingSensor ? leadingSensor.pm10 : derivePm10(projectedPm25);
+  const baselinePm25 = peakBaselinePm25;
+  const baselinePm10 = derivePm10(baselinePm25);
+  const currentBoundaryPm25 = leadingSensor ? leadingSensor.pm25 : 8;
+  const currentBoundaryPm10 = derivePm10(currentBoundaryPm25);
+
+  // Prediction lead time based on physical plume transport speed to the exposed boundary
+  const leadTimeSeconds = predictedBoundaries.length && plume.effectiveVelocityMps > 0 && leadingSensor
+    ? Math.max(1, Math.round(leadingSensor.distanceM / plume.effectiveVelocityMps))
     : null;
-  const riskIndex = round(clamp((baselinePm25 / 150) * 100, 0, 100));
-  const flowRateLpm = calculateFlowRateLpm(activeZoneIds.length);
+
+  // Variable misting flow rate per active zone based on required suppression demand
+  const flowPerZoneLpm = activeZoneIds.length > 0 ? getRequiredFlowPerZone(risk) : 0;
+  const flowRateLpm = calculateFlowRateLpm(activeZoneIds.length, flowPerZoneLpm);
   const activeNozzles = calculateActiveNozzles(activeZoneIds.length);
-  const waterUsedL = Math.max(0, runState?.waterUsedL ?? 0);
-  const elapsedSeconds = Math.max(0, runState?.elapsedSeconds ?? 0);
-  const mistingSeconds = Math.max(0, runState?.mistingSeconds ?? 0);
-  const { decision, reasons } = buildDecision(strategy, running, activeZoneIds, predictedBoundaries, heldOffBoundaries);
+
+  // Estimated misting duration and projected water use for this scenario
+  const mistingSeconds = activeZoneIds.length > 0
+    ? estimateMistingDurationSeconds(risk, baselinePm25, input.dustIntensity)
+    : 0;
+  const waterUsedL = calculateWaterUseL(activeZoneIds.length, mistingSeconds, flowPerZoneLpm);
+  const elapsedSeconds = mistingSeconds;
+
+  const { decision, reasons } = buildDecision(
+    input,
+    strategy,
+    riskBreakdown,
+    leadingSensor,
+    activeZoneIds,
+    predictedBoundaries,
+    flowPerZoneLpm,
+    leadTimeSeconds,
+  );
 
   return {
     input,
@@ -172,12 +279,12 @@ export function predictSimulation(
     sensors,
     plume,
     risk,
-    currentRisk,
+    currentRisk: risk,
     riskIndex,
     predictedBoundaries,
     predictedEscapeBoundary: predictedBoundaries.length ? formatBoundaryList(predictedBoundaries) : 'None predicted',
     primaryBoundary,
-    predictedZoneIds,
+    predictedZoneIds: selectedZones,
     activeZoneIds,
     heldOffBoundaries,
     projectedPm25,
@@ -189,6 +296,7 @@ export function predictSimulation(
     leadTimeSeconds,
     waterUsedL,
     flowRateLpm,
+    flowPerZoneLpm,
     activeNozzles,
     elapsedSeconds,
     mistingSeconds,
@@ -224,7 +332,8 @@ export function advanceSimulation(
     beforeStep.activeZoneIds.map((zone) => ZONE_TO_BOUNDARY[zone]),
     safeSeconds,
   );
-  const waterIncrement = calculateWaterUseL(beforeStep.activeZoneIds.length, safeSeconds);
+  const flowPerZone = getRequiredFlowPerZone(beforeStep.risk);
+  const waterIncrement = calculateWaterUseL(beforeStep.activeZoneIds.length, safeSeconds, flowPerZone);
   const state: SimulationRunState = {
     running: true,
     elapsedSeconds: previous.elapsedSeconds + safeSeconds,
