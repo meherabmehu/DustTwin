@@ -147,10 +147,34 @@ export default function SimulationMap({ prediction, input, view, onViewChange }:
           <path d={`M0 0 C${plumeLength * .22} ${-plumeSpread * .15}, ${plumeLength * .48} ${plumeSpread * .13}, ${plumeLength * .7} 0 S${plumeLength * .88} ${plumeSpread * .06}, ${plumeLength} 0`} className="plume-heat-spine" fill="none" stroke="url(#site-plume-spine)" strokeWidth={plumeSpread * 0.64} strokeLinecap="round" />
         </g>
 
-        <g className={`zone-mist zone-mist-A ${activeZones.has('A') ? 'is-active' : ''}`}><path d="M380 135 Q420 194 455 232 M540 130 Q560 190 566 230" /><circle cx="380" cy="135" r="4" /><circle cx="540" cy="130" r="4" /></g>
-        <g className={`zone-mist zone-mist-B ${activeZones.has('B') ? 'is-active' : ''}`}><path d="M860 236 Q800 254 760 281 M875 365 Q815 355 770 333" /><circle cx="860" cy="236" r="4" /><circle cx="875" cy="365" r="4" /></g>
-        <g className={`zone-mist zone-mist-C ${activeZones.has('C') ? 'is-active' : ''}`}><path d="M395 477 Q430 415 466 393 M570 481 Q560 425 555 395" /><circle cx="395" cy="477" r="4" /><circle cx="570" cy="481" r="4" /></g>
-        <g className={`zone-mist zone-mist-D ${activeZones.has('D') ? 'is-active' : ''}`}><path d="M184 235 Q250 248 278 278 M181 365 Q250 350 276 326" /><circle cx="184" cy="235" r="4" /><circle cx="181" cy="365" r="4" /></g>
+        <g className={`zone-mist zone-mist-A ${activeZones.has('A') ? 'is-active' : ''}`}>
+          <path className="zone-mist-glow" d="M380 135 Q420 194 455 232 M540 130 Q560 190 566 230" />
+          <path className="zone-mist-flow" d="M380 135 Q420 194 455 232 M540 130 Q560 190 566 230" />
+          <circle className="zone-mist-emitter" cx="380" cy="135" r="4" /><circle className="zone-mist-emitter" cx="540" cy="130" r="4" />
+          <circle className="zone-mist-particle" cx="405" cy="172" r="2" /><circle className="zone-mist-particle" cx="430" cy="204" r="1.5" />
+          <circle className="zone-mist-particle" cx="547" cy="169" r="1.8" /><circle className="zone-mist-particle" cx="560" cy="203" r="1.4" />
+        </g>
+        <g className={`zone-mist zone-mist-B ${activeZones.has('B') ? 'is-active' : ''}`}>
+          <path className="zone-mist-glow" d="M860 236 Q800 254 760 281 M875 365 Q815 355 770 333" />
+          <path className="zone-mist-flow" d="M860 236 Q800 254 760 281 M875 365 Q815 355 770 333" />
+          <circle className="zone-mist-emitter" cx="860" cy="236" r="4" /><circle className="zone-mist-emitter" cx="875" cy="365" r="4" />
+          <circle className="zone-mist-particle" cx="826" cy="251" r="2" /><circle className="zone-mist-particle" cx="790" cy="269" r="1.5" />
+          <circle className="zone-mist-particle" cx="835" cy="359" r="1.8" /><circle className="zone-mist-particle" cx="800" cy="344" r="1.4" />
+        </g>
+        <g className={`zone-mist zone-mist-C ${activeZones.has('C') ? 'is-active' : ''}`}>
+          <path className="zone-mist-glow" d="M395 477 Q430 415 466 393 M570 481 Q560 425 555 395" />
+          <path className="zone-mist-flow" d="M395 477 Q430 415 466 393 M570 481 Q560 425 555 395" />
+          <circle className="zone-mist-emitter" cx="395" cy="477" r="4" /><circle className="zone-mist-emitter" cx="570" cy="481" r="4" />
+          <circle className="zone-mist-particle" cx="418" cy="438" r="2" /><circle className="zone-mist-particle" cx="443" cy="411" r="1.5" />
+          <circle className="zone-mist-particle" cx="563" cy="446" r="1.8" /><circle className="zone-mist-particle" cx="558" cy="416" r="1.4" />
+        </g>
+        <g className={`zone-mist zone-mist-D ${activeZones.has('D') ? 'is-active' : ''}`}>
+          <path className="zone-mist-glow" d="M184 235 Q250 248 278 278 M181 365 Q250 350 276 326" />
+          <path className="zone-mist-flow" d="M184 235 Q250 248 278 278 M181 365 Q250 350 276 326" />
+          <circle className="zone-mist-emitter" cx="184" cy="235" r="4" /><circle className="zone-mist-emitter" cx="181" cy="365" r="4" />
+          <circle className="zone-mist-particle" cx="225" cy="244" r="2" /><circle className="zone-mist-particle" cx="254" cy="260" r="1.5" />
+          <circle className="zone-mist-particle" cx="226" cy="354" r="1.8" /><circle className="zone-mist-particle" cx="254" cy="340" r="1.4" />
+        </g>
 
         <line className="sim-wind-vector" x1={sourceX} y1={sourceY} x2={plumeEndX} y2={plumeEndY} markerEnd="url(#site-wind-arrow)" />
         <g className="sim-source-mark" transform={`translate(${sourceX} ${sourceY})`}>
