@@ -1,61 +1,81 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { SIMULATION_THRESHOLDS } from '../src/config/simulationThresholds';
-import { calculateDustScenario, defaultInput } from '../src/lib/simulation';
+import {
+  advanceSimulation,
+  createInitialRunState,
+  defaultInput,
+  predictSimulation,
+} from '../src/features/simulation/simulationEngine';
+import { calculateStrategyComparison } from '../src/features/simulation/strategyComparison';
+import { derivePm10 } from '../src/features/simulation/sensorModel';
+import { calculateFlowRateLpm } from '../src/features/simulation/waterModel';
+import type { SimulationInput } from '../src/features/simulation/simulationTypes';
 
-const input = (overrides: Partial<typeof defaultInput> = {}) => ({ ...defaultInput, ...overrides });
+const input = (overrides: Partial<SimulationInput> = {}): SimulationInput => ({ ...defaultInput, ...overrides });
 
-test('default scenario is deterministic and selects a downstream response', () => {
-  const first = calculateDustScenario(defaultInput);
-  const second = calculateDustScenario(defaultInput);
-  assert.deepEqual(first, second);
-  assert.equal(first.risk, 'MODERATE');
-  assert.equal(first.mistingActive, true);
-  assert.equal(first.activeZone, 'Zone A');
-  assert.equal(first.escapeDirection, 'NW');
-  assert.equal(first.chart.length, 20);
-});
-
-test('risk bands use the shared 40 and 75 µg/m³ PM2.5 limits', () => {
-  assert.equal(calculateDustScenario(input({ dustIntensity: 87, windSpeed: 0, humidity: 100 })).risk, 'LOW');
-  assert.equal(calculateDustScenario(input({ dustIntensity: 89, windSpeed: 0, humidity: 100 })).risk, 'MODERATE');
-  assert.equal(calculateDustScenario(input({ dustIntensity: 58, windSpeed: 10, humidity: 0 })).risk, 'MODERATE');
-  assert.equal(calculateDustScenario(input({ dustIntensity: 59, windSpeed: 10, humidity: 0 })).risk, 'HIGH');
-});
-
-test('targeted misting lowers modeled PM and the trend line without claiming a field result', () => {
-  const result = calculateDustScenario(defaultInput);
-  assert.ok(result.pm25 < result.baselinePm25);
-  assert.equal(result.pm10, Math.round(result.pm25 * SIMULATION_THRESHOLDS.pm10Factor));
-  assert.ok(result.pm10 < result.baselinePm10);
-  assert.ok(result.chart.at(-1)!.twin < result.chart.at(-1)!.baseline);
-  assert.ok(result.waterUsage > 0);
-});
-
-test('low-risk scenario stays on standby and predicts no escape event', () => {
-  const result = calculateDustScenario(input({ dustIntensity: 0, windSpeed: 0, humidity: 100 }));
+// Scenario A: a calm/low-source site remains on standby.
+test('Scenario A — low-risk conditions keep predictive misting on standby', () => {
+  const result = predictSimulation(input({ dustIntensity: 10, windSpeed: 0.5, humidity: 75, temperatureC: 20 }));
   assert.equal(result.risk, 'LOW');
-  assert.equal(result.mistingActive, false);
-  assert.equal(result.activeZone, 'Standby');
-  assert.equal(result.leadTime, 0);
-  assert.equal(result.waterUsage, 0);
-  assert.equal(result.pm25, result.baselinePm25);
+  assert.deepEqual(result.predictedZoneIds, []);
+  assert.deepEqual(result.activeZoneIds, []);
+  assert.equal(result.predictedEscapeBoundary, 'None predicted');
+  assert.equal(result.flowRateLpm, 0);
 });
 
-test('wind direction maps consistently to the four downstream zones', () => {
-  for (const [windDirection, direction, zone] of [
-    [0, 'N', 'Zone A'], [90, 'E', 'Zone B'], [180, 'S', 'Zone C'], [270, 'W', 'Zone D'],
-  ] as const) {
-    const result = calculateDustScenario(input({ dustIntensity: 70, windDirection }));
-    assert.equal(result.escapeDirection, direction);
-    assert.equal(result.activeZone, zone);
+// Scenario B: eastward plume exposure is resolved from the E sensor and maps to Zone B.
+test('Scenario B — high dust moving East predicts the East boundary and Zone B', () => {
+  const result = predictSimulation(input({ dustIntensity: 95, windSpeed: 4.2, windDirection: 90 }));
+  assert.deepEqual(result.predictedBoundaries, ['east']);
+  assert.deepEqual(result.predictedZoneIds, ['B']);
+  assert.equal(result.primaryBoundary, 'east');
+  assert.ok(result.sensors.find((sensor) => sensor.id === 'east')!.forecastPm25
+    > result.sensors.find((sensor) => sensor.id === 'west')!.forecastPm25);
+});
+
+// Scenario C: northwest plume exposure selects both adjacent boundary segments.
+test('Scenario C — NW plume predicts North and West, selecting Zones A and D', () => {
+  const result = predictSimulation(input({ dustIntensity: 90, windSpeed: 5.5, windDirection: 315 }));
+  assert.deepEqual(result.predictedBoundaries, ['north', 'west']);
+  assert.deepEqual(result.predictedZoneIds, ['A', 'D']);
+});
+
+// Scenario D: an abrupt change recalculates the selected boundary from modeled sensor exposure.
+test('Scenario D — sudden NW-to-East wind shift switches the target from A/D to B', () => {
+  const current = createInitialRunState(defaultInput).currentPm25;
+  const before = predictSimulation(input({ dustIntensity: 90, windSpeed: 4.2, windDirection: 315 }), current);
+  const after = predictSimulation(input({ dustIntensity: 90, windSpeed: 8, windDirection: 90 }), current);
+  assert.deepEqual(before.predictedZoneIds, ['A', 'D']);
+  assert.deepEqual(after.predictedBoundaries, ['east']);
+  assert.deepEqual(after.predictedZoneIds, ['B']);
+  assert.ok(after.sensors.find((sensor) => sensor.id === 'east')!.forecastPm25
+    > before.sensors.find((sensor) => sensor.id === 'east')!.forecastPm25);
+});
+
+// Scenario E: continuous response runs every zone and live water advances with elapsed time.
+test('Scenario E — continuous spraying activates all zones and accumulates configured flow', () => {
+  let state = createInitialRunState(defaultInput);
+  const initial = predictSimulation(defaultInput, state.currentPm25, 'continuous', true, state);
+  assert.deepEqual(initial.activeZoneIds, ['A', 'B', 'C', 'D']);
+  assert.equal(initial.flowRateLpm, calculateFlowRateLpm(4));
+  for (let second = 0; second < 60; second += 1) {
+    state = advanceSimulation(state, defaultInput, 'continuous').state;
   }
+  assert.equal(state.elapsedSeconds, 60);
+  assert.equal(state.mistingSeconds, 60);
+  assert.ok(Math.abs(state.waterUsedL - 2) < 1e-9);
 });
 
-test('dust, wind, and humidity controls change the predicted scenario', () => {
-  const calm = calculateDustScenario(input({ dustIntensity: 30, windSpeed: 0, humidity: 80 }));
-  const dusty = calculateDustScenario(input({ dustIntensity: 90, windSpeed: 8, humidity: 20 }));
-  assert.ok(dusty.baselinePm25 > calm.baselinePm25);
-  assert.ok(dusty.plumeLength > calm.plumeLength);
-  assert.notDeepEqual(dusty.zoneReadings, calm.zoneReadings);
+// Scenario F: predictive targeting uses fewer active nozzles than continuous spraying.
+test('Scenario F — predictive response is targeted and uses less comparison water than continuous', () => {
+  const predictive = predictSimulation(defaultInput);
+  const continuous = predictSimulation(defaultInput, undefined, 'continuous');
+  const results = calculateStrategyComparison(predictive);
+  assert.equal(predictive.activeZoneIds.length, 2);
+  assert.equal(continuous.activeZoneIds.length, 4);
+  assert.ok(results.find((item) => item.strategy === 'predictive')!.waterUsedL
+    < results.find((item) => item.strategy === 'continuous')!.waterUsedL);
+  assert.ok(results.find((item) => item.strategy === 'predictive')!.exceedanceMinutes
+    <= results.find((item) => item.strategy === 'reactive')!.exceedanceMinutes);
+  assert.ok(results.every((item) => item.boundaryPm10 === derivePm10(item.boundaryPm25)));
 });
