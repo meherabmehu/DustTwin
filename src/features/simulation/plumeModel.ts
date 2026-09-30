@@ -33,13 +33,14 @@ export function getPlumeEstimate(input: SimulationInput): PlumeEstimate {
   const dustIntensity = clamp(input.dustIntensity, 0, 100);
   const humidity = clamp(input.humidity, 0, 100);
   const temperature = clamp(input.temperatureC, 10, 50);
-  const temperatureLift = Math.max(0, temperature - 25) * 0.002;
-  const speedFactor = clamp(0.88 + windSpeed * 0.045 + temperatureLift - humidity * 0.0007, 0.72, 1.5);
-  const effectiveVelocityMps = Math.max(0.2, (0.25 + windSpeed * 0.18 + dustIntensity * 0.002) * speedFactor);
-  const length = clamp(70 + windSpeed * 10 + dustIntensity * 0.82 - humidity * 0.16, 58, 300);
-  const spread = clamp(12 + humidity * 0.075 + (10 - windSpeed) * 0.38, 11, 25);
+  const temperatureLift = Math.max(0, temperature - 28) * 0.002;
+  const speedFactor = clamp(0.85 + windSpeed * 0.05 + temperatureLift - humidity * 0.0006, 0.70, 1.55);
+  // Plume transport speed is directly proportional to wind speed
+  const effectiveVelocityMps = Math.max(0.25, (0.20 + windSpeed * 0.26 + dustIntensity * 0.002) * speedFactor);
+  const length = clamp(60 + windSpeed * 12 + dustIntensity * 0.85 - humidity * 0.15, 55, 300);
+  const spread = clamp(12 + humidity * 0.07 + (10 - windSpeed) * 0.38, 11, 26);
   const density = clamp(
-    dustIntensity / 100 * 0.78 + windSpeed / 10 * 0.18 + (100 - humidity) / 100 * 0.08,
+    (dustIntensity / 100) * 0.78 + (windSpeed / 10) * 0.18 + ((100 - humidity) / 100) * 0.08,
     0.04,
     1,
   );
@@ -57,13 +58,16 @@ export function getPlumeEstimate(input: SimulationInput): PlumeEstimate {
 export function getBoundaryModelFactors(input: SimulationInput, boundary: BoundaryGeometry) {
   const bearing = normalizeBearing(input.windDirection);
   const alignment = getDirectionalAlignment(boundary, bearing);
-  // A small crosswind floor represents measured background dispersion; downwind alignment dominates.
+  // Crosswind background floor represents atmospheric dispersion; downwind alignment dominates
   const directionalFactor = 0.14 + 0.86 * Math.pow(Math.max(0, alignment), 2);
   const distanceM = getBoundaryDistanceM(boundary);
   const distanceFactor = 1 / (1 + distanceM / 230);
-  const windFactor = 0.72 + clamp(input.windSpeed, 0, 10) * 0.055;
-  const humidityFactor = 1.12 - clamp(input.humidity, 0, 100) * 0.0028;
-  const temperatureFactor = 1 + (clamp(input.temperatureC, 10, 50) - 25) * 0.0025;
+  // Wind speed drives transport to boundary: at low wind (1 m/s), transport is weak; at high wind, transport is strong
+  const windFactor = 0.46 + clamp(input.windSpeed, 0, 10) * 0.095;
+  // Humidity slightly enhances particle settling (secondary modifier)
+  const humidityFactor = 1.08 - clamp(input.humidity, 0, 100) * 0.0022;
+  // Temperature is a subtle dispersion modifier around 28°C baseline
+  const temperatureFactor = 1 + (clamp(input.temperatureC, 10, 50) - 28) * 0.005;
 
   return { alignment, distanceM, directionalFactor, distanceFactor, windFactor, humidityFactor, temperatureFactor };
 }
