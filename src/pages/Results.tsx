@@ -41,7 +41,14 @@ export default function Results() {
       foot: `${summary.noControlExceedance.toFixed(1)} min → ${summary.predictiveExceedance.toFixed(1)} min modeled window`,
       base: 10,
     },
-    { icon: <Droplets />, title: 'Water Use Reduction', subtitle: 'Illustrative targeted application', value: '−62%', foot: 'Example vs. continuous spraying', base: 58 },
+    {
+      icon: <Droplets />,
+      title: 'Water Use Reduction',
+      subtitle: 'Targeted misting vs Continuous',
+      value: `−${summary.waterReductionPercent}%`,
+      foot: `${summary.continuousWater.toFixed(1)} L → ${summary.predictiveWater.toFixed(1)} L modeled usage`,
+      base: 15,
+    },
     { icon: <Clock3 />, title: 'Prediction Lead Time', subtitle: 'Illustrative advance notice of dust', value: '+45 min', foot: 'Example scenario timing', base: 39 },
     { icon: <Users />, title: 'Protected Public Area', subtitle: 'Illustrative PM10 at a community receptor', value: '3.2×', foot: 'Example vs. no control', base: 43 },
   ];
