@@ -24,22 +24,6 @@
   .prototype-hero .prototype-features { margin-top: 28px; }
   .prototype-hero .prototype-features .feature-item { flex: 0 1 128px; }
 }
-.prototype-reading-note {
-  position: absolute;
-  z-index: 3;
-  left: 43%;
-  bottom: 10px;
-  padding: 4px 7px;
-  border: 1px solid rgba(80,146,163,.25);
-  border-radius: 5px;
-  color: #9bb1bc;
-  background: rgba(2,17,29,.7);
-  font-size: 7px;
-  line-height: 1.2;
-  letter-spacing: .12px;
-  white-space: nowrap;
-  pointer-events: none;
-}
 .prototype-hero .map-overlay,
 .prototype-hero .map-stamp,
 .prototype-hero .map-zone,
@@ -141,7 +125,6 @@
   .prototype-hero .hero-title { font-size: clamp(38px, 9vw, 55px); }
   .prototype-hero .hero-map-layer { left: 0; top: 30%; }
   .prototype-hero .hero-description { font-size: 12px; }
-  .prototype-reading-note { left: 18px; right: 18px; text-align: center; white-space: normal; }
   .prototype-workbench { grid-template-columns: 1fr; }
   .prototype-panel:last-child { grid-column: auto; }
   .prototype-flow { grid-template-columns: 1fr; }

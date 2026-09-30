@@ -46,13 +46,12 @@ export default function Prototype() {
         <div className="prototype-callout callout-pump"><Activity size={17} />Water Pump</div>
         <div className="prototype-callout callout-box"><Cpu size={17} />Control Box<br /><small>(ESP32 / Raspberry Pi + Relay)</small></div>
         <div className="prototype-callout callout-laptop"><Laptop size={17} />Laptop Dashboard<br /><small>(Real-time monitoring)</small></div>
-        <div className="prototype-reading-note">Illustrative PM2.5 readings · misting state shown for demonstration</div>
         <div className="hero-copy">
           <Eyebrow><span>▱</span> PROTOTYPE DEMO <span>›</span> TABLE-TOP MODEL <span>›</span> JUDGE EXPERIENCE</Eyebrow>
           <h1 className="hero-title">The prototype judges<br /><span>will experience.</span></h1>
           <p className="hero-description">A working table-top model that demonstrates how DustTwin senses dust, predicts risk, and automatically activates misting in real time. Experience the complete closed-loop system in a compact, hands-on demonstration.</p>
           <div className="hero-actions"><CTAButton to="#model-overview" icon={<span className="play-disc">▶</span>}>Watch Prototype Video</CTAButton><CTAButton to="/circuit-simulation" variant="outline" icon={<Box size={20} />}>View Circuit Details</CTAButton></div>
-          <div className="prototype-features"><FeatureItem icon={<ShieldCheck />} title="Real hardware" detail="Working sensors and actuators" /><FeatureItem icon={<Settings />} title="Live demonstration" detail="See real-time dust control in action" /><FeatureItem icon={<BarChart3 />} title="Same algorithm" detail="As full-scale DustTwin system" /><FeatureItem icon={<Zap />} title="Hands-on experience" detail="Built for judges to explore" /></div>
+          <div className="prototype-features"><FeatureItem icon={<ShieldCheck />} title="Real hardware" detail="Working sensors and actuators" /><FeatureItem icon={<Settings />} title="Live demonstration" detail="See real-time dust control in action" /><FeatureItem icon={<BarChart3 />} title="Same control architecture" detail="Designed to scale to the full DustTwin system" /><FeatureItem icon={<Zap />} title="Hands-on experience" detail="Built for judges to explore" /></div>
         </div>
       </section>
 
