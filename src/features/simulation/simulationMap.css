@@ -165,3 +165,23 @@
   .sim-map-legend > span { font-size:5.5px; }
   .map-pm-mode { display:none; }
 }
+
+/* Compact the boundary readout cards a touch without moving the sensor HUDs. */
+.sim-sensor-card { width:clamp(124px,14%,144px); padding:4px 6px; }
+.sim-sensor-heading { position:relative; gap:4px; }
+.sim-sensor-heading strong { padding-right:30px; }
+.sim-sensor-heading small { overflow:hidden; text-overflow:ellipsis; }
+.sim-sensor-zone-state { position:absolute; top:0; right:0; padding:1px 3px; }
+.sim-sensor-readings { gap:3px; margin-top:4px; padding-top:3px; }
+.sim-sensor-readings > span { gap:2px; font-size:6.2px; }
+.sim-sensor-readings b { font-size:9px; }
+.sim-sensor-readings small { font-size:5.2px; }
+@media (max-width:760px) {
+  .sim-sensor-card { width:116px; padding:4px 5px; }
+  .sim-sensor-readings > span { font-size:5.9px; }
+  .sim-sensor-readings b { font-size:8.5px; }
+  .sim-sensor-readings small { font-size:5px; }
+}
+@media (max-width:430px) {
+  .sim-sensor-card { width:115px; }
+}
