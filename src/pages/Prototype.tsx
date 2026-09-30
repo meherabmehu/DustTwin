@@ -5,20 +5,20 @@ import { FeatureItem } from '../components/Cards';
 import { DustMap } from '../components/Visuals';
 
 const parts = [
-  { icon: <Droplet />, title: 'Misting Nozzle (x4)', body: 'Creates fine water mist to suppress dust around the site perimeter.' },
+  { icon: <Droplet />, title: 'Misting Nozzle (x4)', body: 'Four targeted boundary misting zones (Zones A–D) to suppress dust.' },
   { icon: <Wind />, title: 'Weather Sensor', body: 'Measures wind speed, wind direction, temperature and humidity.' },
-  { icon: <Gauge />, title: 'PM Sensor (x2)', body: 'Measures PM2.5 and PM10 at the site boundary.' },
-  { icon: <Droplet />, title: 'Water Tank', body: 'Stores clean water for the misting system (5–10 liters).' },
-  { icon: <Activity />, title: 'Water Pump', body: 'DC water pump supplies pressurized water to misting nozzles.' },
-  { icon: <Cpu />, title: 'Control Box', body: 'ESP32 or Raspberry Pi with relay module. Runs DustTwin control logic for the pump and nozzles.' },
+  { icon: <Gauge />, title: 'PM Sensor (x2)', body: 'Measures PM2.5 and PM10 at key site boundary points.' },
+  { icon: <Droplet />, title: 'Water Tank', body: 'Stores clean water for the misting system.' },
+  { icon: <Activity />, title: 'Water Pump', body: 'Supplies pressurized water to active misting zones.' },
+  { icon: <Cpu />, title: 'Control Box', body: 'ESP32 DevKit V1 + 4-Channel Relay module. Runs DustTwin control logic for the pump and zones.' },
   { icon: <Box />, title: 'Table-Top Construction Site', body: 'Sand, toy excavator and dump truck simulate construction activity and dust generation.' },
 ];
 const steps = [
-  { icon: <Wind />, title: 'Sense', body: 'PM and weather sensors continuously monitor dust levels and site conditions around the model.' },
-  { icon: <Activity />, title: 'Predict', body: 'DustTwin estimates near-term dust movement and boundary risk from current sensor inputs.' },
-  { icon: <Settings />, title: 'Decide', body: 'If dust risk exceeds the threshold, the controller selects the required misting zone.' },
-  { icon: <Droplet />, title: 'Act', body: 'The water pump activates and selected nozzles spray fine mist to suppress dust.' },
-  { icon: <Monitor />, title: 'Visualize', body: 'The dashboard presents sensor values, control decisions and misting status in real time.' },
+  { icon: <Wind />, title: 'Sense', body: 'PM and weather sensors capture site conditions.' },
+  { icon: <Activity />, title: 'Predict', body: 'DustTwin estimates short-term dust movement and boundary risk.' },
+  { icon: <Settings />, title: 'Decide', body: 'The controller selects the required misting zone(s).' },
+  { icon: <Droplet />, title: 'Act', body: 'The ESP32 activates the corresponding relay, valve and pump response.' },
+  { icon: <Monitor />, title: 'Visualize', body: 'The dashboard shows sensor values, decisions and system status.' },
 ];
 
 export default function Prototype() {
@@ -26,7 +26,7 @@ export default function Prototype() {
   return (
     <>
       <section className="hero prototype-hero">
-        <div className="hero-map-layer"><DustMap intensity={58} readings={[24, 18, 40]} hotReadingIndex={-1} activeZone="Zone 2" showLegend={false} showWind={false} /></div>
+        <div className="hero-map-layer"><DustMap intensity={58} readings={[24, 18, 40]} hotReadingIndex={-1} activeZone="Zone B" showLegend={false} showWind={false} /></div>
         <svg className="prototype-hero-connectors" viewBox="0 0 1000 452" preserveAspectRatio="none" aria-hidden="true">
           <g fill="none" stroke="rgba(35,221,244,.78)" strokeWidth="1.5" vectorEffect="non-scaling-stroke">
             <path d="M540 92 L550 112 L564 153" /><path d="M692 42 L710 42 L718 52" />
@@ -39,12 +39,12 @@ export default function Prototype() {
             <circle cx="925" cy="211" r="3" /><circle cx="917" cy="300" r="3" /><circle cx="847" cy="344" r="3" /><circle cx="545" cy="327" r="3" />
           </g>
         </svg>
-        <div className="prototype-callout callout-nozzle"><Droplet size={17} />Misting Nozzle<br /><small>(4 around perimeter)</small></div>
+        <div className="prototype-callout callout-nozzle"><Droplet size={17} />Misting Nozzles<br /><small>(Zones A–D perimeter)</small></div>
         <div className="prototype-callout callout-weather"><Wind size={18} />Weather Sensor</div>
         <div className="prototype-callout callout-pm"><Gauge size={17} />PM Sensor<br /><small>(at site boundary)</small></div>
         <div className="prototype-callout callout-tank"><Droplet size={17} />Water Tank</div>
         <div className="prototype-callout callout-pump"><Activity size={17} />Water Pump</div>
-        <div className="prototype-callout callout-box"><Cpu size={17} />Control Box<br /><small>(ESP32 / Raspberry Pi + Relay)</small></div>
+        <div className="prototype-callout callout-box"><Cpu size={17} />Control Box<br /><small>(ESP32 + 4-Channel Relay)</small></div>
         <div className="prototype-callout callout-laptop"><Laptop size={17} />Laptop Dashboard<br /><small>(Real-time monitoring)</small></div>
         <div className="hero-copy">
           <Eyebrow><span>▱</span> PROTOTYPE DEMO <span>›</span> TABLE-TOP MODEL <span>›</span> JUDGE EXPERIENCE</Eyebrow>
@@ -71,7 +71,7 @@ export default function Prototype() {
                 <circle cx="697" cy="276" r="4" /><circle cx="673" cy="390" r="4" /><circle cx="650" cy="474" r="4" /><circle cx="386" cy="405" r="4" />
               </g>
             </svg>
-            <div className="top-model-callout model-mist">Misting Nozzle<b>(4 around perimeter)</b></div><div className="top-model-callout model-weather">Weather Sensor<b>(on mast)</b></div><div className="top-model-callout model-pm">PM Sensor<b>(at boundary)</b></div><div className="top-model-callout model-tank">Water Tank</div><div className="top-model-callout model-pump">Water Pump</div><div className="top-model-callout model-box">Control Box<b>(ESP32/RPi + Relay)</b></div><div className="top-model-callout model-site">Construction Site<br /><b>(sand, excavator, truck)</b></div>
+            <div className="top-model-callout model-mist">Misting Nozzles<b>(Zones A–D perimeter)</b></div><div className="top-model-callout model-weather">Weather Sensor<b>(on mast)</b></div><div className="top-model-callout model-pm">PM Sensor<b>(at boundary)</b></div><div className="top-model-callout model-tank">Water Tank</div><div className="top-model-callout model-pump">Water Pump</div><div className="top-model-callout model-box">Control Box<b>(ESP32 + 4-Channel Relay)</b></div><div className="top-model-callout model-site">Construction Site<br /><b>(sand, excavator, truck)</b></div>
           </div>
         </article>
         <article className="prototype-panel components-panel">
