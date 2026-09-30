@@ -311,12 +311,20 @@ function commitOutputs(
   } else if (candidate.mode === 'manual') {
     updatedState = { ...candidate, ...calculateManualDerivedMetrics(candidate) };
   } else {
+    // STOPPED State in Auto Mode: compute live risk preview while keeping hardware outputs de-energized
     const risk = calculateCircuitRisk(candidate);
     updatedState = {
       ...candidate,
       riskScore: risk.score,
       riskStatus: risk.status,
       predictedDirection: getPredictedDirectionLabel(candidate.windDirection),
+      zones: [false, false, false, false],
+      pumpOn: false,
+      fanOn: false,
+      flowPerZoneLpm: 0,
+      requiredFlowLpm: 0,
+      mistingDurationSeconds: 0,
+      projectedWaterL: 0,
     };
   }
 

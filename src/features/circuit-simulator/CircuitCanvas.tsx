@@ -168,7 +168,7 @@ export default function CircuitCanvas({ state, zoom }: Props) {
           <div className="part-art">
             {state.zones.map((active, index) => (
               <span
-                className={`led-dot ${active ? (risk === 'high' || risk === 'HIGH' || risk === 'VERY HIGH' ? 'danger' : 'on') : ''}`}
+                className={`led-dot ${active ? (risk === 'HIGH' || risk === 'VERY HIGH' ? 'danger' : 'on') : ''}`}
                 key={index}
                 title={`${ZONE_LETTERS[index]} LED ${active ? 'ON' : 'OFF'}`}
               />

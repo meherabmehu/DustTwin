@@ -23,7 +23,7 @@ export default function LiveMetrics({ state }: Props) {
         </span>
         <span className={`risk-pill risk-${riskClass}`}>
           <ShieldCheck size={12} aria-hidden="true" style={{ display: 'inline', marginRight: 3, verticalAlign: -1 }} />
-          {state.riskStatus} RISK ({state.riskScore}/100)
+          {state.riskStatus} RISK ({state.riskScore}/100){!state.simulationRunning ? ' · PREVIEW' : ''}
         </span>
         <span className="runtime-chip">{formatElapsedTime(state.elapsedSeconds)}</span>
       </h2>
@@ -54,22 +54,22 @@ export default function LiveMetrics({ state }: Props) {
       <div className="output-metrics" style={{ marginTop: '7px' }}>
         <div className="output-metric">
           <small>Active Misting Zones</small>
-          <strong>{activeZonesLabel}</strong>
-          <span>Direction: {state.predictedDirection}</span>
+          <strong>{state.simulationRunning && activeZoneNames.length ? activeZonesLabel : 'None (Standby)'}</strong>
+          <span>{state.simulationRunning ? `Direction: ${state.predictedDirection}` : `Targeted: ${state.predictedDirection} (Standby)`}</span>
         </div>
         <div className="output-metric">
           <small>Required System Flow</small>
-          <strong><Waves size={14} /> {state.requiredFlowLpm.toFixed(2)} L/min</strong>
-          <span>{state.flowPerZoneLpm > 0 ? `${state.flowPerZoneLpm.toFixed(2)} L/min / zone` : 'Standby 0 L/min'}</span>
+          <strong><Waves size={14} /> {state.simulationRunning ? `${state.requiredFlowLpm.toFixed(2)} L/min` : '0.00 L/min'}</strong>
+          <span>{state.simulationRunning && state.flowPerZoneLpm > 0 ? `${state.flowPerZoneLpm.toFixed(2)} L/min / zone` : 'Hardware Standby'}</span>
         </div>
         <div className="output-metric">
           <small>Estimated Duration</small>
-          <strong>{state.mistingDurationSeconds} sec</strong>
-          <span>Targeted suppression burst</span>
+          <strong>{state.simulationRunning ? `${state.mistingDurationSeconds} sec` : '0 sec (Standby)'}</strong>
+          <span>{state.simulationRunning ? 'Targeted suppression burst' : 'Click Run Scenario to spray'}</span>
         </div>
         <div className="output-metric">
           <small>Projected Water Use</small>
-          <strong><Droplet size={14} /> {state.projectedWaterL.toFixed(2)} L</strong>
+          <strong><Droplet size={14} /> {state.simulationRunning ? `${state.projectedWaterL.toFixed(2)} L` : '0.00 L'}</strong>
           <span>Pump State: <b>{state.pumpOn ? 'ENERGIZED (ON)' : 'STANDBY (OFF)'}</b></span>
         </div>
       </div>

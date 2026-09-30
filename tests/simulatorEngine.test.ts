@@ -90,6 +90,52 @@ test('temperature and humidity status thresholds are reflected in periodic seria
   assert.ok(state.serialLogs.some((entry) => entry.message.includes('DHT22: 40.0 °C [HIGH], 80% RH [HIGH]')));
 });
 
+test('STOPPED state provides live risk preview while keeping hardware outputs de-energized until RUN', () => {
+  let state = createInitialSimulatorState();
+  assert.equal(state.simulationRunning, false);
+  assert.equal(state.pumpOn, false);
+  assert.deepEqual(state.zones, [false, false, false, false]);
+  assert.equal(state.requiredFlowLpm, 0);
+  assert.equal(state.mistingDurationSeconds, 0);
+
+  // Update inputs while STOPPED: risk preview updates dynamically
+  state = act(state, { type: 'SET_SENSOR', key: 'dustIntensity', value: 90 });
+  state = act(state, { type: 'SET_SENSOR', key: 'pm1', value: 80 });
+  state = act(state, { type: 'SET_SENSOR', key: 'windSpeed', value: 6 });
+  state = act(state, { type: 'SET_SENSOR', key: 'windDirection', value: 315 });
+
+  // Preview should reflect HIGH risk and NW targeting
+  assert.equal(state.riskStatus, 'HIGH');
+  assert.equal(state.predictedDirection, 'North / West');
+  // But hardware MUST remain de-energized
+  assert.equal(state.simulationRunning, false);
+  assert.equal(state.pumpOn, false);
+  assert.deepEqual(state.zones, [false, false, false, false]);
+  assert.equal(state.requiredFlowLpm, 0);
+  assert.equal(state.mistingDurationSeconds, 0);
+  assert.equal(state.projectedWaterL, 0);
+
+  // Click RUN SCENARIO: now hardware energizes to matching state
+  state = act(state, { type: 'RUN' });
+  assert.equal(state.simulationRunning, true);
+  assert.deepEqual(state.zones, [true, false, false, true]); // Zones A + D
+  assert.equal(state.pumpOn, true);
+  assert.equal(state.requiredFlowLpm, 1.50);
+  assert.equal(state.mistingDurationSeconds, 60);
+  assert.equal(state.projectedWaterL, 1.50);
+
+  // Click STOP: immediately returns to standby with hardware de-energized
+  state = act(state, { type: 'STOP' });
+  assert.equal(state.simulationRunning, false);
+  assert.deepEqual(state.zones, [false, false, false, false]);
+  assert.equal(state.pumpOn, false);
+  assert.equal(state.requiredFlowLpm, 0);
+  assert.equal(state.mistingDurationSeconds, 0);
+  assert.equal(state.projectedWaterL, 0);
+  // Risk preview remains intact
+  assert.equal(state.riskStatus, 'HIGH');
+});
+
 test('Stop de-energizes outputs, freezes elapsed time, and logs the safety action', () => {
   let state = act(createInitialSimulatorState(), { type: 'RUN' });
   state = act(state, { type: 'TICK' });
