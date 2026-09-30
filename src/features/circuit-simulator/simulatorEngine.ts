@@ -280,15 +280,21 @@ function outputTransitionLogs(before: SimulatorState, after: SimulatorState): Ar
 }
 
 function buildScenarioExecutionLog(state: SimulatorState): Array<{ message: string; level?: LogLevel }> {
+  const activeZoneNames = state.zones
+    .map((active, index) => (active ? `Zone ${['A', 'B', 'C', 'D'][index]}` : null))
+    .filter(Boolean) as string[];
+  const activeZonesSummary = activeZoneNames.length ? activeZoneNames.join(' + ') : 'None (Standby)';
+
   return [
     { message: `[READY] DustTwin Circuit Scenario · ${state.mode === 'auto' ? 'AUTO' : 'MANUAL'}`, level: 'info' },
     { message: `Dust Source: ${state.dustIntensity}%`, level: 'info' },
     { message: `PM Sensor 1: ${state.pm1} µg/m³ · PM Sensor 2: ${state.pm2} µg/m³`, level: 'info' },
     { message: `Temperature: ${state.temperature.toFixed(1)} °C · Humidity: ${state.humidity}% RH`, level: 'info' },
     { message: `Wind: ${state.predictedDirection} (${state.windDirection}°) ${state.windSpeed.toFixed(1)} m/s`, level: 'info' },
-    { message: `Risk Score: ${state.riskScore} · Risk Level: ${state.riskStatus}`, level: state.riskStatus === 'HIGH' || state.riskStatus === 'VERY HIGH' ? 'warning' : 'info' },
+    { message: `Risk Score: ${state.riskScore}/100 · Risk Level: ${state.riskStatus}`, level: state.riskStatus === 'HIGH' || state.riskStatus === 'VERY HIGH' ? 'warning' : 'info' },
     { message: `Predicted Direction: ${state.predictedDirection}`, level: 'info' },
     { message: `Zone A: ${state.zones[0] ? 'ACTIVE' : 'STANDBY'} · Zone B: ${state.zones[1] ? 'ACTIVE' : 'STANDBY'} · Zone C: ${state.zones[2] ? 'ACTIVE' : 'STANDBY'} · Zone D: ${state.zones[3] ? 'ACTIVE' : 'STANDBY'}`, level: state.zones.some(Boolean) ? 'success' : 'info' },
+    { message: `Action: ${state.riskStatus}, ${activeZonesSummary}, Pump ${state.pumpOn ? 'ON' : 'OFF'}, Flow ${state.requiredFlowLpm.toFixed(2)} L/min`, level: state.pumpOn ? 'success' : 'info' },
     { message: `Required Flow: ${state.requiredFlowLpm.toFixed(2)} L/min · Projected Water Use: ${state.projectedWaterL.toFixed(2)} L · Misting Duration: ${state.mistingDurationSeconds} sec`, level: 'info' },
     { message: `Pump: ${state.pumpOn ? 'ON' : 'OFF'}`, level: state.pumpOn ? 'success' : 'info' },
   ];

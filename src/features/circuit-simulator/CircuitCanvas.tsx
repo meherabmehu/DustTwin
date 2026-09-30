@@ -14,19 +14,20 @@ type PartProps = {
   children?: ReactNode;
   active?: boolean;
   showState?: boolean;
+  stateLabel?: string;
 };
 
 const ZONE_LETTERS = ['Zone A (North)', 'Zone B (East)', 'Zone C (South)', 'Zone D (West)'];
 
-function CircuitPart({ className, icon, name, children, active = false, showState = false }: PartProps) {
+function CircuitPart({ className, icon, name, children, active = false, showState = false, stateLabel }: PartProps) {
   return (
     <div
       className={`circuit-part ${className} ${showState ? (active ? 'is-active' : 'is-inactive') : ''}`}
       data-state={showState ? (active ? 'on' : 'off') : undefined}
       role={showState ? 'img' : undefined}
-      aria-label={showState ? `${name}: ${active ? 'ON' : 'OFF'}` : undefined}
+      aria-label={showState ? `${name}: ${stateLabel ?? (active ? 'ON' : 'OFF')}` : undefined}
     >
-      {showState && <OutputStateBadge active={active} />}
+      {showState && <OutputStateBadge active={active} label={stateLabel} />}
       <div className="part-art">{children ?? icon}</div>
       <div className="part-name">{name}</div>
     </div>
@@ -97,17 +98,20 @@ export default function CircuitCanvas({ state, zoom }: Props) {
         <CircuitPart
           className="relay-board"
           icon={<Settings />}
-          name="4 Channel Relay Module"
+          name="4 Channel Relay Module (A–D)"
           active={anyZoneActive}
           showState
+          stateLabel={anyZoneActive ? 'ACTIVE' : 'STANDBY'}
         >
           <span className="relay-blocks">
             {state.zones.map((active, index) => (
               <i
                 className={active ? 'relay-channel active' : 'relay-channel'}
                 key={index}
-                title={`Relay ${index + 1} (${ZONE_LETTERS[index]}): ${active ? 'ACTIVE' : 'STANDBY'}`}
-              />
+                title={`Relay ${['A', 'B', 'C', 'D'][index]} (${ZONE_LETTERS[index]}): ${active ? 'ON' : 'OFF'}`}
+              >
+                <small className="relay-tag">{['A', 'B', 'C', 'D'][index]}:{active ? 'ON' : 'OFF'}</small>
+              </i>
             ))}
           </span>
         </CircuitPart>
@@ -119,6 +123,7 @@ export default function CircuitCanvas({ state, zoom }: Props) {
             name={`${ZONE_LETTERS[index]} Valve`}
             active={active}
             showState
+            stateLabel={active ? 'OPEN' : 'CLOSED'}
             key={index}
           />
         ))}

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  classifyRisk,
   createInitialSimulatorState,
   derivePm10,
   formatElapsedTime,
@@ -17,7 +18,7 @@ test('initial readings and derived PM10 are deterministic', () => {
   assert.equal(state.pm2, 42);
   assert.equal(state.pm10_1, 46);
   assert.equal(state.pm10_2, 69);
-  assert.equal(getRiskLevel(state), 'moderate');
+  assert.equal(state.riskStatus, 'MODERATE');
   assert.deepEqual(state.zones, [false, false, false, false]);
   assert.equal(derivePm10(40), 66);
 });
@@ -46,7 +47,7 @@ test('AUTO multi-factor decision maps directional zones and variable flow accord
   assert.deepEqual(state.zones, [false, false, false, false]);
   assert.equal(state.pumpOn, false);
   assert.equal(state.requiredFlowLpm, 0);
-  assert.equal(getRiskLevel(state), 'low');
+  assert.equal(state.riskStatus, 'LOW');
 });
 
 test('MANUAL controls override zones and actuators independently', () => {
@@ -139,7 +140,7 @@ test('Circuit Case 1 — Dust 20%, PM1 15, PM2 12, Wind 1, Hum 70% yields LOW ri
   state = act(state, { type: 'SET_SENSOR', key: 'windSpeed', value: 1 });
   state = act(state, { type: 'SET_SENSOR', key: 'humidity', value: 70 });
   state = act(state, { type: 'RUN' });
-  assert.equal(getRiskLevel(state), 'low');
+  assert.equal(state.riskStatus, 'LOW');
   assert.deepEqual(state.zones, [false, false, false, false]);
   assert.equal(state.pumpOn, false);
   assert.equal(state.requiredFlowLpm, 0);
@@ -153,7 +154,7 @@ test('Circuit Case 2 — Dust 80%, PM1 40, PM2 35, Wind 1, NW yields MODERATE ri
   state = act(state, { type: 'SET_SENSOR', key: 'windSpeed', value: 1 });
   state = act(state, { type: 'SET_SENSOR', key: 'windDirection', value: 315 });
   state = act(state, { type: 'RUN' });
-  assert.equal(getRiskLevel(state), 'moderate');
+  assert.equal(state.riskStatus, 'MODERATE');
 });
 
 test('Circuit Case 3 — Dust 60%, PM1 55, PM2 30, Wind 7, East yields East exposure, Zone B, pump ON', () => {
@@ -177,11 +178,43 @@ test('Circuit Case 4 — Dust 90%, PM1 80, PM2 70, Wind 6, NW yields HIGH risk, 
   state = act(state, { type: 'SET_SENSOR', key: 'windSpeed', value: 6 });
   state = act(state, { type: 'SET_SENSOR', key: 'windDirection', value: 315 });
   state = act(state, { type: 'RUN' });
-  assert.ok(getRiskLevel(state) === 'high' || getRiskLevel(state) === 'very high');
+  assert.equal(state.riskStatus, 'HIGH');
   assert.deepEqual(state.zones, [true, false, false, true]); // Zone A + Zone D
   assert.equal(state.flowPerZoneLpm, 0.75);
   assert.equal(state.requiredFlowLpm, 1.50);
+  assert.equal(state.mistingDurationSeconds, 60);
+  assert.equal(state.projectedWaterL, 1.50);
   assert.equal(state.pumpOn, true);
+
+  // Check hardware synchronization: serial log contains exact match
+  const actionLog = state.serialLogs.find((l) => l.message.startsWith('Action: HIGH'));
+  assert.ok(actionLog, 'Serial log must contain Action summary line');
+  assert.ok(actionLog.message.includes('Zone A + Zone D'));
+  assert.ok(actionLog.message.includes('Pump ON'));
+  assert.ok(actionLog.message.includes('Flow 1.50 L/min'));
+});
+
+test('Shared risk classification matches exact Main Simulation thresholds', () => {
+  // LOW: score < 32 AND peak PM < 40
+  assert.equal(classifyRisk(31, 39), 'LOW');
+  assert.equal(classifyRisk(0, 0), 'LOW');
+
+  // MODERATE: 32 <= score < 55 (or peak PM >= 40)
+  assert.equal(classifyRisk(32, 20), 'MODERATE');
+  assert.equal(classifyRisk(54, 20), 'MODERATE');
+  assert.equal(classifyRisk(20, 40), 'MODERATE');
+  assert.equal(classifyRisk(20, 74), 'MODERATE');
+
+  // HIGH: 55 <= score < 80 OR peak PM >= 75
+  assert.equal(classifyRisk(55, 20), 'HIGH');
+  assert.equal(classifyRisk(79, 20), 'HIGH');
+  assert.equal(classifyRisk(20, 75), 'HIGH');
+  assert.equal(classifyRisk(20, 149), 'HIGH');
+
+  // VERY HIGH: score >= 80 OR peak PM >= 150
+  assert.equal(classifyRisk(80, 20), 'VERY HIGH');
+  assert.equal(classifyRisk(20, 150), 'VERY HIGH');
+  assert.equal(classifyRisk(100, 200), 'VERY HIGH');
 });
 
 test('Circuit Simulation and Main Simulation maintain completely independent state', () => {
