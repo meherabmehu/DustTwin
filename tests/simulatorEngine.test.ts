@@ -7,6 +7,7 @@ import {
   getRiskLevel,
   simulatorReducer,
 } from '../src/features/circuit-simulator/simulatorEngine';
+import { defaultInput, predictSimulation } from '../src/features/simulation/simulationEngine';
 
 const act = simulatorReducer;
 
@@ -21,33 +22,30 @@ test('initial readings and derived PM10 are deterministic', () => {
   assert.equal(derivePm10(40), 66);
 });
 
-test('AUTO thresholds map each PM sensor to its two zones at exact boundaries', () => {
+test('AUTO multi-factor decision maps directional zones and variable flow according to final rules', () => {
   let state = act(createInitialSimulatorState(), { type: 'RUN' });
-  assert.deepEqual(state.zones, [false, false, true, false]);
+  // Default is NW (315°) and MODERATE risk -> Zone A + Zone D
+  assert.deepEqual(state.zones, [true, false, false, true]);
   assert.equal(state.pumpOn, true);
-  assert.equal(state.fanOn, false);
+  assert.equal(state.flowPerZoneLpm, 0.50);
+  assert.equal(state.requiredFlowLpm, 1.00);
 
-  state = act(state, { type: 'SET_SENSOR', key: 'pm1', value: 40 });
-  assert.deepEqual(state.zones, [true, false, true, false]);
-  assert.equal(getRiskLevel(state), 'moderate');
-
-  state = act(state, { type: 'SET_SENSOR', key: 'pm2', value: 39 });
-  assert.deepEqual(state.zones, [true, false, false, false]);
+  // Switch wind to East (90°) -> Zone B
+  state = act(state, { type: 'SET_SENSOR', key: 'windDirection', value: 90 });
+  assert.deepEqual(state.zones, [false, true, false, false]);
   assert.equal(state.pumpOn, true);
+  assert.equal(state.flowPerZoneLpm, 0.50);
+  assert.equal(state.requiredFlowLpm, 0.50);
 
-  state = act(state, { type: 'SET_SENSOR', key: 'pm1', value: 75 });
-  assert.deepEqual(state.zones, [true, true, false, false]);
-  assert.equal(state.fanOn, true);
-  assert.equal(getRiskLevel(state), 'high');
-
-  state = act(state, { type: 'SET_SENSOR', key: 'pm1', value: 74 });
-  assert.deepEqual(state.zones, [true, false, false, false]);
-  assert.equal(state.fanOn, false);
-  assert.equal(getRiskLevel(state), 'moderate');
-
-  state = act(state, { type: 'SET_SENSOR', key: 'pm1', value: 39 });
+  // Low risk scenario -> All zones OFF, pump OFF, flow 0
+  state = act(state, { type: 'SET_SENSOR', key: 'dustIntensity', value: 10 });
+  state = act(state, { type: 'SET_SENSOR', key: 'pm1', value: 15 });
+  state = act(state, { type: 'SET_SENSOR', key: 'pm2', value: 12 });
+  state = act(state, { type: 'SET_SENSOR', key: 'windSpeed', value: 1 });
+  state = act(state, { type: 'SET_SENSOR', key: 'humidity', value: 75 });
   assert.deepEqual(state.zones, [false, false, false, false]);
   assert.equal(state.pumpOn, false);
+  assert.equal(state.requiredFlowLpm, 0);
   assert.equal(getRiskLevel(state), 'low');
 });
 
@@ -129,4 +127,88 @@ test('Serial Monitor can clear its buffer without changing simulator outputs', (
   assert.equal(act(state, { type: 'CLEAR_LOGS' }), state);
   for (let i = 0; i < 5; i++) state = act(state, { type: 'TICK' });
   assert.ok(state.serialLogs.some((entry) => entry.message.startsWith('PM 1:')));
+});
+
+// Explicit Circuit Simulation Specification Cases from User Prompt:
+
+test('Circuit Case 1 — Dust 20%, PM1 15, PM2 12, Wind 1, Hum 70% yields LOW risk, no active zones, pump OFF, flow 0', () => {
+  let state = createInitialSimulatorState();
+  state = act(state, { type: 'SET_SENSOR', key: 'dustIntensity', value: 20 });
+  state = act(state, { type: 'SET_SENSOR', key: 'pm1', value: 15 });
+  state = act(state, { type: 'SET_SENSOR', key: 'pm2', value: 12 });
+  state = act(state, { type: 'SET_SENSOR', key: 'windSpeed', value: 1 });
+  state = act(state, { type: 'SET_SENSOR', key: 'humidity', value: 70 });
+  state = act(state, { type: 'RUN' });
+  assert.equal(getRiskLevel(state), 'low');
+  assert.deepEqual(state.zones, [false, false, false, false]);
+  assert.equal(state.pumpOn, false);
+  assert.equal(state.requiredFlowLpm, 0);
+});
+
+test('Circuit Case 2 — Dust 80%, PM1 40, PM2 35, Wind 1, NW yields MODERATE risk and low transport', () => {
+  let state = createInitialSimulatorState();
+  state = act(state, { type: 'SET_SENSOR', key: 'dustIntensity', value: 80 });
+  state = act(state, { type: 'SET_SENSOR', key: 'pm1', value: 40 });
+  state = act(state, { type: 'SET_SENSOR', key: 'pm2', value: 35 });
+  state = act(state, { type: 'SET_SENSOR', key: 'windSpeed', value: 1 });
+  state = act(state, { type: 'SET_SENSOR', key: 'windDirection', value: 315 });
+  state = act(state, { type: 'RUN' });
+  assert.equal(getRiskLevel(state), 'moderate');
+});
+
+test('Circuit Case 3 — Dust 60%, PM1 55, PM2 30, Wind 7, East yields East exposure, Zone B, pump ON', () => {
+  let state = createInitialSimulatorState();
+  state = act(state, { type: 'SET_SENSOR', key: 'dustIntensity', value: 60 });
+  state = act(state, { type: 'SET_SENSOR', key: 'pm1', value: 55 });
+  state = act(state, { type: 'SET_SENSOR', key: 'pm2', value: 30 });
+  state = act(state, { type: 'SET_SENSOR', key: 'windSpeed', value: 7 });
+  state = act(state, { type: 'SET_SENSOR', key: 'windDirection', value: 90 });
+  state = act(state, { type: 'RUN' });
+  assert.deepEqual(state.zones, [false, true, false, false]); // Zone B (East)
+  assert.equal(state.pumpOn, true);
+  assert.equal(state.predictedDirection, 'East');
+});
+
+test('Circuit Case 4 — Dust 90%, PM1 80, PM2 70, Wind 6, NW yields HIGH risk, Zone A + Zone D, flow 1.50 L/min, pump ON', () => {
+  let state = createInitialSimulatorState();
+  state = act(state, { type: 'SET_SENSOR', key: 'dustIntensity', value: 90 });
+  state = act(state, { type: 'SET_SENSOR', key: 'pm1', value: 80 });
+  state = act(state, { type: 'SET_SENSOR', key: 'pm2', value: 70 });
+  state = act(state, { type: 'SET_SENSOR', key: 'windSpeed', value: 6 });
+  state = act(state, { type: 'SET_SENSOR', key: 'windDirection', value: 315 });
+  state = act(state, { type: 'RUN' });
+  assert.ok(getRiskLevel(state) === 'high' || getRiskLevel(state) === 'very high');
+  assert.deepEqual(state.zones, [true, false, false, true]); // Zone A + Zone D
+  assert.equal(state.flowPerZoneLpm, 0.75);
+  assert.equal(state.requiredFlowLpm, 1.50);
+  assert.equal(state.pumpOn, true);
+});
+
+test('Circuit Simulation and Main Simulation maintain completely independent state', () => {
+  const mainScenario = { ...defaultInput, dustIntensity: 90, windSpeed: 8 };
+  const mainPrediction1 = predictSimulation(mainScenario, undefined, 'predictive');
+
+  let circuitState = createInitialSimulatorState();
+  assert.equal(circuitState.dustIntensity, 70);
+  assert.equal(circuitState.pm1, 28);
+  assert.equal(circuitState.pm2, 42);
+
+  circuitState = act(circuitState, { type: 'SET_SENSOR', key: 'dustIntensity', value: 20 });
+  circuitState = act(circuitState, { type: 'SET_SENSOR', key: 'pm1', value: 15 });
+  circuitState = act(circuitState, { type: 'SET_SENSOR', key: 'pm2', value: 12 });
+  circuitState = act(circuitState, { type: 'SET_SENSOR', key: 'windSpeed', value: 1 });
+  circuitState = act(circuitState, { type: 'RUN' });
+
+  assert.equal(circuitState.dustIntensity, 20);
+  assert.equal(circuitState.pm1, 15);
+  assert.equal(circuitState.pm2, 12);
+  assert.equal(circuitState.riskStatus, 'LOW');
+  assert.equal(circuitState.pumpOn, false);
+
+  assert.equal(mainScenario.dustIntensity, 90);
+  assert.equal(mainScenario.windSpeed, 8);
+  const mainPrediction2 = predictSimulation(mainScenario, undefined, 'predictive');
+  assert.deepEqual(mainPrediction1, mainPrediction2);
+  assert.equal(mainPrediction2.risk, 'HIGH');
+  assert.deepEqual(mainPrediction2.activeZoneIds, ['A', 'D']);
 });
