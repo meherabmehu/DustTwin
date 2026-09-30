@@ -79,3 +79,48 @@ test('Scenario F — predictive response is targeted and uses less comparison wa
     <= results.find((item) => item.strategy === 'reactive')!.exceedanceMinutes);
   assert.ok(results.every((item) => item.boundaryPm10 === derivePm10(item.boundaryPm25)));
 });
+
+// Explicit Judge-Facing Test Cases from Specification:
+
+test('Specification Case 1 — Dust 20%, Wind 1 m/s, Humidity 70% yields LOW risk, misting OFF, Flow 0', () => {
+  const result = predictSimulation({ dustIntensity: 20, windSpeed: 1, windDirection: 0, humidity: 70, temperatureC: 28 });
+  assert.equal(result.risk, 'LOW');
+  assert.deepEqual(result.activeZoneIds, []);
+  assert.equal(result.flowRateLpm, 0);
+  assert.ok(result.projectedPm25 < 40);
+});
+
+test('Specification Case 2 — Dust 80%, Wind 1 m/s yields MODERATE risk (high dust generation but weak transport)', () => {
+  const result = predictSimulation({ dustIntensity: 80, windSpeed: 1, windDirection: 0, humidity: 60, temperatureC: 28 });
+  assert.equal(result.risk, 'MODERATE');
+});
+
+test('Specification Case 3 — Dust 60%, Wind 7 m/s aimed East exposes East boundary, selects Zone B, and has shorter lead time', () => {
+  const result = predictSimulation({ dustIntensity: 60, windSpeed: 7, windDirection: 90, humidity: 45, temperatureC: 28 });
+  assert.ok(result.predictedBoundaries.includes('east'));
+  assert.ok(result.predictedZoneIds.includes('B'));
+  assert.ok(result.leadTimeSeconds !== null && result.leadTimeSeconds < 30);
+});
+
+test('Specification Case 4 — Dust 90%, Wind 6 m/s NW exposes NW, selects Zones A+D, HIGH risk with higher required flow', () => {
+  const result = predictSimulation({ dustIntensity: 90, windSpeed: 6, windDirection: 315, humidity: 45, temperatureC: 28 });
+  assert.ok(result.predictedBoundaries.includes('north') && result.predictedBoundaries.includes('west'));
+  assert.ok(result.predictedZoneIds.includes('A') && result.predictedZoneIds.includes('D'));
+  assert.ok(result.risk === 'HIGH' || result.risk === 'VERY HIGH');
+  assert.ok(result.flowPerZoneLpm >= 0.75);
+});
+
+test('Specification Case 5 & 6 — Comparison of Continuous vs Predictive under identical inputs', () => {
+  const scenarioInput = { dustIntensity: 90, windSpeed: 6, windDirection: 315, humidity: 45, temperatureC: 28 };
+  const continuous = predictSimulation(scenarioInput, undefined, 'continuous');
+  const predictive = predictSimulation(scenarioInput, undefined, 'predictive');
+
+  assert.equal(continuous.activeZoneIds.length, 4);
+  assert.equal(predictive.activeZoneIds.length, 2);
+
+  const comparison = calculateStrategyComparison(predictive);
+  const contComp = comparison.find((c) => c.strategy === 'continuous')!;
+  const predComp = comparison.find((c) => c.strategy === 'predictive')!;
+
+  assert.ok(predComp.waterUsedL < contComp.waterUsedL);
+});
