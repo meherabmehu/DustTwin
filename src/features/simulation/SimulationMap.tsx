@@ -24,13 +24,6 @@ const zoneForBoundary: Record<BoundaryId, ZoneId> = {
   west: 'D',
 };
 
-const zoneLabels: Record<ZoneId, string> = {
-  A: 'North',
-  B: 'East',
-  C: 'South',
-  D: 'West',
-};
-
 function sensorValue(reading: SimulationPrediction['sensors'][number], view: PollutantView) {
   if (view === 'pm10') return reading.pm10;
   return reading.pm25;
@@ -61,11 +54,6 @@ function SensorCard({ reading, view, activeZone }: {
       {reading.forecastStatus !== reading.status && <small className="sim-sensor-forecast">Forecast: {reading.forecastStatus}</small>}
     </div>
   );
-}
-
-function ZoneTag({ zone, active }: { zone: ZoneId; active: boolean }) {
-  const boundary = zoneLabels[zone];
-  return <span className={`map-zone-tag zone-${zone.toLowerCase()} ${active ? 'is-active' : ''}`} data-testid={`zone-${zone}`}><b>{zone}</b><span>{boundary}</span><strong>{active ? 'ACTIVE' : 'STANDBY'}</strong></span>;
 }
 
 export default function SimulationMap({
@@ -164,6 +152,10 @@ export default function SimulationMap({
         <rect x="660" y="195" width="22" height="220" rx="7" className={`sim-zone-segment zone-B ${activeZones.has('B') ? 'is-active' : ''}`} />
         <rect x="340" y="415" width="320" height="20" rx="7" className={`sim-zone-segment zone-C ${activeZones.has('C') ? 'is-active' : ''}`} />
         <rect x="318" y="195" width="22" height="220" rx="7" className={`sim-zone-segment zone-D ${activeZones.has('D') ? 'is-active' : ''}`} />
+        <text x="500" y="189" textAnchor="middle" className={`sim-zone-label-svg ${activeZones.has('A') ? 'is-active' : ''}`}>A · NORTH · {activeZones.has('A') ? 'ACTIVE' : 'STANDBY'}</text>
+        <text transform="translate(674 305) rotate(90)" textAnchor="middle" className={`sim-zone-label-svg ${activeZones.has('B') ? 'is-active' : ''}`}>B · EAST · {activeZones.has('B') ? 'ACTIVE' : 'STANDBY'}</text>
+        <text x="500" y="429" textAnchor="middle" className={`sim-zone-label-svg ${activeZones.has('C') ? 'is-active' : ''}`}>C · SOUTH · {activeZones.has('C') ? 'ACTIVE' : 'STANDBY'}</text>
+        <text transform="translate(328 305) rotate(-90)" textAnchor="middle" className={`sim-zone-label-svg ${activeZones.has('D') ? 'is-active' : ''}`}>D · WEST · {activeZones.has('D') ? 'ACTIVE' : 'STANDBY'}</text>
 
         <g className="sim-wind-vector">
           <line x1={sourceX} y1={sourceY} x2={downwindEndX} y2={downwindEndY} markerEnd="url(#simulation-wind-arrow)" />
@@ -179,10 +171,6 @@ export default function SimulationMap({
         <g className="sim-sensor-pin" transform="translate(500 469)"><circle r="13" /><text y="4">S</text></g>
         <g className="sim-sensor-pin" transform="translate(275 305)"><circle r="13" /><text y="4">W</text></g>
       </svg>
-
-      <div className="sim-zone-tags" aria-label="Boundary misting zones">
-        {(['A', 'B', 'C', 'D'] as const).map((zone) => <ZoneTag key={zone} zone={zone} active={activeZones.has(zone)} />)}
-      </div>
 
       {prediction.sensors.map((reading) => (
         <SensorCard key={reading.id} reading={reading} view={view} activeZone={activeZones.has(zoneForBoundary[reading.id])} />

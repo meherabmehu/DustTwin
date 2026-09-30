@@ -5,6 +5,8 @@
 .sim-site-subtitle-svg { fill: #7599a8; font: 500 9px/1 ui-sans-serif, system-ui, sans-serif; letter-spacing: 2px; }
 .sim-zone-segment { fill: rgba(86,125,141,.2); stroke: #7496a4; stroke-width: 1.4; stroke-dasharray: 6 5; transition: fill .24s ease, stroke .24s ease, filter .24s ease; }
 .sim-zone-segment.is-active { fill: rgba(19,215,235,.55); stroke: #62f3ff; stroke-width: 2.1; stroke-dasharray: none; filter: drop-shadow(0 0 6px rgba(15,225,247,.8)); animation: sim-zone-glow 1.8s ease-in-out infinite alternate; }
+.sim-zone-label-svg { fill: #b8cbd3; font: 700 7px ui-sans-serif, system-ui, sans-serif; letter-spacing: .75px; }
+.sim-zone-label-svg.is-active { fill: #e4ffff; }
 .sim-wind-vector line { stroke: #c8f7ff; stroke-width: 2.1; stroke-dasharray: 7 6; opacity: .9; filter: drop-shadow(0 0 4px rgba(38,211,235,.58)); }
 .sim-source-mark circle:first-child { opacity: .83; }
 .sim-source-mark circle:nth-child(2) { filter: drop-shadow(0 0 8px rgba(255,193,99,.7)); }
@@ -109,7 +111,6 @@
 @media (max-width: 430px) {
   .sim-map-inputs { max-width: 57%; }
   .sim-map-inputs > span { font-size: 6.5px; }
-  .sim-map-inputs > span:nth-child(3) { display: none; }
   .sim-map-view-switch button { padding: 4px 4px; font-size: 6.5px; }
   .sim-sensor-card { width: 115px; min-height: 77px; }
   .sim-sensor-card.sensor-north { top: 49px; }
