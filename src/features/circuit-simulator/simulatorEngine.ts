@@ -1,6 +1,6 @@
 import { SIMULATION_INPUT_LIMITS, SIMULATION_THRESHOLDS } from '../../config/simulationThresholds';
 import { DEFAULT_SIMULATOR_INPUTS, SERIAL_LOG_LIMIT } from './simulatorConfig';
-import { calculateCombinedRisk } from '../simulation/riskModel';
+import { calculateCombinedRisk, classifyRisk } from '../simulation/riskModel';
 import {
   calculateFlowRateLpm,
   calculateWaterUseL,
@@ -75,6 +75,8 @@ export function getPredictedDirectionLabel(windDirection: number): string {
   return 'North / West';
 }
 
+export { classifyRisk };
+
 /**
  * Reuses the same transparent combined weighted risk model as Main Simulation.
  * Combines dust source (30%), wind exposure (20%), boundary PM (35%), humidity (10%), temperature (5%).
@@ -97,7 +99,7 @@ export function calculateCircuitRisk(
 
 export function getRiskLevel(
   state: Pick<SimulatorState, 'dustIntensity' | 'pm1' | 'pm2' | 'temperature' | 'humidity' | 'windSpeed' | 'windDirection'> | Pick<SimulatorState, 'pm1' | 'pm2'>,
-): RiskLevel {
+): RiskStatus {
   const fullState = {
     dustIntensity: ('dustIntensity' in state && typeof state.dustIntensity === 'number') ? state.dustIntensity : DEFAULT_SIMULATOR_INPUTS.dustIntensity,
     pm1: state.pm1,
@@ -108,7 +110,7 @@ export function getRiskLevel(
     windDirection: ('windDirection' in state && typeof state.windDirection === 'number') ? state.windDirection : DEFAULT_SIMULATOR_INPUTS.windDirection,
   };
   const breakdown = calculateCircuitRisk(fullState);
-  return breakdown.status.toLowerCase() as RiskLevel;
+  return breakdown.status;
 }
 
 export function formatElapsedTime(seconds: number): string {

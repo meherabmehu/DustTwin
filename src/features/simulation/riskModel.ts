@@ -38,6 +38,34 @@ export interface RiskBreakdown {
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 /**
+ * Exact Main Simulation risk classification helper:
+ *
+ * LOW:
+ * score < 32 AND peak PM < 40
+ *
+ * MODERATE:
+ * 32 <= score < 55 (and peak PM < 75)
+ *
+ * HIGH:
+ * 55 <= score < 80 OR peak PM >= 75
+ *
+ * VERY HIGH:
+ * score >= 80 OR peak PM >= 150
+ */
+export function classifyRisk(score: number, peakBoundaryPm25: number): RiskStatus {
+  if (score >= 80 || peakBoundaryPm25 >= 150) {
+    return 'VERY HIGH';
+  }
+  if (score >= 55 || peakBoundaryPm25 >= 75) {
+    return 'HIGH';
+  }
+  if (score >= 32 || peakBoundaryPm25 >= 40) {
+    return 'MODERATE';
+  }
+  return 'LOW';
+}
+
+/**
  * Calculates a combined multi-factor risk score and classification.
  */
 export function calculateCombinedRisk(
@@ -75,17 +103,8 @@ export function calculateCombinedRisk(
   const rawScore = dustScore + windScore + boundaryPmScore + humidityScore + tempScore;
   const score = Math.round(clamp(rawScore, 0, 100));
 
-  // Transparent risk classification based on combined score and boundary thresholds
-  let status: RiskStatus = 'LOW';
-  if (score >= 80 || peakBoundaryPm25 >= 150) {
-    status = 'VERY HIGH';
-  } else if (score >= 55 || (peakBoundaryPm25 >= 75 && score >= 45)) {
-    status = 'HIGH';
-  } else if (score >= 32 || peakBoundaryPm25 >= 40) {
-    status = 'MODERATE';
-  } else {
-    status = 'LOW';
-  }
+  // Transparent risk classification based on the exact shared rules
+  const status = classifyRisk(score, peakBoundaryPm25);
 
   const explanation =
     status === 'LOW'
