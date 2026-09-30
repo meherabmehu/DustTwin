@@ -62,6 +62,16 @@ export default function LiveMetrics({ state }: Props) {
           <strong><Waves size={14} /> {state.requiredFlowLpm.toFixed(2)} L/min</strong>
           <span>{state.flowPerZoneLpm > 0 ? `${state.flowPerZoneLpm.toFixed(2)} L/min / zone` : 'Standby 0 L/min'}</span>
         </div>
+        <div className="output-metric">
+          <small>Estimated Duration</small>
+          <strong>{state.mistingDurationSeconds} sec</strong>
+          <span>Targeted suppression burst</span>
+        </div>
+        <div className="output-metric">
+          <small>Projected Water Use</small>
+          <strong><Droplet size={14} /> {state.projectedWaterL.toFixed(2)} L</strong>
+          <span>Pump State: <b>{state.pumpOn ? 'ENERGIZED (ON)' : 'STANDBY (OFF)'}</b></span>
+        </div>
       </div>
     </article>
   );
