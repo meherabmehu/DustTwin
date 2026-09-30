@@ -1,4 +1,4 @@
-import { Droplet, Gauge, Thermometer, Wind } from 'lucide-react';
+import { CloudFog, Droplet, Gauge, Thermometer, Wind } from 'lucide-react';
 import { SIMULATION_INPUT_LIMITS } from '../../config/simulationThresholds';
 import type { SensorInputKey, SimulatorState } from './simulatorTypes';
 
@@ -80,6 +80,17 @@ export default function SensorInputs({ state, onChange }: Props) {
         <span className="sensor-panel-tag">EDITABLE INPUTS</span>
       </div>
       <div className="sensor-input-grid">
+        <SensorControl
+          label="Dust source intensity"
+          sensorKey="dustIntensity"
+          value={state.dustIntensity}
+          min={limits.dustIntensity.min}
+          max={limits.dustIntensity.max}
+          step={limits.dustIntensity.step}
+          unit="%"
+          icon={<CloudFog />}
+          onChange={onChange}
+        />
         <SensorControl
           label="PM2.5 · Sensor 1"
           sensorKey="pm1"

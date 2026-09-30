@@ -31,6 +31,7 @@ export const SIMULATION_PIN_MAP = Object.freeze({
 });
 
 export const SIMULATION_INPUT_LIMITS = Object.freeze({
+  dustIntensity: { min: 0, max: 100, step: 1 },
   pm25: { min: 0, max: 200, step: 1 },
   temperature: { min: 10, max: 50, step: 0.1 },
   humidity: { min: 0, max: 100, step: 1 },
