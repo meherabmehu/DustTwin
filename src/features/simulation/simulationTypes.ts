@@ -70,6 +70,7 @@ export interface SimulationPrediction {
   primaryBoundary: BoundaryId | null;
   predictedZoneIds: ZoneId[];
   activeZoneIds: ZoneId[];
+  heldOffBoundaries: BoundaryId[];
   projectedPm25: number;
   projectedPm10: number;
   baselinePm25: number;
@@ -93,6 +94,8 @@ export interface SimulationRunState {
   mistingSeconds: number;
   waterUsedL: number;
   currentPm25: Record<BoundaryId, number>;
+  activeZoneIds: ZoneId[];
+  heldOffBoundaries: BoundaryId[];
 }
 
 export interface StrategyComparisonResult {

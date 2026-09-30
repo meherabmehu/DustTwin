@@ -1,4 +1,4 @@
-import { RISK_RANK, ZONE_TO_BOUNDARY } from './simulationConfig';
+import { PM25_MODERATE_THRESHOLD, RISK_RANK, SENSOR_RELEASE_THRESHOLD_PM25, ZONE_TO_BOUNDARY } from './simulationConfig';
 import { BOUNDARY_IDS, ZONE_IDS, type BoundaryId, type ControlStrategy, type RiskStatus, type SensorReading, type ZoneId } from './simulationTypes';
 
 const boundaryNames: Record<BoundaryId, string> = {
@@ -68,6 +68,45 @@ export function getZonesForStrategy(
     default:
       return [];
   }
+}
+
+export function getPredictiveZonesWithFeedback(
+  predictedBoundaries: readonly BoundaryId[],
+  currentPm25: Record<BoundaryId, number>,
+  previouslyActiveZones: readonly ZoneId[],
+  heldOffBoundaries: readonly BoundaryId[],
+): { zoneIds: ZoneId[]; heldOffBoundaries: BoundaryId[] } {
+  const candidateSet = new Set(predictedBoundaries);
+  const nextHeldOff = new Set(heldOffBoundaries.filter((boundary) => candidateSet.has(boundary)));
+  const previousActive = new Set(previouslyActiveZones);
+  const selected = new Set<ZoneId>();
+
+  for (const boundary of predictedBoundaries) {
+    const zone = (Object.entries(ZONE_TO_BOUNDARY) as Array<[ZoneId, BoundaryId]>)
+      .find(([, mappedBoundary]) => mappedBoundary === boundary)?.[0];
+    if (!zone) continue;
+    const current = currentPm25[boundary] ?? 0;
+
+    if (nextHeldOff.has(boundary)) {
+      if (current >= PM25_MODERATE_THRESHOLD) {
+        nextHeldOff.delete(boundary);
+        selected.add(zone);
+      }
+      continue;
+    }
+
+    if (previousActive.has(zone) && current <= SENSOR_RELEASE_THRESHOLD_PM25) {
+      nextHeldOff.add(boundary);
+      continue;
+    }
+
+    selected.add(zone);
+  }
+
+  return {
+    zoneIds: ZONE_IDS.filter((zone) => selected.has(zone)),
+    heldOffBoundaries: BOUNDARY_IDS.filter((boundary) => nextHeldOff.has(boundary)),
+  };
 }
 
 export function formatBoundaryList(boundaries: readonly BoundaryId[]): string {

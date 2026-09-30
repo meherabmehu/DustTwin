@@ -1,8 +1,8 @@
 import { MAX_ACTIVE_ZONES } from '../../config/waterSystem';
-import { BOUNDARY_GEOMETRY, PM25_MODERATE_THRESHOLD, RISK_RANK, STRATEGY_LABELS, ZONE_TO_BOUNDARY } from './simulationConfig';
-import { advanceSensorReadings, createInitialReadings, derivePm10, getRiskStatus, getSensorBaseline, getSensorReadings } from './sensorModel';
+import { PM25_MODERATE_THRESHOLD, SENSOR_RELEASE_THRESHOLD_PM25, STRATEGY_LABELS, ZONE_TO_BOUNDARY } from './simulationConfig';
+import { advanceSensorReadings, createInitialReadings, derivePm10, getSensorReadings } from './sensorModel';
 import { getPlumeEstimate, normalizeBearing } from './plumeModel';
-import { formatBoundaryList, getHighestRisk, getPredictedBoundaries, getPrimaryBoundary, getZonesForStrategy } from './zoneLogic';
+import { formatBoundaryList, getHighestRisk, getPredictedBoundaries, getPredictiveZonesWithFeedback, getPrimaryBoundary, getZonesForStrategy } from './zoneLogic';
 import { calculateActiveNozzles, calculateFlowRateLpm, calculateWaterUseL } from './waterModel';
 import type { BoundaryId, ControlStrategy, SimulationInput, SimulationPrediction, SimulationRunState, ZoneId } from './simulationTypes';
 
@@ -63,7 +63,7 @@ function buildDecision(
   running: boolean,
   activeZoneIds: readonly ZoneId[],
   predictedBoundaries: readonly BoundaryId[],
-  risk: SimulationPrediction['risk'],
+  heldOffBoundaries: readonly BoundaryId[],
 ): { decision: string; reasons: string[] } {
   const zoneNames = activeZoneIds.map((zone) => `Zone ${zone}`).join(', ');
   const boundaryNames = formatBoundaryList(predictedBoundaries);
@@ -103,12 +103,21 @@ function buildDecision(
       return activeZoneIds.length
         ? {
           decision: `Predictive response — targeting ${zoneNames} ahead of the forecast boundary risk.`,
-          reasons: [`${boundaryNames} forecast at or above ${PM25_MODERATE_THRESHOLD} µg/m³ PM2.5 from the modeled plume and sensor readings.`, `${activeZoneIds.length} boundary-matched zone${activeZoneIds.length === 1 ? '' : 's'} selected; unaffected boundaries stay on standby.`],
+          reasons: [
+            `${boundaryNames} forecast at or above ${PM25_MODERATE_THRESHOLD} µg/m³ PM2.5 from the modeled plume and sensor readings.`,
+            `${activeZoneIds.length} boundary-matched zone${activeZoneIds.length === 1 ? '' : 's'} selected; unaffected boundaries stay on standby.`,
+            ...(heldOffBoundaries.length ? [`${formatBoundaryList(heldOffBoundaries)} zone feedback is on hold below ${SENSOR_RELEASE_THRESHOLD_PM25} µg/m³ until its live sensor re-crosses ${PM25_MODERATE_THRESHOLD} µg/m³.`] : []),
+          ],
         }
-        : {
-          decision: 'Predictive standby — no boundary threshold crossing is forecast.',
-          reasons: [`All modeled boundary forecasts are below ${PM25_MODERATE_THRESHOLD} µg/m³ PM2.5.`, 'No misting zone is activated while the projected boundary risk is low.'],
-        };
+        : heldOffBoundaries.length
+          ? {
+            decision: 'Predictive hold — live sensor feedback reached the misting release level.',
+            reasons: [`${formatBoundaryList(heldOffBoundaries)} sensor feedback fell to ${SENSOR_RELEASE_THRESHOLD_PM25} µg/m³ PM2.5 or lower.`, `Those zones stay off until a live sensor rises to ${PM25_MODERATE_THRESHOLD} µg/m³; the plume forecast continues to be monitored.`],
+          }
+          : {
+            decision: 'Predictive standby — no boundary threshold crossing is forecast.',
+            reasons: [`All modeled boundary forecasts are below ${PM25_MODERATE_THRESHOLD} µg/m³ PM2.5.`, 'No misting zone is activated while the projected boundary risk is low.'],
+          };
   }
 }
 
@@ -124,11 +133,14 @@ export function predictSimulation(
   runState?: Partial<SimulationRunState>,
 ): SimulationPrediction {
   const input = normalizeSimulationInput(rawInput);
-  const baselines = getSensorBaseline(input);
   const noControlReadings = getSensorReadings(input, currentPm25, []);
   const predictedBoundaries = getPredictedBoundaries(noControlReadings);
   const predictedZoneIds = getZonesForStrategy('predictive', noControlReadings, predictedBoundaries);
-  const selectedZones = getZonesForStrategy(strategy, noControlReadings, predictedBoundaries).slice(0, MAX_ACTIVE_ZONES);
+  const feedback = strategy === 'predictive'
+    ? getPredictiveZonesWithFeedback(predictedBoundaries, currentPm25, runState?.activeZoneIds ?? [], runState?.heldOffBoundaries ?? [])
+    : { zoneIds: getZonesForStrategy(strategy, noControlReadings, predictedBoundaries), heldOffBoundaries: runState?.heldOffBoundaries ?? [] };
+  const selectedZones = feedback.zoneIds.slice(0, MAX_ACTIVE_ZONES);
+  const heldOffBoundaries = feedback.heldOffBoundaries;
   const activeZoneIds = running ? selectedZones : [];
   const activeBoundaryIds = activeZoneIds.map((zone) => ZONE_TO_BOUNDARY[zone]);
   const sensors = getSensorReadings(input, currentPm25, activeBoundaryIds);
@@ -151,7 +163,7 @@ export function predictSimulation(
   const waterUsedL = Math.max(0, runState?.waterUsedL ?? 0);
   const elapsedSeconds = Math.max(0, runState?.elapsedSeconds ?? 0);
   const mistingSeconds = Math.max(0, runState?.mistingSeconds ?? 0);
-  const { decision, reasons } = buildDecision(strategy, running, activeZoneIds, predictedBoundaries, risk);
+  const { decision, reasons } = buildDecision(strategy, running, activeZoneIds, predictedBoundaries, heldOffBoundaries);
 
   return {
     input,
@@ -167,6 +179,7 @@ export function predictSimulation(
     primaryBoundary,
     predictedZoneIds,
     activeZoneIds,
+    heldOffBoundaries,
     projectedPm25,
     projectedPm10,
     baselinePm25,
@@ -218,6 +231,8 @@ export function advanceSimulation(
     mistingSeconds: previous.mistingSeconds + (beforeStep.activeZoneIds.length ? safeSeconds : 0),
     waterUsedL: previous.waterUsedL + waterIncrement,
     currentPm25: nextCurrentPm25,
+    activeZoneIds: beforeStep.activeZoneIds,
+    heldOffBoundaries: beforeStep.heldOffBoundaries,
   };
 
   return { state, prediction: predictSimulation(input, state.currentPm25, strategy, true, state) };
@@ -230,6 +245,8 @@ export function createInitialRunState(input: SimulationInput = defaultInput): Si
     mistingSeconds: 0,
     waterUsedL: 0,
     currentPm25: createInitialSimulationReadings(input),
+    activeZoneIds: [],
+    heldOffBoundaries: [],
   };
 }
 

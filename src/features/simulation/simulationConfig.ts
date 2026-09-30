@@ -1,16 +1,17 @@
+import { SIMULATION_THRESHOLDS } from '../../config/simulationThresholds';
 import type { BoundaryGeometry, BoundaryId, ControlStrategy, RiskStatus, ZoneId } from './simulationTypes';
 
 export const AMBIENT_PM25_UG_M3 = 8;
-export const PM10_TO_PM25_RATIO = 1.65;
-export const PM25_MODERATE_THRESHOLD = 40;
-export const PM25_HIGH_THRESHOLD = 75;
+export const PM10_TO_PM25_RATIO = SIMULATION_THRESHOLDS.pm10Factor;
+export const PM25_MODERATE_THRESHOLD = SIMULATION_THRESHOLDS.pm25Moderate;
+export const PM25_HIGH_THRESHOLD = SIMULATION_THRESHOLDS.pm25High;
 export const PM25_VERY_HIGH_THRESHOLD = 150;
 export const PM10_MODERATE_THRESHOLD = Math.round(PM25_MODERATE_THRESHOLD * PM10_TO_PM25_RATIO);
 export const PM10_HIGH_THRESHOLD = Math.round(PM25_HIGH_THRESHOLD * PM10_TO_PM25_RATIO);
 export const PM10_VERY_HIGH_THRESHOLD = Math.round(PM25_VERY_HIGH_THRESHOLD * PM10_TO_PM25_RATIO);
-export const SENSOR_RELEASE_THRESHOLD_PM25 = 32;
+export const SENSOR_RELEASE_THRESHOLD_PM25 = 14;
 export const SIMULATION_STEP_SECONDS = 1;
-export const SUPPRESSION_TARGET_FRACTION = 0.34;
+export const SUPPRESSION_TARGET_FRACTION = 0.24;
 export const SUPPRESSION_RATE_PER_SECOND = 0.085;
 export const RECOVERY_RATE_PER_SECOND = 0.09;
 export const PROJECTION_HORIZON_SECONDS = 30;

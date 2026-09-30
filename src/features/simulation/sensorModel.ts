@@ -78,6 +78,7 @@ export function getSensorReadings(
   const activeSet = new Set(activeBoundaryIds);
 
   return BOUNDARY_GEOMETRY.map((boundary) => {
+    const factors = getBoundaryModelFactors(input, boundary);
     const livePm25 = clamp(currentPm25[boundary.id] ?? AMBIENT_PM25_UG_M3, 0, 240);
     const isMistingAtBoundary = activeSet.has(boundary.id);
     const responseTarget = baseline[boundary.id] * (isMistingAtBoundary ? SUPPRESSION_TARGET_FRACTION : 1);
@@ -94,8 +95,8 @@ export function getSensorReadings(
 
     return {
       ...boundary,
-      distanceM: getBoundaryModelFactors(input, boundary).distanceM,
-      alignment: getBoundaryModelFactors(input, boundary).alignment,
+      distanceM: factors.distanceM,
+      alignment: factors.alignment,
       pm25: round(livePm25),
       pm10,
       status: getRiskStatus(livePm25, pm10),

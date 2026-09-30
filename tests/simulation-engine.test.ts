@@ -89,16 +89,25 @@ test('predictive misting begins before the current sensor crosses threshold; rea
   assert.equal(reactiveActivated, true);
 });
 
-test('active misting lowers PM gradually and live water equals flow × active time', () => {
-  const run = createInitialRunState(defaultInput);
-  const startNorth = run.currentPm25.north;
-  const first = advanceSimulation(run, defaultInput, 'predictive');
-  const tenSeconds = Array.from({ length: 9 }).reduce((state) =>
-    advanceSimulation(state as typeof run, defaultInput, 'predictive').state, first.state as typeof run);
-  const latest = predictSimulation(defaultInput, tenSeconds.currentPm25, 'predictive', true, tenSeconds);
+test('active misting lowers PM gradually, then sensor feedback can release a zone', () => {
+  let state = createInitialRunState(defaultInput);
+  const startNorth = state.currentPm25.north;
+  const first = advanceSimulation(state, defaultInput, 'predictive');
+  state = first.state;
+  let sawLowerReading = first.state.currentPm25.north < startNorth;
+  let sawFeedbackRelease = false;
+  let second: ReturnType<typeof advanceSimulation> = first;
 
-  assert.ok(first.state.currentPm25.north < startNorth);
-  assert.ok(tenSeconds.currentPm25.north < startNorth);
+  for (let index = 0; index < 18; index += 1) {
+    second = advanceSimulation(state, defaultInput, 'predictive');
+    state = second.state;
+    sawLowerReading ||= state.currentPm25.north < startNorth;
+    sawFeedbackRelease ||= second.prediction.heldOffBoundaries.length > 0;
+  }
+  const latest = predictSimulation(defaultInput, state.currentPm25, 'predictive', true, state);
+
+  assert.equal(sawLowerReading, true);
+  assert.equal(sawFeedbackRelease, true);
   assert.equal(first.state.elapsedSeconds, 1);
   assert.equal(first.state.mistingSeconds, 1);
   assert.ok(Math.abs(first.state.waterUsedL - calculateFlowRateLpm(2) / 60) < 1e-9);
@@ -116,6 +125,19 @@ test('pause holds readings and water; reset clears water and active time', () =>
   assert.equal(reset.waterUsedL, 0);
   assert.equal(reset.mistingSeconds, 0);
   assert.equal(reset.elapsedSeconds, 0);
+});
+
+test('No Control keeps misting outputs off and water use at zero while the simulation clock runs', () => {
+  let state = createInitialRunState(defaultInput);
+  for (let index = 0; index < 30; index += 1) {
+    state = advanceSimulation(state, defaultInput, 'noControl').state;
+  }
+  const prediction = predictSimulation(defaultInput, state.currentPm25, 'noControl', true, state);
+  assert.deepEqual(prediction.activeZoneIds, []);
+  assert.equal(prediction.flowRateLpm, 0);
+  assert.equal(state.waterUsedL, 0);
+  assert.equal(state.mistingSeconds, 0);
+  assert.ok(state.elapsedSeconds > 0);
 });
 
 test('water rates use configured nozzle and pump flow, and stop when there are no active zones', () => {
