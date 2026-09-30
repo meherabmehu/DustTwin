@@ -1,0 +1,125 @@
+/* Simulation-only SVG map, boundary sensors, and four fixed boundary zones. */
+.sim-map-panel .simulation-site-map { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse at 50% 49%, rgba(16,68,83,.3), transparent 58%), #061e2c; }
+.sim-scene { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.sim-site-title-svg { fill: #c9e1e9; font: 700 13px/1 ui-sans-serif, system-ui, sans-serif; letter-spacing: 2px; }
+.sim-site-subtitle-svg { fill: #7599a8; font: 500 9px/1 ui-sans-serif, system-ui, sans-serif; letter-spacing: 2px; }
+.sim-zone-segment { fill: rgba(86,125,141,.2); stroke: #7496a4; stroke-width: 1.4; stroke-dasharray: 6 5; transition: fill .24s ease, stroke .24s ease, filter .24s ease; }
+.sim-zone-segment.is-active { fill: rgba(19,215,235,.55); stroke: #62f3ff; stroke-width: 2.1; stroke-dasharray: none; filter: drop-shadow(0 0 6px rgba(15,225,247,.8)); animation: sim-zone-glow 1.8s ease-in-out infinite alternate; }
+.sim-wind-vector line { stroke: #c8f7ff; stroke-width: 2.1; stroke-dasharray: 7 6; opacity: .9; filter: drop-shadow(0 0 4px rgba(38,211,235,.58)); }
+.sim-source-mark circle:first-child { opacity: .83; }
+.sim-source-mark circle:nth-child(2) { filter: drop-shadow(0 0 8px rgba(255,193,99,.7)); }
+.sim-sensor-pin circle { fill: #0c3142; stroke: #66dff0; stroke-width: 2; }
+.sim-sensor-pin text { text-anchor: middle; fill: #eafaff; font: 700 11px ui-sans-serif, system-ui, sans-serif; }
+.sim-plume-layer { transform-box: view-box; transform-origin: 500px 306px; transition: opacity .25s ease; }
+.sim-scene-pm25 .sim-plume-layer { filter: saturate(1.13); }
+.sim-scene-pm10 .sim-plume-layer { filter: saturate(.94); }
+
+.sim-map-toolbar { position: absolute; z-index: 8; top: 8px; left: 9px; right: 9px; display: flex; align-items: center; justify-content: space-between; gap: 8px; pointer-events: none; }
+.sim-map-inputs { min-width: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.sim-map-inputs > span { display: inline-flex; align-items: center; gap: 4px; padding: 4px 6px; border: 1px solid rgba(29,140,164,.35); border-radius: 5px; color: #b4c9d3; background: rgba(3,20,32,.86); font-size: 8px; white-space: nowrap; }
+.sim-map-inputs svg { width: 10px; height: 10px; color: #48d8eb; }
+.sim-map-inputs b { color: #f2fbff; font-weight: 700; }
+.sim-map-view-switch { display: flex; flex: 0 0 auto; gap: 2px; padding: 3px; border: 1px solid rgba(30,147,174,.42); border-radius: 7px; background: rgba(3,19,31,.92); pointer-events: auto; }
+.sim-map-view-switch button { border: 0; border-radius: 4px; padding: 5px 7px; color: #9db4c1; background: transparent; font: 650 8px ui-sans-serif, system-ui, sans-serif; cursor: pointer; }
+.sim-map-view-switch button:hover { color: #effcff; }
+.sim-map-view-switch button.is-selected { color: #e7fcff; background: rgba(14,139,163,.48); box-shadow: inset 0 0 0 1px rgba(56,217,237,.37); }
+.sim-map-view-switch button:focus-visible { outline: 2px solid #31dcee; outline-offset: 1px; }
+
+.sim-sensor-card { position: absolute; z-index: 5; width: 144px; min-height: 88px; box-sizing: border-box; padding: 6px 7px; border: 1px solid rgba(46,157,185,.58); border-radius: 8px; color: #dce9ee; background: rgba(3,19,32,.93); box-shadow: 0 7px 17px rgba(0,0,0,.24), inset 0 0 18px rgba(22,127,151,.06); transition: border-color .2s ease, box-shadow .2s ease; }
+.sim-sensor-card.sensor-north { top: 48px; left: 50%; transform: translateX(-50%); }
+.sim-sensor-card.sensor-east { top: 49%; right: 8px; transform: translateY(-50%); }
+.sim-sensor-card.sensor-south { bottom: 49px; left: 50%; transform: translateX(-50%); }
+.sim-sensor-card.sensor-west { top: 49%; left: 8px; transform: translateY(-50%); }
+.sim-sensor-heading { display: flex; align-items: center; gap: 6px; }
+.sim-sensor-mark { width: 17px; height: 17px; display: grid; flex: 0 0 auto; place-items: center; border: 1px solid rgba(75,202,222,.58); border-radius: 50%; color: #91eff9; background: rgba(12,75,91,.6); font-size: 8px; font-weight: 800; }
+.sim-sensor-heading strong { display: block; color: #eff9fc; font-size: 9px; line-height: 1.1; }
+.sim-sensor-heading small { display: block; margin-top: 2px; color: #91a9b7; font-size: 7px; line-height: 1.1; }
+.sim-sensor-main-reading { display: flex; align-items: baseline; gap: 4px; margin: 5px 0 3px; }
+.sim-sensor-main-reading b { color: #f5fbff; font-size: 19px; line-height: 1; }
+.sim-sensor-main-reading span { color: #92abb8; font-size: 7px; }
+.sim-sensor-secondary-readings { display: flex; justify-content: space-between; gap: 8px; padding-top: 3px; border-top: 1px solid rgba(51,107,127,.3); color: #8ea7b3; font-size: 7px; }
+.sim-sensor-secondary-readings span { display: flex; gap: 4px; align-items: center; }
+.sim-sensor-secondary-readings b { color: #d6e9ef; font-size: 8px; }
+.sim-sensor-secondary-readings .is-selected { color: #79eaf5; }
+.sim-sensor-status-row { display: flex; align-items: center; justify-content: space-between; gap: 5px; margin-top: 4px; }
+.sim-risk-badge, .sim-sensor-zone-state { display: inline-flex; align-items: center; min-height: 13px; padding: 2px 5px; border-radius: 99px; font-size: 6px; font-weight: 800; letter-spacing: .035em; line-height: 1; }
+.sim-risk-badge.risk-low { color: #87edbf; background: rgba(18,113,82,.26); }
+.sim-risk-badge.risk-moderate { color: #ffe08a; background: rgba(141,101,17,.27); }
+.sim-risk-badge.risk-high { color: #ffb07a; background: rgba(152,70,21,.3); }
+.sim-risk-badge.risk-very-high { color: #ff9b9b; background: rgba(157,43,54,.33); }
+.sim-sensor-zone-state { color: #9db1bd; background: rgba(91,112,122,.19); }
+.sim-sensor-zone-state.is-active { color: #a9fff2; background: rgba(16,146,133,.28); }
+.sim-sensor-forecast { display: block; margin-top: 3px; color: #ffc86e; font-size: 7px; }
+.sim-sensor-card.view-pm25 .sim-sensor-main-reading b { color: #9cfcff; }
+.sim-sensor-card.view-pm10 .sim-sensor-main-reading b { color: #f6bcff; }
+.sim-sensor-card.risk-high, .sim-sensor-card.risk-very-high { border-color: rgba(252,115,82,.72); }
+
+.sim-zone-tags { position: absolute; z-index: 4; inset: 0; pointer-events: none; }
+.map-zone-tag { position: absolute; display: grid; grid-template-columns: 17px auto; grid-template-rows: 1fr 1fr; align-items: center; column-gap: 4px; min-width: 61px; padding: 3px 5px; border: 1px solid rgba(119,151,163,.46); border-radius: 6px; color: #b7c7cf; background: rgba(5,24,36,.94); box-shadow: 0 3px 8px rgba(0,0,0,.17); font-size: 7px; line-height: 1; }
+.map-zone-tag.zone-a { top: 29%; left: 50%; transform: translateX(-50%); }
+.map-zone-tag.zone-b { top: 50%; right: 22%; transform: translateY(-50%); }
+.map-zone-tag.zone-c { bottom: 28%; left: 50%; transform: translateX(-50%); }
+.map-zone-tag.zone-d { top: 50%; left: 22%; transform: translateY(-50%); }
+.map-zone-tag b { grid-row: 1 / 3; display: grid; place-items: center; width: 17px; height: 17px; border-radius: 4px; color: #d1e1e7; background: rgba(86,111,122,.35); font-size: 9px; }
+.map-zone-tag span { color: #9db2bd; font-weight: 650; }
+.map-zone-tag strong { color: #7e9aa7; font-size: 5.5px; letter-spacing: .04em; }
+.map-zone-tag.is-active { border-color: rgba(44,223,237,.84); color: #eaffff; box-shadow: 0 0 11px rgba(30,209,232,.18); }
+.map-zone-tag.is-active b { color: #eaffff; background: rgba(9,137,158,.7); }
+.map-zone-tag.is-active strong { color: #81f5f5; }
+
+.sim-map-legend { position: absolute; z-index: 7; left: 50%; bottom: 7px; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 10px; width: max-content; max-width: calc(100% - 20px); padding: 5px 8px; border: 1px solid rgba(39,119,143,.43); border-radius: 7px; color: #a8bdc7; background: rgba(3,18,29,.92); transform: translateX(-50%); }
+.sim-map-legend > span { display: inline-flex; align-items: center; gap: 4px; font-size: 7px; line-height: 1; white-space: nowrap; }
+.sim-map-legend i { display: inline-block; width: 10px; height: 7px; box-sizing: border-box; }
+.legend-boundary { border: 1px dashed #7596a4; border-radius: 2px; }
+.legend-source { border-radius: 50%; background: radial-gradient(circle,#ffe69a 0 27%,#ec8450 53%,transparent 73%); }
+.legend-plume { border-radius: 50%; background: linear-gradient(90deg,#ed6550,#f4d459,#5bd5df); }
+.legend-plume.pollutant-pm10 { background: linear-gradient(90deg,#fb8b39,#c67bf3,#55bfe2); }
+.legend-sensor { width: 8px !important; height: 8px !important; border: 2px solid #79deec; border-radius: 50%; }
+.legend-active { border: 1px solid #60eff7; border-radius: 2px; background: rgba(22,191,209,.53); }
+.legend-standby { border: 1px dashed #8199a5; border-radius: 2px; }
+.legend-wind { width: 11px !important; height: 10px !important; color: #91eff9; }
+.legend-wind svg { width: 11px; height: 10px; }
+.sim-map-source-note { position: absolute; z-index: 7; top: 45px; right: 10px; display: inline-flex; align-items: center; gap: 4px; padding: 4px 6px; border: 1px solid rgba(57,142,160,.35); border-radius: 5px; color: #93aeb8; background: rgba(3,19,31,.83); font-size: 7px; }
+.sim-map-source-note svg { width: 10px; height: 10px; color: #6cdbea; }
+
+@keyframes sim-zone-glow { from { opacity: .72; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .sim-zone-segment, .sim-plume-layer, .sim-sensor-card { transition: none !important; }
+  .sim-zone-segment.is-active { animation: none !important; }
+}
+
+@media (max-width: 760px) {
+  .sim-map-toolbar { align-items: flex-start; }
+  .sim-map-inputs { max-width: 59%; gap: 3px; }
+  .sim-map-inputs > span { padding: 3px 4px; font-size: 7px; }
+  .sim-map-view-switch { gap: 1px; }
+  .sim-map-view-switch button { padding: 5px 5px; font-size: 7px; }
+  .sim-sensor-card { width: 126px; min-height: 79px; padding: 5px 6px; }
+  .sim-sensor-card.sensor-north { top: 50px; }
+  .sim-sensor-card.sensor-south { bottom: 48px; }
+  .sim-sensor-card.sensor-east { right: 5px; }
+  .sim-sensor-card.sensor-west { left: 5px; }
+  .sim-sensor-main-reading b { font-size: 17px; }
+  .map-zone-tag.zone-b { right: 20%; }
+  .map-zone-tag.zone-d { left: 20%; }
+  .sim-map-legend { gap: 4px 7px; bottom: 6px; }
+  .sim-map-legend > span { font-size: 6.5px; }
+}
+
+@media (max-width: 430px) {
+  .sim-map-inputs { max-width: 57%; }
+  .sim-map-inputs > span { font-size: 6.5px; }
+  .sim-map-inputs > span:nth-child(3) { display: none; }
+  .sim-map-view-switch button { padding: 4px 4px; font-size: 6.5px; }
+  .sim-sensor-card { width: 115px; min-height: 77px; }
+  .sim-sensor-card.sensor-north { top: 49px; }
+  .sim-sensor-card.sensor-south { bottom: 47px; }
+  .sim-sensor-card.sensor-west { left: 4px; }
+  .sim-sensor-card.sensor-east { right: 4px; }
+  .sim-sensor-heading strong { font-size: 8px; }
+  .sim-sensor-heading small { font-size: 6px; }
+  .sim-sensor-secondary-readings { font-size: 6px; }
+  .sim-map-legend { max-width: calc(100% - 10px); gap: 3px 5px; padding: 4px 5px; }
+  .sim-map-legend > span { font-size: 5.9px; }
+  .sim-map-source-note { top: 77px; right: 6px; font-size: 6px; }
+}
