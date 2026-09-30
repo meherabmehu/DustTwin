@@ -16,6 +16,8 @@ type PartProps = {
   showState?: boolean;
 };
 
+const ZONE_LETTERS = ['Zone A (North)', 'Zone B (East)', 'Zone C (South)', 'Zone D (West)'];
+
 function CircuitPart({ className, icon, name, children, active = false, showState = false }: PartProps) {
   return (
     <div
@@ -46,48 +48,131 @@ function WireLegend() {
 export default function CircuitCanvas({ state, zoom }: Props) {
   const risk = getRiskLevel(state);
   const anyZoneActive = state.zones.some(Boolean);
+
   return (
     <div className="circuit-canvas" aria-label="Interactive DustTwin circuit schematic">
       <div className="circuit-board-inner" style={{ '--board-zoom': zoom / 100 } as CSSProperties}>
         <WiringLayer state={state} />
-        <CircuitPart className="sensor-board pm-sensor" icon={<Gauge />} name="PM2.5 / PM10 Sensor 1" active={state.simulationRunning} showState>
+
+        <CircuitPart
+          className="sensor-board pm-sensor"
+          icon={<Gauge />}
+          name="PM2.5 / PM10 Sensor 1"
+          active={state.simulationRunning}
+          showState
+        >
           <span className="sensor-chip">PMS5003 · UART1</span>
         </CircuitPart>
-        <CircuitPart className="sensor-board pm-sensor2" icon={<Gauge />} name="PM2.5 / PM10 Sensor 2" active={state.simulationRunning} showState>
+
+        <CircuitPart
+          className="sensor-board pm-sensor2"
+          icon={<Gauge />}
+          name="PM2.5 / PM10 Sensor 2"
+          active={state.simulationRunning}
+          showState
+        >
           <span className="sensor-chip">PMS5003 · UART2</span>
         </CircuitPart>
-        <CircuitPart className="dht-board" icon={<Thermometer />} name="DHT22 · T/H · GPIO4" active={state.simulationRunning} showState />
-        <CircuitPart className="esp-board" icon={<Cpu />} name="ESP32 DevKit V1" active={state.simulationRunning} showState>
-          <span className="esp-chip"><small>ESP32</small><b>◉</b><small>WiFi · BLE</small></span>
+
+        <CircuitPart
+          className="dht-board"
+          icon={<Thermometer />}
+          name="DHT22 · T/H · GPIO4"
+          active={state.simulationRunning}
+          showState
+        />
+
+        <CircuitPart
+          className="esp-board"
+          icon={<Cpu />}
+          name="ESP32 DevKit V1"
+          active={state.simulationRunning}
+          showState
+        >
+          <span className="esp-chip">
+            <small>ESP32</small><b>◉</b><small>WiFi · BLE</small>
+          </span>
         </CircuitPart>
-        <CircuitPart className="relay-board" icon={<Settings />} name="4 Channel Relay Module" active={anyZoneActive} showState>
-          <span className="relay-blocks">{state.zones.map((active, index) => <i className={active ? 'relay-channel active' : 'relay-channel'} key={index} title={`Relay ${index + 1}: ${active ? 'ON' : 'OFF'}`} />)}</span>
+
+        <CircuitPart
+          className="relay-board"
+          icon={<Settings />}
+          name="4 Channel Relay Module"
+          active={anyZoneActive}
+          showState
+        >
+          <span className="relay-blocks">
+            {state.zones.map((active, index) => (
+              <i
+                className={active ? 'relay-channel active' : 'relay-channel'}
+                key={index}
+                title={`Relay ${index + 1} (${ZONE_LETTERS[index]}): ${active ? 'ACTIVE' : 'STANDBY'}`}
+              />
+            ))}
+          </span>
         </CircuitPart>
+
         {state.zones.map((active, index) => (
           <CircuitPart
             className={`valve-part valve-${index + 1}`}
             icon={<Power />}
-            name={`Zone ${index + 1} Valve`}
+            name={`${ZONE_LETTERS[index]} Valve`}
             active={active}
             showState
             key={index}
           />
         ))}
-        <CircuitPart className="power-part" icon={<BatteryCharging />} name="12V DC Power Supply" active showState>
+
+        <CircuitPart
+          className="power-part"
+          icon={<BatteryCharging />}
+          name="12V DC Power Supply"
+          active
+          showState
+        >
           <span className="power-label">12V DC<br /><small>5A</small></span>
         </CircuitPart>
-        <CircuitPart className="buck-part" icon={<Zap />} name="12V → 5V Buck Converter" active={state.simulationRunning} showState>
+
+        <CircuitPart
+          className="buck-part"
+          icon={<Zap />}
+          name="12V → 5V Buck Converter"
+          active={state.simulationRunning}
+          showState
+        >
           <span className="buck-chip">5V OUT</span>
         </CircuitPart>
-        <CircuitPart className="pump-part" icon={<Droplet />} name="12V DC Water Pump · GPIO22" active={state.pumpOn} showState />
-        <CircuitPart className="fan-part" icon={<Fan />} name="12V DC Fan · GPIO23" active={state.fanOn} showState />
+
+        <CircuitPart
+          className="pump-part"
+          icon={<Droplet />}
+          name="12V DC Water Pump · GPIO22"
+          active={state.pumpOn}
+          showState
+        />
+
+        <CircuitPart
+          className="fan-part"
+          icon={<Fan />}
+          name="12V DC Fan · GPIO23"
+          active={state.fanOn}
+          showState
+        />
+
         <div className="circuit-part led-bank" role="img" aria-label={`Zone indicator LEDs, air quality ${risk}`}>
           <div className="part-art">
-            {state.zones.map((active, index) => <span className={`led-dot ${active ? (risk === 'high' ? 'danger' : 'on') : ''}`} key={index} title={`Zone ${index + 1} LED ${active ? 'ON' : 'OFF'}`} />)}
+            {state.zones.map((active, index) => (
+              <span
+                className={`led-dot ${active ? (risk === 'high' || risk === 'HIGH' || risk === 'VERY HIGH' ? 'danger' : 'on') : ''}`}
+                key={index}
+                title={`${ZONE_LETTERS[index]} LED ${active ? 'ON' : 'OFF'}`}
+              />
+            ))}
           </div>
-          <div className="part-name">Z1–Z4 LEDs</div>
+          <div className="part-name">Zone A–D LEDs</div>
         </div>
       </div>
+
       <WireLegend />
     </div>
   );
