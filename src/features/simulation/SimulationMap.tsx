@@ -29,14 +29,30 @@ function SensorCard({ reading, view, activeZone }: {
     <div className={`sim-sensor-card sensor-${reading.id} risk-${reading.status.toLowerCase().replace(' ', '-')}`} data-testid={`sensor-${reading.id}`}>
       <div className="sim-sensor-heading">
         <i className={`sim-sensor-status-dot risk-${reading.status.toLowerCase().replace(' ', '-')}`} />
-        <div><strong>{reading.sensorName}</strong><small>{reading.label} Boundary · Zone {reading.zoneId}</small></div>
+        <div className="sim-sensor-identity">
+          <strong className="sim-sensor-name">{reading.sensorName}</strong>
+          <small className="sim-sensor-meta">{reading.label} Boundary · Zone {reading.zoneId}</small>
+        </div>
         <span className={`sim-sensor-zone-state ${activeZone ? 'is-active' : ''}`}>{activeZone ? 'ACTIVE' : 'STANDBY'}</span>
       </div>
       <div className="sim-sensor-readings">
-        <span className={view === 'pm25' ? 'is-selected' : ''}>PM2.5 <b>{reading.pm25}</b><small>µg/m³</small></span>
-        <span className={view === 'pm10' ? 'is-selected' : ''}>PM10 <b>{reading.pm10}</b><small>µg/m³</small></span>
+        <span className={`sim-sensor-metric ${view === 'pm25' ? 'is-selected' : ''}`}>
+          <small className="metric-tag">PM2.5</small>
+          <b className="metric-val">{reading.pm25}</b>
+          <span className="metric-unit">µg/m³</span>
+        </span>
+        <span className={`sim-sensor-metric ${view === 'pm10' ? 'is-selected' : ''}`}>
+          <small className="metric-tag">PM10</small>
+          <b className="metric-val">{reading.pm10}</b>
+          <span className="metric-unit">µg/m³</span>
+        </span>
       </div>
-      {reading.forecastStatus !== reading.status && <small className="sim-sensor-forecast">Forecast {reading.forecastStatus}</small>}
+      {reading.forecastStatus !== reading.status && (
+        <div className="sim-sensor-forecast">
+          <span className="forecast-label">Forecast</span>
+          <b className={`forecast-status risk-${reading.forecastStatus.toLowerCase().replace(' ', '-')}`}>{reading.forecastStatus}</b>
+        </div>
+      )}
     </div>
   );
 }

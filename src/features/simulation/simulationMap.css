@@ -120,7 +120,7 @@
 .map-zone-tag.is-active strong { color:#54f3f5; }
 .map-zone-tag.is-active b { color:#03343a; background:#55f0eb; box-shadow:0 0 9px rgba(45,234,237,.62); }
 
-.sim-sensor-card { position:absolute; z-index:7; width:clamp(128px,15%,152px); box-sizing:border-box; padding:6px 7px; border:1px solid rgba(49,188,211,.63); border-radius:8px; color:#edf7f9; background:rgba(3,18,30,.94); box-shadow:0 6px 15px rgba(0,0,0,.32),inset 0 0 12px rgba(20,153,178,.06); backdrop-filter:blur(7px); }
+.sim-sensor-card { position:absolute; z-index:7; width:clamp(126px,14.5%,148px); box-sizing:border-box; padding:5px 7px; border:1px solid rgba(49,188,211,.63); border-radius:8px; color:#edf7f9; background:rgba(3,18,30,.94); box-shadow:0 6px 15px rgba(0,0,0,.32),inset 0 0 12px rgba(20,153,178,.06); backdrop-filter:blur(7px); }
 .sim-sensor-card.sensor-north { top:16%; left:51.5%; transform:translateX(-50%); }
 .sim-sensor-card.sensor-east { top:47%; right:7px; }
 .sim-sensor-card.sensor-south { bottom:48px; left:70%; }
@@ -130,18 +130,25 @@
 .sim-sensor-status-dot.risk-moderate { color:#ffca4d; background:#ffca4d; }
 .sim-sensor-status-dot.risk-high,.sim-sensor-status-dot.risk-very-high { color:#ff5969; background:#ff5969; }
 .sim-sensor-status-dot.risk-low { color:#4ceda1; background:#4ceda1; }
-.sim-sensor-heading > div { min-width:0; flex:1; }
-.sim-sensor-heading strong { display:block; color:#f1fafc; font-size:8.5px; line-height:1.12; white-space:nowrap; }
-.sim-sensor-heading small { display:block; margin-top:2px; color:#9fb7c0; font-size:6.3px; line-height:1.1; white-space:nowrap; }
-.sim-sensor-zone-state { padding:2px 4px; border-radius:99px; color:#aabcc4; background:rgba(99,117,126,.23); font-size:5.7px; font-weight:800; letter-spacing:.025em; }
-.sim-sensor-zone-state.is-active { color:#7dffed; background:rgba(15,148,139,.33); }
-.sim-sensor-readings { display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:5px; padding-top:4px; border-top:1px solid rgba(88,139,155,.34); }
-.sim-sensor-readings > span { display:flex; align-items:baseline; gap:3px; color:#aabdc5; font-size:6.6px; white-space:nowrap; }
-.sim-sensor-readings b { color:#eef9fb; font-size:10px; font-variant-numeric:tabular-nums; }
-.sim-sensor-readings small { color:#91aab4; font-size:5.7px; }
-.sim-sensor-readings .is-selected { color:#70eff7; }
-.sim-sensor-readings .is-selected b { color:#a3fbff; }
-.sim-sensor-forecast { display:block; margin-top:3px; color:#ffd370; font-size:6px; }
+.sim-sensor-identity { min-width:0; flex:1; padding-right:2px; }
+.sim-sensor-name { display:block; color:#ffffff; font-size:9.5px; font-weight:800; letter-spacing:0.02em; line-height:1.15; white-space:nowrap; text-shadow:0 1px 2px rgba(0,0,0,.6); }
+.sim-sensor-meta { display:block; margin-top:1px; color:#a3bcc5; font-size:6.4px; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sim-sensor-zone-state { flex:0 0 auto; padding:2px 4.5px; border-radius:99px; color:#aabcc4; background:rgba(99,117,126,.23); font-size:5.8px; font-weight:800; letter-spacing:.03em; }
+.sim-sensor-zone-state.is-active { color:#7dffed; background:rgba(15,148,139,.38); box-shadow:0 0 6px rgba(45,234,237,.35); }
+.sim-sensor-readings { display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:4px; padding-top:3.5px; border-top:1px solid rgba(88,139,155,.34); }
+.sim-sensor-metric { display:flex; align-items:baseline; gap:2.5px; color:#b0c3cb; font-size:6.8px; white-space:nowrap; }
+.sim-sensor-metric .metric-tag { color:#8aa5af; font-size:6.8px; font-weight:700; letter-spacing:0.02em; }
+.sim-sensor-metric .metric-val { color:#ffffff; font-size:10.5px; font-weight:800; font-variant-numeric:tabular-nums; line-height:1; }
+.sim-sensor-metric .metric-unit { color:#829da8; font-size:5.6px; font-weight:500; }
+.sim-sensor-metric.is-selected { color:#82f5fc; }
+.sim-sensor-metric.is-selected .metric-tag { color:#6feff8; }
+.sim-sensor-metric.is-selected .metric-val { color:#d4fcff; text-shadow:0 0 6px rgba(45,234,237,.45); }
+.sim-sensor-metric.is-selected .metric-unit { color:#9deef3; }
+.sim-sensor-forecast { display:flex; align-items:center; gap:3px; margin-top:3px; font-size:6.2px; line-height:1.1; white-space:nowrap; }
+.sim-sensor-forecast .forecast-label { color:#8aa2ab; font-size:6px; text-transform:uppercase; letter-spacing:0.04em; }
+.sim-sensor-forecast .forecast-status { color:#ffd875; font-size:6.5px; font-weight:750; }
+.sim-sensor-forecast .forecast-status.risk-high,.sim-sensor-forecast .forecast-status.risk-very-high { color:#ff7075; }
+.sim-sensor-forecast .forecast-status.risk-low { color:#57efa9; }
 .sim-sensor-card.risk-high,.sim-sensor-card.risk-very-high { border-color:rgba(255,104,98,.82); }
 
 .map-compass { position:absolute; z-index:8; right:9px; bottom:7px; width:43px; height:43px; display:grid; place-items:center; border:1px solid rgba(72,178,194,.55); border-radius:50%; color:#e9f8fa; background:rgba(3,20,33,.82); box-shadow:0 3px 8px rgba(0,0,0,.25); }
@@ -208,20 +215,17 @@
 }
 
 /* Compact the boundary readout cards a touch without moving the sensor HUDs. */
-.sim-sensor-card { width:clamp(124px,14%,144px); padding:4px 6px; }
+.sim-sensor-card { width:clamp(126px,14.5%,148px); padding:4px 6px; }
 .sim-sensor-heading { position:relative; gap:4px; }
-.sim-sensor-heading strong { padding-right:30px; }
-.sim-sensor-heading small { overflow:hidden; text-overflow:ellipsis; }
+.sim-sensor-heading .sim-sensor-name { padding-right:24px; }
 .sim-sensor-zone-state { position:absolute; top:0; right:0; padding:1px 3px; }
-.sim-sensor-readings { gap:3px; margin-top:4px; padding-top:3px; }
-.sim-sensor-readings > span { gap:2px; font-size:6.2px; }
-.sim-sensor-readings b { font-size:9px; }
-.sim-sensor-readings small { font-size:5.2px; }
+.sim-sensor-readings { gap:3px; margin-top:3.5px; padding-top:3px; }
 @media (max-width:760px) {
   .sim-sensor-card { width:116px; padding:4px 5px; }
-  .sim-sensor-readings > span { font-size:5.9px; }
-  .sim-sensor-readings b { font-size:8.5px; }
-  .sim-sensor-readings small { font-size:5px; }
+  .sim-sensor-metric { font-size:5.8px; }
+  .sim-sensor-metric .metric-tag { font-size:6px; }
+  .sim-sensor-metric .metric-val { font-size:9.5px; }
+  .sim-sensor-metric .metric-unit { font-size:5px; }
 }
 @media (max-width:430px) {
   .sim-sensor-card { width:115px; }
