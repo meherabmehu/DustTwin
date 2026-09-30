@@ -80,6 +80,7 @@ export interface SimulationPrediction {
   leadTimeSeconds: number | null;
   waterUsedL: number;
   flowRateLpm: number;
+  flowPerZoneLpm: number;
   activeNozzles: number;
   elapsedSeconds: number;
   mistingSeconds: number;
