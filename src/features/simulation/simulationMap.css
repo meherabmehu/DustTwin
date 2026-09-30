@@ -4,21 +4,22 @@
 .simulation-site-photo { z-index:0; object-fit:cover; object-position:center 52%; filter:brightness(.82) saturate(.98) contrast(1.04); }
 .simulation-site-tint { z-index:1; pointer-events:none; background:linear-gradient(180deg,rgba(2,15,26,.46) 0%,rgba(2,15,26,.04) 27%,rgba(2,15,26,.09) 72%,rgba(2,15,26,.46) 100%),linear-gradient(90deg,rgba(2,18,29,.24),transparent 32%,transparent 70%,rgba(2,18,29,.28)); }
 .sim-map-overlay { position:absolute; z-index:2; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
-.dynamic-plume { position:absolute; z-index:3; transform-origin:0 50%; border-radius:50%; pointer-events:none; mix-blend-mode:screen; filter:saturate(1.28); transition:opacity .3s ease,width .3s ease,height .3s ease; }
+.dynamic-plume { position:absolute; z-index:3; transform-origin:0 50%; border-radius:50%; pointer-events:none; mix-blend-mode:screen; filter:saturate(1.16); transition:opacity .3s ease,width .3s ease,height .3s ease; }
 .dynamic-plume::before,.dynamic-plume::after { content:""; position:absolute; border-radius:50%; }
-.dynamic-plume::before { inset:0; background:radial-gradient(ellipse at 7% 50%,rgba(255,48,42,.97) 0%,rgba(255,72,35,.93) 16%,rgba(255,133,42,.85) 34%,rgba(255,205,57,.77) 53%,rgba(91,226,215,.57) 74%,rgba(38,188,237,.22) 90%,rgba(16,164,225,0) 100%); filter:blur(10px); }
-.dynamic-plume::after { inset:34% 1% 34% 4%; background:linear-gradient(90deg,rgba(255,48,39,.92) 0%,rgba(255,103,34,.88) 25%,rgba(255,207,51,.78) 52%,rgba(82,226,221,.55) 78%,rgba(42,187,237,0) 100%); filter:blur(7px); }
-.dynamic-plume.pollutant-pm25 { filter:saturate(1.35) contrast(1.06); }
-.dynamic-plume.pollutant-pm10 { filter:hue-rotate(-15deg) saturate(1.2); }
+.dynamic-plume::before { inset:0; background:radial-gradient(ellipse at 8% 50%,rgba(255,55,47,.82) 0%,rgba(255,82,39,.76) 17%,rgba(255,142,48,.66) 36%,rgba(255,208,66,.54) 55%,rgba(87,220,214,.39) 74%,rgba(38,178,228,.17) 91%,rgba(16,164,225,0) 100%); filter:blur(8px); }
+.dynamic-plume::after { inset:36% 1% 36% 4%; background:linear-gradient(90deg,rgba(255,57,45,.66) 0%,rgba(255,104,37,.64) 25%,rgba(255,203,57,.54) 52%,rgba(82,222,218,.37) 78%,rgba(42,177,227,0) 100%); filter:blur(5px); }
+.dynamic-plume.pollutant-pm25 { filter:saturate(1.23) contrast(1.04); }
+.dynamic-plume.pollutant-pm10 { filter:hue-rotate(-15deg) saturate(1.13); }
 .site-boundary-halo { fill:none; stroke:rgba(40,231,239,.28); stroke-width:7; filter:url(#site-glow); }
 .site-boundary-line { fill:rgba(11,39,49,.08); stroke:#a8fbff; stroke-width:2.2; stroke-dasharray:10 6; vector-effect:non-scaling-stroke; filter:drop-shadow(0 0 3px rgba(23,210,239,.76)); }
 .site-inner-boundary { fill:none; stroke:rgba(227,249,246,.55); stroke-width:1.4; stroke-dasharray:5 6; vector-effect:non-scaling-stroke; }
 .sim-plume-layer { pointer-events:none; transform-box:view-box; transform-origin:510px 306px; transition:opacity .3s ease,filter .3s ease; }
 .plume-color-body,.plume-ribbon { mix-blend-mode:screen; }
-.plume-soft-outer { opacity:.86; }
-.plume-core { opacity:.95; mix-blend-mode:normal; filter:drop-shadow(0 0 11px rgba(247,61,48,.57)); }
-.plume-ribbon { fill:url(#site-plume-heat); opacity:.86; }
-.plume-heat-spine { opacity:.86; mix-blend-mode:normal; filter:drop-shadow(0 0 7px rgba(255,103,38,.38)); }
+.plume-soft-outer { opacity:.62; }
+.plume-color-body { opacity:.9; filter:drop-shadow(0 0 2px rgba(71,217,225,.2)); }
+.plume-core { opacity:1; mix-blend-mode:normal; filter:drop-shadow(0 0 8px rgba(247,61,48,.48)); }
+.plume-ribbon { fill:url(#site-plume-heat); opacity:.92; }
+.plume-heat-spine { opacity:.76; mix-blend-mode:normal; filter:drop-shadow(0 0 5px rgba(255,103,38,.34)); }
 .simulation-site-map.view-pm25 .sim-plume-layer { filter:saturate(1.22) contrast(1.05); }
 .simulation-site-map.view-pm10 .sim-plume-layer { filter:hue-rotate(-20deg) saturate(1.16); }
 .sim-wind-vector { stroke:#e1fcff; stroke-width:3; stroke-dasharray:10 8; opacity:.94; filter:drop-shadow(0 0 5px rgba(18,218,239,.8)); vector-effect:non-scaling-stroke; animation:wind-drift 1.4s linear infinite; }

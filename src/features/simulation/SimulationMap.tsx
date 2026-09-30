@@ -54,7 +54,7 @@ export default function SimulationMap({ prediction, input, view, onViewChange }:
   const plumeEndX = sourceX + Math.sin(bearingRadians) * Math.min(prediction.plume.length, 330);
   const plumeEndY = sourceY - Math.cos(bearingRadians) * Math.min(prediction.plume.length, 275);
   const plumeRotation = prediction.plume.bearingDeg - 90;
-  const plumeOpacity = Math.min(0.92, 0.24 + prediction.plume.density * 0.66) * (activeZones.size ? 0.82 : 1);
+  const plumeOpacity = Math.min(0.92, 0.24 + prediction.plume.density * 0.9) * (activeZones.size ? 0.82 : 1);
   const plumeWidthPercent = 13 + (prediction.plume.length / 300) * 14;
   const plumeHeightPercent = 14 + prediction.plume.spread * 0.65;
   const plumeLength = Math.min(prediction.plume.length * 0.88, 275);
@@ -94,24 +94,27 @@ export default function SimulationMap({ prediction, input, view, onViewChange }:
       <svg className={`sim-map-overlay sim-map-overlay-${view}`} viewBox="0 0 1000 600" preserveAspectRatio="none" role="img" aria-label={`Construction site map. Dust source ${input.dustIntensity} percent; modeled wind toward ${directionLabel(input.windDirection)}.`}>
         <defs>
           <linearGradient id="site-plume-heat" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="0" stopColor="#ff5338" stopOpacity=".94" />
-            <stop offset=".22" stopColor="#ff812e" stopOpacity=".84" />
-            <stop offset=".48" stopColor="#ffe14c" stopOpacity=".7" />
-            <stop offset=".76" stopColor="#48e6dc" stopOpacity=".52" />
-            <stop offset="1" stopColor="#21c9ed" stopOpacity=".03" />
+            <stop offset="0" stopColor="#ff4a37" stopOpacity=".96" />
+            <stop offset=".2" stopColor="#ff7c2d" stopOpacity=".9" />
+            <stop offset=".46" stopColor="#ffd646" stopOpacity=".8" />
+            <stop offset=".71" stopColor="#4bdedb" stopOpacity=".6" />
+            <stop offset=".9" stopColor="#239ed5" stopOpacity=".26" />
+            <stop offset="1" stopColor="#21c9ed" stopOpacity=".02" />
           </linearGradient>
           <linearGradient id="site-plume-spine" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="0" stopColor="#fb3c35" stopOpacity=".88" />
-            <stop offset=".24" stopColor="#ff6e28" stopOpacity=".92" />
-            <stop offset=".53" stopColor="#ffd33d" stopOpacity=".83" />
-            <stop offset=".82" stopColor="#54e5dc" stopOpacity=".52" />
-            <stop offset="1" stopColor="#1ccbe9" stopOpacity=".06" />
+            <stop offset="0" stopColor="#f94336" stopOpacity=".92" />
+            <stop offset=".22" stopColor="#ff7130" stopOpacity=".94" />
+            <stop offset=".5" stopColor="#ffd43f" stopOpacity=".88" />
+            <stop offset=".76" stopColor="#4bdde0" stopOpacity=".65" />
+            <stop offset=".92" stopColor="#25a8d8" stopOpacity=".28" />
+            <stop offset="1" stopColor="#1ccbe9" stopOpacity=".03" />
           </linearGradient>
-          <radialGradient id="site-plume-core">
+          <radialGradient id="site-plume-core" cx="30%" cy="50%" r="78%" fx="20%" fy="50%">
             <stop offset="0" stopColor="#f92832" stopOpacity="1" />
-            <stop offset=".28" stopColor="#ff5928" stopOpacity=".96" />
-            <stop offset=".55" stopColor="#ffad30" stopOpacity=".84" />
-            <stop offset=".78" stopColor="#ffe55b" stopOpacity=".48" />
+            <stop offset=".22" stopColor="#ff5928" stopOpacity=".98" />
+            <stop offset=".46" stopColor="#ff962d" stopOpacity=".86" />
+            <stop offset=".67" stopColor="#ffd34b" stopOpacity=".64" />
+            <stop offset=".85" stopColor="#61dce0" stopOpacity=".28" />
             <stop offset="1" stopColor="#45dbeb" stopOpacity="0" />
           </radialGradient>
           <radialGradient id="site-dust-source">
@@ -120,7 +123,7 @@ export default function SimulationMap({ prediction, input, view, onViewChange }:
             <stop offset=".62" stopColor="#ff583b" stopOpacity=".85" />
             <stop offset="1" stopColor="#ff5139" stopOpacity="0" />
           </radialGradient>
-          <filter id="site-plume-soft" x="-35%" y="-80%" width="180%" height="260%"><feGaussianBlur stdDeviation="14" /></filter>
+          <filter id="site-plume-soft" x="-35%" y="-80%" width="180%" height="260%"><feGaussianBlur stdDeviation="11" /></filter>
           <filter id="site-glow"><feGaussianBlur stdDeviation="3" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
           <marker id="site-wind-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
             <path d="M0,0 L9,4.5 L0,9 Z" fill="#dffbff" />
@@ -138,10 +141,10 @@ export default function SimulationMap({ prediction, input, view, onViewChange }:
 
         <g className={`sim-plume-layer ${activeZones.size ? 'is-suppressed' : ''}`} transform={`translate(${sourceX} ${sourceY}) rotate(${plumeRotation})`} style={{ opacity: plumeOpacity }}>
           <ellipse className="plume-soft-outer" cx={plumeLength * 0.48} cy="0" rx={plumeLength * 0.72} ry={plumeSpread * 1.3} fill="url(#site-plume-heat)" filter="url(#site-plume-soft)" />
-          <ellipse className="plume-color-body" cx={plumeLength * 0.48} cy="0" rx={plumeLength * 0.62} ry={plumeSpread * 0.85} fill="url(#site-plume-heat)" />
-          <ellipse className="plume-core" cx={plumeLength * 0.43} cy="0" rx={plumeLength * 0.38} ry={plumeSpread * 0.58} fill="url(#site-plume-core)" />
-          <path d={`M0 0 C${plumeLength * .22} ${-plumeSpread * 1.08}, ${plumeLength * .48} ${-plumeSpread * 1.15}, ${plumeLength * .76} ${-plumeSpread * .18} C${plumeLength} ${plumeSpread * .42}, ${plumeLength * .68} ${plumeSpread * 1.15}, ${plumeLength * .42} ${plumeSpread * .82} C${plumeLength * .2} ${plumeSpread * .62}, ${plumeLength * .12} ${plumeSpread * .36}, 0 0 Z`} className="plume-ribbon" />
-          <path d={`M0 0 C${plumeLength * .22} ${-plumeSpread * .15}, ${plumeLength * .48} ${plumeSpread * .13}, ${plumeLength * .7} 0 S${plumeLength * .88} ${plumeSpread * .06}, ${plumeLength} 0`} className="plume-heat-spine" fill="none" stroke="url(#site-plume-spine)" strokeWidth={plumeSpread * 0.78} strokeLinecap="round" />
+          <ellipse className="plume-color-body" cx={plumeLength * 0.48} cy="0" rx={plumeLength * 0.62} ry={plumeSpread * 0.75} fill="url(#site-plume-heat)" />
+          <ellipse className="plume-core" cx={plumeLength * 0.36} cy="0" rx={plumeLength * 0.38} ry={plumeSpread * 0.46} fill="url(#site-plume-core)" />
+          <path d={`M0 0 C${plumeLength * .16} ${-plumeSpread * .68}, ${plumeLength * .39} ${-plumeSpread * 1.02}, ${plumeLength * .68} ${-plumeSpread * .78} C${plumeLength * .9} ${-plumeSpread * .6}, ${plumeLength * 1.08} ${-plumeSpread * .19}, ${plumeLength * 1.08} ${plumeSpread * .02} C${plumeLength * 1.02} ${plumeSpread * .31}, ${plumeLength * .83} ${plumeSpread * .71}, ${plumeLength * .58} ${plumeSpread * .86} C${plumeLength * .34} ${plumeSpread * .94}, ${plumeLength * .14} ${plumeSpread * .49}, 0 0 Z`} className="plume-ribbon" />
+          <path d={`M0 0 C${plumeLength * .22} ${-plumeSpread * .15}, ${plumeLength * .48} ${plumeSpread * .13}, ${plumeLength * .7} 0 S${plumeLength * .88} ${plumeSpread * .06}, ${plumeLength} 0`} className="plume-heat-spine" fill="none" stroke="url(#site-plume-spine)" strokeWidth={plumeSpread * 0.64} strokeLinecap="round" />
         </g>
 
         <g className={`zone-mist zone-mist-A ${activeZones.has('A') ? 'is-active' : ''}`}><path d="M380 135 Q420 194 455 232 M540 130 Q560 190 566 230" /><circle cx="380" cy="135" r="4" /><circle cx="540" cy="130" r="4" /></g>
