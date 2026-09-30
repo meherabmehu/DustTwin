@@ -28,7 +28,7 @@ const tooltipStyle = {
 export default function BoundaryTrendChart({ data, pollutant }: { data: BoundaryTrendPoint[]; pollutant: TrendPollutant }) {
   const firstActive = data.find((point) => point.activeZoneIds.length > 0);
   const lastActive = [...data].reverse().find((point) => point.activeZoneIds.length > 0);
-  const tickInterval = Math.max(1, Math.ceil(data.length / 5) - 1);
+  const tickInterval = data.length <= 6 ? 0 : Math.max(1, Math.ceil(data.length / 5) - 1);
 
   return (
     <div className="chart-wrap sim-trend-chart" role="img" aria-label={`Four-boundary ${pollutant === 'pm25' ? 'PM2.5' : 'PM10'} trend with active misting interval`}>
