@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import '../features/simulation/simulationPage.css';
 import {
@@ -39,6 +39,9 @@ import type {
   SimulationInput,
   SimulationPrediction,
 } from '../features/simulation/simulationTypes';
+import { AiForecastCard, EPISODES } from '../features/simulation/AiForecastCard';
+import { useDustTwinHealth, useDustTwinReplay } from '../integrations/dusttwin-ai';
+import { getApiBaseUrl } from '../integrations/dusttwin-ai/dusttwin-client';
 
 const directionOptions = [
   [0, 'N (0°)'], [45, 'NE (45°)'], [90, 'E (90°)'], [135, 'SE (135°)'],
@@ -176,6 +179,36 @@ export default function Simulation() {
   const [applyFeedback, setApplyFeedback] = useState('');
   const [lastUpdated, setLastUpdated] = useState(() => new Date());
   const [hasCalculated, setHasCalculated] = useState(false);
+
+  // AI Backend Integration
+  const [simulationSource, setSimulationSource] = useState<'deterministic' | 'replay'>('deterministic');
+  const [selectedEpisodeId, setSelectedEpisodeId] = useState<string>(EPISODES[0].id);
+  const [replaySecond, setReplaySecond] = useState<number>(EPISODES[0].suggestedSecond);
+
+  const health = useDustTwinHealth();
+  const replay = useDustTwinReplay(getApiBaseUrl(), selectedEpisodeId, replaySecond);
+
+  // Synchronize AI Replay with hybrid simulation prediction
+  useEffect(() => {
+    if (simulationSource === 'replay' && replay.snapshot?.forecast) {
+      const forecastPm10 = replay.snapshot.forecast.predicted_pm10_ug_m3;
+      // Map AI forecast magnitude to simulation dust intensity (10-100 range)
+      const mappedIntensity = Math.min(100, Math.max(10, Math.round(forecastPm10 / 5)));
+      const hybridInput: SimulationInput = { ...appliedInput, dustIntensity: mappedIntensity };
+      const nextPrediction = predictSimulation(hybridInput, undefined, appliedStrategy);
+      setPrediction(nextPrediction);
+      setTrendHistory(generateScenarioTrendPoints(nextPrediction.sensors, nextPrediction.activeZoneIds));
+    }
+  }, [simulationSource, replay.snapshot, appliedInput, appliedStrategy]);
+
+  const handleToggleSource = (source: 'deterministic' | 'replay') => {
+    setSimulationSource(source);
+    if (source === 'deterministic') {
+      const nextPrediction = predictSimulation(appliedInput, undefined, appliedStrategy);
+      setPrediction(nextPrediction);
+      setTrendHistory(generateScenarioTrendPoints(nextPrediction.sensors, nextPrediction.activeZoneIds));
+    }
+  };
 
   // Strategy comparison is deterministic and based strictly on the current applied scenario
   const strategyResults = calculateStrategyComparison(prediction);
@@ -602,8 +635,28 @@ export default function Simulation() {
         <aside className="sim-panel analytics-panel" aria-label="Live simulation analytics">
           <div className="analytics-heading">
             <h2><BarChart3 aria-hidden="true" />Live Analytics</h2>
-            <p>Simulation estimates — not field measurements</p>
+            <p>Simulation estimates &amp; AI forecasting — not outdoor field verification</p>
           </div>
+
+          <AiForecastCard
+            simulationSource={simulationSource}
+            onToggleSource={handleToggleSource}
+            backendStatus={health.status}
+            backendHealth={health.health}
+            backendError={health.error}
+            selectedEpisodeId={selectedEpisodeId}
+            onSelectEpisode={(epId) => {
+              setSelectedEpisodeId(epId);
+              const ep = EPISODES.find((e) => e.id === epId);
+              if (ep) setReplaySecond(ep.suggestedSecond);
+            }}
+            replaySecond={replaySecond}
+            onChangeSecond={setReplaySecond}
+            replaySnapshot={replay.snapshot}
+            replayStatus={replay.status}
+            replayError={replay.error}
+          />
+
           <div className="analytics-grid">
             <MetricTile
               icon={<Gauge />}
