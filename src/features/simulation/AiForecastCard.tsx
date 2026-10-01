@@ -53,6 +53,11 @@ export function AiForecastCard({
   const forecast: Forecast | null = replaySnapshot?.forecast ?? null;
   const matured: MaturedForecast | null = replaySnapshot?.matured_forecast ?? null;
 
+  const isAiActive =
+    simulationSource === 'replay' &&
+    (replayStatus === 'live' || replayStatus === 'saved') &&
+    forecast !== null;
+
   const [isPlaying, setIsPlaying] = React.useState(false);
 
   // Auto-step timeline when playing
@@ -70,6 +75,13 @@ export function AiForecastCard({
 
   const currentPm10 = forecast?.current_pm10_ug_m3 ?? null;
   const predictedPm10 = forecast?.predicted_pm10_ug_m3 ?? null;
+
+  const delta =
+    currentPm10 !== null && predictedPm10 !== null ? predictedPm10 - currentPm10 : null;
+  const deltaText =
+    delta !== null
+      ? `${delta >= 0 ? '+' : ''}${delta.toFixed(1)} µg/m³`
+      : '—';
 
   const trend =
     currentPm10 !== null && predictedPm10 !== null
@@ -89,6 +101,9 @@ export function AiForecastCard({
           <small className="ai-horizon-pill">+30s</small>
         </div>
         <div className="ai-status-wrap">
+          <span className={`ai-impact-badge ${isAiActive ? 'active' : 'standby'}`}>
+            {isAiActive ? 'AI IMPACT: ACTIVE' : 'AI IMPACT: STANDBY'}
+          </span>
           {simulationSource === 'replay' ? (
             <span className={`ai-status-badge ${replayStatus}`}>
               {replayStatus === 'live' && 'LIVE TRAINED MODEL'}
@@ -244,34 +259,45 @@ export function AiForecastCard({
             <>
               <div className="ai-forecast-grid">
                 <div className="ai-forecast-tile">
-                  <small>Current PM10</small>
+                  <small>Current Observed PM10</small>
                   <strong>
-                    {currentPm10 !== null ? `${currentPm10.toFixed(1)} µg/m³` : '…'}
+                    {currentPm10 !== null ? `${currentPm10.toFixed(1)} µg/m³` : '—'}
                   </strong>
-                  <span>Observed at issue time ({replaySecond}s)</span>
+                  <span>OPC-N3 sensor at {replaySecond}s</span>
                 </div>
                 <div className="ai-forecast-tile highlight">
-                  <small>Predicted PM10 (+30s)</small>
+                  <small>AI Predicted PM10 (+30s)</small>
                   <strong>
-                    {predictedPm10 !== null ? `${predictedPm10.toFixed(1)} µg/m³` : '…'}
+                    {predictedPm10 !== null ? `${predictedPm10.toFixed(1)} µg/m³` : '—'}
                   </strong>
-                  <span>Trained model output ({replaySecond + 30}s)</span>
+                  <span>Trained HistGBM model ({replaySecond + 30}s)</span>
                 </div>
                 <div className="ai-forecast-tile">
-                  <small>Forecast Trend</small>
+                  <small>30s Forecast Trend</small>
                   <strong className={`trend-${trend.toLowerCase()}`}>
                     {trend === 'Rising' && <TrendingUp size={13} />}
                     {trend === 'Falling' && <TrendingDown size={13} />}
                     {trend === 'Stable' && <Minus size={13} />}
                     <span>{trend}</span>
                   </strong>
-                  <span>30s delta vs current</span>
+                  <span>Delta vs observed ({deltaText})</span>
                 </div>
                 <div className="ai-forecast-tile">
-                  <small>Target Horizon</small>
+                  <small>Forecast Horizon</small>
                   <strong>+30 sec</strong>
-                  <span>Mode: {forecast?.mode ?? 'live_inference'}</span>
+                  <span>
+                    Mode:{' '}
+                    {forecast?.mode === 'live_inference'
+                      ? 'Live trained model'
+                      : forecast?.mode === 'saved_inference'
+                      ? 'Saved inference'
+                      : 'Offline'}
+                  </span>
                 </div>
+              </div>
+
+              <div className="ai-mapping-subtext">
+                AI PM10 forecast influences modeled dust severity in the physical site simulation.
               </div>
 
               {forecast?.baselines && (
