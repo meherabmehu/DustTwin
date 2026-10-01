@@ -31,7 +31,12 @@ export function useDustTwinHealth(baseUrl: string = getApiBaseUrl()): HealthStat
       .health({ signal: controller.signal, timeoutMs: 4000 })
       .then((health) => {
         if (!active) return;
-        const status: BackendStatus = health.ready ? 'live' : 'saved';
+        const status: BackendStatus =
+          health.ready && health.mode === 'live_inference'
+            ? 'live'
+            : health.mode === 'saved_inference'
+            ? 'saved'
+            : 'offline';
         setState({ status, health, error: null, recheck });
       })
       .catch((err) => {

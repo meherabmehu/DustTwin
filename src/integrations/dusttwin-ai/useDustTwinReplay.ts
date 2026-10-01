@@ -19,7 +19,18 @@ export function useDustTwinReplay(
   } | null>(null);
 
   useEffect(() => {
-    if (!episodeId || second < 120) {
+    if (!episodeId) {
+      setResult({
+        selection,
+        state: { status: 'unavailable', snapshot: null, error: 'No replay episode selected.' },
+      });
+      return;
+    }
+    if (second < 120) {
+      setResult({
+        selection,
+        state: { status: 'unavailable', snapshot: null, error: 'Replay requires at least 120s of causal history.' },
+      });
       return;
     }
     const controller = new AbortController();
