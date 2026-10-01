@@ -17,7 +17,6 @@ const CircuitSimulation = lazy(() => import('./pages/CircuitSimulation'));
 const Prototype = lazy(() => import('./pages/Prototype'));
 const Results = lazy(() => import('./pages/Results'));
 const Team = lazy(() => import('./pages/Team'));
-const Contact = lazy(() => import('./pages/Contact'));
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -47,7 +46,6 @@ function App() {
             <Route path="/prototype" element={<Prototype />} />
             <Route path="/results" element={<Results />} />
             <Route path="/team" element={<Team />} />
-            <Route path="/contact" element={<Contact />} />
             <Route path="*" element={<Overview />} />
           </Routes>
         </Suspense>

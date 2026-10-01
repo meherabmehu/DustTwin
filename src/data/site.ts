@@ -1,13 +1,6 @@
 export const siteConfig = {
   brand: 'DustTwin',
   tagline: 'Cleaner air. Smarter sites.',
-  // Replace these obvious placeholders with approved public contact details.
-  contact: {
-    email: 'hello@dusttwin.example',
-    phone: '+1 (415) 555-0123',
-    location: 'San Francisco, CA, USA · placeholder',
-    responseTime: 'Within 1 business day',
-  },
 };
 
 export const navItems = [
@@ -19,7 +12,6 @@ export const navItems = [
   { label: 'Prototype Demo', path: '/prototype' },
   { label: 'Results', path: '/results' },
   { label: 'Team', path: '/team' },
-  { label: 'Contact', path: '/contact' },
 ];
 
 export const teamMembers = [

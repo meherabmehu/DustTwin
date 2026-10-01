@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { navItems, siteConfig } from '../data/site';
+import { navItems } from '../data/site';
 
 export function Brand() {
   return (
@@ -73,10 +73,6 @@ export function CTAButton({ to, children, variant = 'primary', icon }: { to: str
 
 export function SectionHeading({ title, highlight, note }: { title: string; highlight?: string; note?: string }) {
   return <div className="section-heading-row"><h2>{highlight ? <>{title} <span>{highlight}</span></> : title}</h2>{note && <p>{note}</p>}</div>;
-}
-
-export function ContactCard({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
-  return <div className="contact-info-card"><span className="contact-info-icon">{icon}</span><div><h3>{title}</h3>{children}</div></div>;
 }
 
 export function usePagePath() {

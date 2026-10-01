@@ -25,7 +25,6 @@ npm run build
 - `/prototype` — Judge-facing tabletop hardware prototype
 - `/results` — Clearly labelled illustrative simulation results
 - `/team` — Replaceable placeholder team roles
-- `/contact` — Validated demo contact form
 
 ## Model and AI Backend Integration
 
