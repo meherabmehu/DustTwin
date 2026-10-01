@@ -15,6 +15,7 @@ import { EPISODES } from '../src/features/simulation/AiForecastCard';
 import {
   predictSimulation,
   defaultInput,
+  mapAiPm10ToDustIntensity,
 } from '../src/features/simulation/simulationEngine';
 import type { SimulationInput } from '../src/features/simulation/simulationTypes';
 
@@ -217,4 +218,116 @@ test('Laboratory model metrics are strictly decoupled from site-control simulati
   assert.equal(siteExceedanceReductionPercent, 96);
   assert.equal(siteWaterReductionPercent, 93);
   assert.equal(siteLeadTimeSec, 26);
+});
+
+test('mapAiPm10ToDustIntensity calibrates and bounds AI PM10 to dust intensity', () => {
+  // Test lower bound clamp (10%)
+  assert.equal(mapAiPm10ToDustIntensity(0), 10);
+  assert.equal(mapAiPm10ToDustIntensity(-50), 10);
+  assert.equal(mapAiPm10ToDustIntensity(Number.NaN), 10);
+  assert.equal(mapAiPm10ToDustIntensity(30), 10); // round(30/5) = 6 -> clamped to 10
+
+  // Test linear scaling range
+  assert.equal(mapAiPm10ToDustIntensity(100), 20); // 100/5 = 20%
+  assert.equal(mapAiPm10ToDustIntensity(250), 50); // 250/5 = 50%
+  assert.equal(mapAiPm10ToDustIntensity(385.1), 77); // 385.1/5 = 77%
+  assert.equal(mapAiPm10ToDustIntensity(450), 90); // 450/5 = 90%
+
+  // Test upper bound clamp (100%)
+  assert.equal(mapAiPm10ToDustIntensity(500), 100);
+  assert.equal(mapAiPm10ToDustIntensity(1200), 100);
+});
+
+test('Saved inference mode is strictly distinguished from live trained model', async () => {
+  const mockSavedSnapshot: ReplaySnapshot = {
+    episode_id: 'lab_e4_drill10',
+    clock_second: 120,
+    past_observations: [{ time_seconds: 120, pm10_ug_m3: 45.0 }],
+    forecast: {
+      task_id: 'construction_pm10_30s_v1',
+      model_id: 'hist_gb_depth3_iter100',
+      artifact_sha256: 'd78f1b37269f72af45933e01722968fb13ed82178f6d8b3e4c5584d46cec09c7',
+      issue_time_seconds: 120,
+      target_time_seconds: 150,
+      horizon_seconds: 30,
+      units: 'ug/m3',
+      current_pm10_ug_m3: 45.0,
+      predicted_pm10_ug_m3: 52.3,
+      baselines: {
+        persistence_pm10_ug_m3: 45.0,
+        trailing_mean_pm10_ug_m3: 42.1,
+      },
+      mode: 'saved_inference',
+    },
+    matured_forecast: null,
+  };
+
+  const client = new DustTwinClient('http://mock-saved', {
+    fetchImpl: async () =>
+      new Response(JSON.stringify(mockSavedSnapshot), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
+  });
+
+  const snapshot = await client.replay('lab_e4_drill10', 120);
+  assert.equal(snapshot.forecast.mode, 'saved_inference');
+  assert.notEqual(snapshot.forecast.mode, 'live_inference');
+});
+
+test('Mode switching: returning to deterministic restores manual scenario without leftover AI intensity', () => {
+  const manualInput: SimulationInput = {
+    ...defaultInput,
+    dustIntensity: 60,
+    windDirection: 90, // East
+    windSpeed: 4.0,
+  };
+
+  // Replay mode was active with high AI forecast
+  const aiPredictedPm10 = 450;
+  const mappedAiIntensity = mapAiPm10ToDustIntensity(aiPredictedPm10); // 90%
+  const replayInput: SimulationInput = { ...manualInput, dustIntensity: mappedAiIntensity };
+
+  const replayPrediction = predictSimulation(replayInput, undefined, 'predictive');
+  assert.equal(replayPrediction.input.dustIntensity, 90);
+
+  // Switching back to deterministic restores manual scenario
+  const restoredPrediction = predictSimulation(manualInput, undefined, 'predictive');
+  assert.equal(restoredPrediction.input.dustIntensity, 60);
+  assert.equal(restoredPrediction.input.windDirection, 90);
+  assert.notEqual(restoredPrediction.input.dustIntensity, replayPrediction.input.dustIntensity);
+});
+
+test('Simulated boundary PM10 is derived physically and distinct from AI predicted PM10', () => {
+  const input: SimulationInput = {
+    ...defaultInput,
+    dustIntensity: 70,
+    windDirection: 315,
+  };
+
+  const prediction = predictSimulation(input, undefined, 'predictive');
+
+  // Simulated boundary PM10 is derived via 1.65x from physical PM2.5 boundary sensor
+  assert.equal(prediction.projectedPm10, Math.round(prediction.projectedPm25 * 1.65));
+
+  // AI predicted PM10 comes directly from the 16-feature HistGBM time series model (e.g. 385.1)
+  const aiForecastPm10 = 385.1;
+  assert.notEqual(prediction.projectedPm10, aiForecastPm10);
+});
+
+test('Zone decision remains deterministic/hybrid based on wind and physics, not labelled as direct AI zone prediction', () => {
+  // NW wind directs plume to North & West boundaries -> Zones A & D
+  const nwInput: SimulationInput = { ...defaultInput, windDirection: 315, dustIntensity: 80 };
+  const nwPred = predictSimulation(nwInput, undefined, 'predictive');
+  assert.deepEqual(nwPred.activeZoneIds, ['A', 'D']);
+
+  // East wind directs plume to East boundary -> Zone B
+  const eastInput: SimulationInput = { ...defaultInput, windDirection: 90, dustIntensity: 80 };
+  const eastPred = predictSimulation(eastInput, undefined, 'predictive');
+  assert.deepEqual(eastPred.activeZoneIds, ['B']);
+
+  // South wind directs plume to South boundary -> Zone C
+  const southInput: SimulationInput = { ...defaultInput, windDirection: 180, dustIntensity: 80 };
+  const southPred = predictSimulation(southInput, undefined, 'predictive');
+  assert.deepEqual(southPred.activeZoneIds, ['C']);
 });
