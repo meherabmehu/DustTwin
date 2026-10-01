@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: dusttwin-ai-backend
+    runtime: docker
+    plan: free
+    region: singapore
+    branch: main
+    dockerfilePath: ./ai-backend/Dockerfile
+    dockerContext: ./ai-backend
+    healthCheckPath: /health
+    envVars:
+      - key: DUSTTWIN_ALLOWED_ORIGINS
+        value: https://dusttwin-frontend.onrender.com
+
+  - type: static
+    name: dusttwin-frontend
+    branch: main
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_DUSTTWIN_API_URL
+        fromService:
+          type: web
+          name: dusttwin-ai-backend
+          envVarKey: RENDER_EXTERNAL_URL
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
