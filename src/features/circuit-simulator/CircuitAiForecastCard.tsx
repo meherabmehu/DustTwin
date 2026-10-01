@@ -110,13 +110,13 @@ export default function CircuitAiForecastCard({
           <span className="circuit-ai-label">Model Status</span>
           <div className="circuit-ai-status-row">
             <div className="circuit-ai-brain-bubble" aria-hidden="true">
-              <Cpu size={15} />
+              <Cpu size={13} />
             </div>
             <div className="circuit-ai-status-text">
               <strong className={`model-status-title ${statusClass}`}>{statusText}</strong>
               <small className="circuit-ai-note">
                 {isHealthy
-                  ? 'Multi-factor prediction active using sensors, wind and zone states.'
+                  ? 'Multi-factor prediction active using sensors, wind & zone states.'
                   : 'Physical fallback active · AI backend unavailable'}
               </small>
             </div>

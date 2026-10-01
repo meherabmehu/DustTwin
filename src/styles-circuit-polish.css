@@ -187,7 +187,7 @@
 }
 .circuit-four-panels {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.42fr) minmax(0, 1.28fr) minmax(0, 1.12fr);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.50fr) minmax(0, 1.25fr) minmax(0, 1.10fr);
   gap: 8px;
   padding: 0 16px;
   align-items: stretch;
@@ -314,7 +314,7 @@
 
 .circuit-ai-body {
   display: grid;
-  grid-template-columns: 1fr 1fr 1.15fr;
+  grid-template-columns: 0.88fr 0.88fr 1.28fr;
   gap: 5px;
   flex: 1;
   align-items: stretch;
@@ -402,8 +402,8 @@
   margin-top: 2px;
 }
 .circuit-ai-brain-bubble {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -419,9 +419,9 @@
   gap: 1px;
 }
 .model-status-title {
-  font-size: 8.5px;
+  font-size: 9.5px;
   font-weight: 750;
-  line-height: 1.15;
+  line-height: 1.2;
   white-space: nowrap;
 }
 .model-status-title.online {
@@ -432,6 +432,13 @@
 }
 .model-status-title.offline {
   color: #ef4444;
+}
+.circuit-ai-col-status .circuit-ai-note {
+  font-size: 7px;
+  line-height: 1.25;
+  color: #8fa5af;
+  white-space: normal;
+  display: block;
 }
 
 /* ==========================================================
@@ -528,7 +535,7 @@
 .output-metrics-grid .output-metric small {
   display: block !important;
   color: #9cb5c2 !important;
-  font-size: 7.2px !important;
+  font-size: 7.5px !important;
   font-weight: 650 !important;
   line-height: 1.15 !important;
   text-transform: uppercase !important;
@@ -560,11 +567,10 @@
 .output-metrics-grid .output-metric span {
   display: block !important;
   color: #4ade80 !important;
-  font-size: 6.8px !important;
-  line-height: 1.15 !important;
-  white-space: nowrap !important;
+  font-size: 7px !important;
+  line-height: 1.2 !important;
+  white-space: normal !important;
   overflow: hidden !important;
-  text-overflow: ellipsis !important;
 }
 .output-metrics-grid .output-metric span b {
   color: #22d3ee;
@@ -632,7 +638,7 @@
 }
 .zone-card-name {
   color: #eaf3f6;
-  font-size: 8.5px;
+  font-size: 8.8px;
   font-weight: 750;
   white-space: nowrap;
   overflow: hidden;
@@ -641,7 +647,7 @@
 .zone-card-pill {
   padding: 1.5px 5px;
   border-radius: 3px;
-  font-size: 6.8px;
+  font-size: 7px;
   font-weight: 800;
   letter-spacing: 0.04em;
   flex-shrink: 0;
@@ -686,12 +692,12 @@
 }
 .zone-gpio {
   color: #38bdf8;
-  font-size: 7.5px;
+  font-size: 8px;
   font-weight: 700;
 }
 .zone-relay-name {
   color: #e2f1f5;
-  font-size: 7.2px;
+  font-size: 7.5px;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -699,7 +705,7 @@
 }
 .zone-subtext {
   color: #8fa5af;
-  font-size: 6.8px;
+  font-size: 7px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -715,7 +721,7 @@
   display: inline-flex;
   align-items: center;
   gap: 2.5px;
-  font-size: 7.2px;
+  font-size: 7.5px;
   font-weight: 750;
 }
 .zone-state-indicator.on {
@@ -739,7 +745,7 @@
 }
 .zone-valve-state {
   color: #8ea5af;
-  font-size: 6.8px;
+  font-size: 7px;
   font-weight: 600;
 }
 .zone-mapping-footer {
@@ -747,8 +753,8 @@
   padding-top: 3px;
   border-top: 1px solid rgba(25, 110, 135, 0.25);
   color: #88a4b2;
-  font-size: 6.8px;
-  line-height: 1.25;
+  font-size: 7px;
+  line-height: 1.3;
   flex-shrink: 0;
 }
 .zone-mapping-footer p {
@@ -872,7 +878,7 @@
   align-items: center;
   gap: 4px;
   padding: 3px 5px;
-  height: 36px;
+  height: 38px;
   border-radius: 5px;
   background: rgba(3, 18, 30, 0.85);
   border: 1px solid rgba(25, 110, 135, 0.3);
@@ -888,8 +894,8 @@
   border-color: rgba(192, 132, 252, 0.55);
 }
 .strategy-mini-icon {
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   border-radius: 4px;
   display: grid;
   place-items: center;
@@ -909,16 +915,17 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  gap: 0.5px;
 }
 .strategy-mini-label {
   color: #8ea5af;
   font-size: 6px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 .strategy-mini-val {
-  font-size: 7.5px;
+  font-size: 7.8px;
   font-weight: 750;
   line-height: 1.15;
   white-space: nowrap;
@@ -932,12 +939,14 @@
   color: #22d3ee;
 }
 .strategy-mini-sub {
-  color: #78909c;
-  font-size: 5.6px;
+  color: #8da4b0;
+  font-size: 6.2px;
   line-height: 1.15;
-  white-space: nowrap;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* ==========================================================

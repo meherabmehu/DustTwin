@@ -42,35 +42,35 @@ export default function LiveMetrics({ state }: Props) {
           <span>Derived PM10: {state.pm10_2} µg/m³</span>
         </div>
         <div className="output-metric">
-          <small>Ambient Temperature</small>
+          <small>Ambient Temp</small>
           <strong><Thermometer size={12} aria-hidden="true" /> {state.temperature.toFixed(1)}°C</strong>
           <span>{state.temperature >= SIMULATION_THRESHOLDS.temperatureWarningC ? 'High dispersion' : 'Baseline 28°C'}</span>
         </div>
         <div className="output-metric">
-          <small>Relative Humidity</small>
+          <small>Humidity</small>
           <strong><Droplet size={12} aria-hidden="true" /> {state.humidity}% RH</strong>
-          <span>{state.humidity >= SIMULATION_THRESHOLDS.humidityWarningPercent ? 'Settling enhanced' : 'Normal'}</span>
+          <span>{state.humidity >= SIMULATION_THRESHOLDS.humidityWarningPercent ? 'Settling enhanced' : 'Normal settling'}</span>
         </div>
 
         <div className="output-metric">
-          <small>Active Misting Zones</small>
+          <small>Misting Zones</small>
           <strong>{state.simulationRunning && activeZoneNames.length ? activeZonesLabel : 'None (Standby)'}</strong>
-          <span>{state.simulationRunning ? `Targeted: ${state.predictedDirection}` : `Targeted: ${state.predictedDirection} (Standby)`}</span>
+          <span>Target: {state.predictedDirection}</span>
         </div>
         <div className="output-metric">
-          <small>Required System Flow</small>
+          <small>System Flow</small>
           <strong><Waves size={12} aria-hidden="true" /> {state.simulationRunning ? `${state.requiredFlowLpm.toFixed(2)} L/min` : '0.00 L/min'}</strong>
           <span>{state.simulationRunning && state.flowPerZoneLpm > 0 ? `${state.flowPerZoneLpm.toFixed(2)} L/min/zone` : 'Hardware Standby'}</span>
         </div>
         <div className="output-metric">
-          <small>Estimated Duration</small>
-          <strong>{state.simulationRunning ? `${state.mistingDurationSeconds} sec` : '0 sec (Standby)'}</strong>
-          <span>{state.simulationRunning ? 'Targeted suppression' : 'Click Run to spray'}</span>
+          <small>Duration</small>
+          <strong>{state.simulationRunning ? `${state.mistingDurationSeconds} sec` : '0 sec'}</strong>
+          <span>{state.simulationRunning ? 'Targeted burst' : 'Click Run to spray'}</span>
         </div>
         <div className="output-metric">
-          <small>Projected Water Use</small>
+          <small>Water Use</small>
           <strong><Droplet size={12} aria-hidden="true" /> {state.simulationRunning ? `${state.projectedWaterL.toFixed(2)} L` : '0.00 L'}</strong>
-          <span>Pump State: <b>{state.pumpOn ? 'ON' : 'STANDBY'}</b></span>
+          <span>Pump: <b>{state.pumpOn ? 'ENERGIZED' : 'STANDBY'}</b></span>
         </div>
       </div>
     </article>

@@ -93,9 +93,9 @@ export default function ZoneStatus({ state, onToggle }: Props) {
       </div>
 
       <div className="zone-mapping-footer">
-        <p>Auto Directional Mapping: North → Zone A · East → Zone B · South → Zone C · West → Zone D</p>
+        <p>Auto Mapping: North → Zone A · East → Zone B · South → Zone C · West → Zone D</p>
         <p className="zone-target-text">
-          Current Target: {state.predictedDirection} (Based on Risk &amp; Wind Direction)
+          Current Target: {state.predictedDirection} (Wind &amp; Risk Driven)
         </p>
       </div>
     </article>

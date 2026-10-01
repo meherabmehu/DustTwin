@@ -105,7 +105,7 @@ export default function SystemControls({
           title="Toggle AI Optimization"
         >
           <div className="strategy-mini-icon purple" aria-hidden="true">
-            <Cpu size={14} />
+            <Cpu size={13} />
           </div>
           <div className="strategy-mini-content">
             <span className="strategy-mini-label">AI Control</span>
@@ -116,7 +116,7 @@ export default function SystemControls({
 
         <div className="strategy-mini-card strategy-card">
           <div className="strategy-mini-icon cyan" aria-hidden="true">
-            <Compass size={14} />
+            <Compass size={13} />
           </div>
           <div className="strategy-mini-content">
             <span className="strategy-mini-label">Current Strategy</span>
