@@ -7,7 +7,9 @@
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "test": "tsx --test tests/*.test.ts",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "verify:model": "cd ai-backend && python3 scripts/verify_model.py",
+    "verify:handoff": "cd ai-backend && python3 scripts/verify_handoff.py"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
