@@ -34,7 +34,7 @@ export default function CircuitToolbar({ state, zoom, onZoomChange, onRun, onSto
   return (
     <div className="workspace-toolbar" role="toolbar" aria-label="Circuit simulation controls">
       <button type="button" className="tool-button run" onClick={onRun} disabled={state.simulationRunning}>
-        <Play size={13} fill="currentColor" aria-hidden="true" />Run Scenario
+        <Play size={13} fill="currentColor" aria-hidden="true" />Run Simulation
       </button>
       <button type="button" className="tool-button stop" onClick={onStop} disabled={!state.simulationRunning && !outputsActive}>
         <Square size={12} fill="currentColor" aria-hidden="true" />Stop

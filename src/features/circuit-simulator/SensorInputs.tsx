@@ -1,10 +1,11 @@
-import { CloudFog, Droplet, Gauge, Thermometer, Wind } from 'lucide-react';
+import { CloudFog, Droplet, Gauge, RotateCcw, Thermometer, Wind } from 'lucide-react';
 import { SIMULATION_INPUT_LIMITS } from '../../config/simulationThresholds';
 import type { SensorInputKey, SimulatorState } from './simulatorTypes';
 
 type Props = {
   state: SimulatorState;
   onChange: (key: SensorInputKey, value: number) => void;
+  onResetToDefault?: () => void;
 };
 
 type SensorControlProps = {
@@ -21,7 +22,19 @@ type SensorControlProps = {
   derivedLabel?: string;
 };
 
-function SensorControl({ label, sensorKey, value, min, max, step, unit, onChange, icon, derivedValue, derivedLabel }: SensorControlProps) {
+function SensorControl({
+  label,
+  sensorKey,
+  value,
+  min,
+  max,
+  step,
+  unit,
+  onChange,
+  icon,
+  derivedValue,
+  derivedLabel,
+}: SensorControlProps) {
   const id = `sensor-${sensorKey}`;
   const precision = step < 1 ? 1 : 0;
   const displayValue = value.toFixed(precision);
@@ -62,23 +75,45 @@ function SensorControl({ label, sensorKey, value, min, max, step, unit, onChange
         aria-label={`${label} slider`}
         onChange={(event) => update(event.currentTarget.value)}
       />
-      <div className="sensor-range-bounds"><span>{min}</span><span>{max} {unit}</span></div>
-      {derivedValue !== undefined && <small className="sensor-derived-value">{derivedLabel}: <b>{derivedValue} µg/m³</b></small>}
+      <div className="sensor-range-bounds">
+        <span>{min}</span>
+        <span>{max} {unit}</span>
+      </div>
+      {derivedValue !== undefined && (
+        <small className="sensor-derived-value">
+          {derivedLabel}: <b>{derivedValue} µg/m³</b>
+        </small>
+      )}
     </div>
   );
 }
 
-export default function SensorInputs({ state, onChange }: Props) {
+export default function SensorInputs({ state, onChange, onResetToDefault }: Props) {
   const limits = SIMULATION_INPUT_LIMITS;
+
   return (
     <article className="output-panel simulator-sensor-panel" aria-labelledby="sensor-input-title">
       <div className="sensor-panel-header">
-        <div>
-          <h2 id="sensor-input-title"><Gauge aria-hidden="true" /> Sensor Inputs</h2>
-          <p>Adjust the deterministic frontend sensor readings. PM10 is shown as a derived estimate.</p>
+        <div className="sensor-header-left">
+          <h2 id="sensor-input-title">
+            <Gauge aria-hidden="true" /> Sensor Inputs
+          </h2>
+          <p>Adjust the deterministic frontend sensor readings. PM10 is derived from PM2.5 for demonstration.</p>
         </div>
-        <span className="sensor-panel-tag">EDITABLE INPUTS</span>
+
+        {onResetToDefault && (
+          <button
+            type="button"
+            className="sensor-reset-btn"
+            onClick={onResetToDefault}
+            title="Reset sensor inputs to default specification"
+          >
+            <RotateCcw size={12} aria-hidden="true" />
+            <span>Reset to Default</span>
+          </button>
+        )}
       </div>
+
       <div className="sensor-input-grid">
         <SensorControl
           label="Dust source intensity"
@@ -105,7 +140,7 @@ export default function SensorInputs({ state, onChange }: Props) {
           onChange={onChange}
         />
         <SensorControl
-          label="PM2.5 · Sensor 2"
+          label="PM10 · Sensor 2"
           sensorKey="pm2"
           value={state.pm2}
           min={limits.pm25.min}
@@ -162,7 +197,6 @@ export default function SensorInputs({ state, onChange }: Props) {
           onChange={onChange}
         />
       </div>
-      <p className="sensor-derivation-note">PM10 estimate = PM2.5 × 1.65 (rounded). It is a display-only derivation, not another simulated sensor.</p>
     </article>
   );
 }
