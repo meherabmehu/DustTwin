@@ -45,11 +45,11 @@ export default function CircuitAiForecastCard({
         <div className="circuit-ai-title-wrap">
           <div className="circuit-ai-title">
             <span className="circuit-ai-icon" aria-hidden="true">
-              <Cpu size={15} />
+              <Cpu size={14} />
             </span>
             <h3>AI Forecast / Impact</h3>
           </div>
-          <p className="circuit-ai-subtitle">Real-time AI model prediction of PM10 and system impact (next 30 seconds).</p>
+          <p className="circuit-ai-subtitle">Predictive dust trajectory &amp; proactive zone targeting (30s)</p>
         </div>
 
         <div className="circuit-ai-badge-wrap">

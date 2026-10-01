@@ -17,7 +17,7 @@ export default function LiveMetrics({ state }: Props) {
     <article className="output-panel live-metrics-panel" aria-label="Circuit simulation live output metrics">
       <div className="output-panel-header">
         <h2>
-          <Activity aria-hidden="true" /> Live Simulation Output
+          <Activity size={14} aria-hidden="true" /> Live Simulation Output
         </h2>
         <div className="output-header-badges">
           <span className={`status-pill ${state.simulationRunning ? 'is-running' : 'is-stopped'}`}>
@@ -30,30 +30,28 @@ export default function LiveMetrics({ state }: Props) {
         </div>
       </div>
 
-      <div className="output-metrics">
+      <div className="output-metrics-grid output-metrics">
         <div className="output-metric">
           <small>PM2.5 · Sensor 1</small>
-          <strong><Gauge size={13} aria-hidden="true" /> {state.pm1} µg/m³</strong>
+          <strong><Gauge size={12} aria-hidden="true" /> {state.pm1} µg/m³</strong>
           <span>Derived PM10: {state.pm10_1} µg/m³</span>
         </div>
         <div className="output-metric">
           <small>PM10 · Sensor 2</small>
-          <strong><Gauge size={13} aria-hidden="true" /> {state.pm2} µg/m³</strong>
+          <strong><Gauge size={12} aria-hidden="true" /> {state.pm2} µg/m³</strong>
           <span>Derived PM10: {state.pm10_2} µg/m³</span>
         </div>
         <div className="output-metric">
           <small>Ambient Temperature</small>
-          <strong><Thermometer size={13} aria-hidden="true" /> {state.temperature.toFixed(1)}°C</strong>
+          <strong><Thermometer size={12} aria-hidden="true" /> {state.temperature.toFixed(1)}°C</strong>
           <span>{state.temperature >= SIMULATION_THRESHOLDS.temperatureWarningC ? 'High dispersion' : 'Baseline 28°C'}</span>
         </div>
         <div className="output-metric">
           <small>Relative Humidity</small>
-          <strong><Droplet size={13} aria-hidden="true" /> {state.humidity}% RH</strong>
+          <strong><Droplet size={12} aria-hidden="true" /> {state.humidity}% RH</strong>
           <span>{state.humidity >= SIMULATION_THRESHOLDS.humidityWarningPercent ? 'Settling enhanced' : 'Normal'}</span>
         </div>
-      </div>
 
-      <div className="output-metrics" style={{ marginTop: '6px' }}>
         <div className="output-metric">
           <small>Active Misting Zones</small>
           <strong>{state.simulationRunning && activeZoneNames.length ? activeZonesLabel : 'None (Standby)'}</strong>
@@ -61,18 +59,18 @@ export default function LiveMetrics({ state }: Props) {
         </div>
         <div className="output-metric">
           <small>Required System Flow</small>
-          <strong><Waves size={13} aria-hidden="true" /> {state.simulationRunning ? `${state.requiredFlowLpm.toFixed(2)} L/min` : '0.00 L/min'}</strong>
-          <span>{state.simulationRunning && state.flowPerZoneLpm > 0 ? `${state.flowPerZoneLpm.toFixed(2)} L/min / zone` : 'Hardware Standby'}</span>
+          <strong><Waves size={12} aria-hidden="true" /> {state.simulationRunning ? `${state.requiredFlowLpm.toFixed(2)} L/min` : '0.00 L/min'}</strong>
+          <span>{state.simulationRunning && state.flowPerZoneLpm > 0 ? `${state.flowPerZoneLpm.toFixed(2)} L/min/zone` : 'Hardware Standby'}</span>
         </div>
         <div className="output-metric">
           <small>Estimated Duration</small>
           <strong>{state.simulationRunning ? `${state.mistingDurationSeconds} sec` : '0 sec (Standby)'}</strong>
-          <span>{state.simulationRunning ? 'Targeted suppression burst' : 'Click Run Scenario to spray'}</span>
+          <span>{state.simulationRunning ? 'Targeted suppression' : 'Click Run to spray'}</span>
         </div>
         <div className="output-metric">
           <small>Projected Water Use</small>
-          <strong><Droplet size={13} aria-hidden="true" /> {state.simulationRunning ? `${state.projectedWaterL.toFixed(2)} L` : '0.00 L'}</strong>
-          <span>Pump State: <b>{state.pumpOn ? 'ENERGIZED (ON)' : 'STANDBY (OFF)'}</b></span>
+          <strong><Droplet size={12} aria-hidden="true" /> {state.simulationRunning ? `${state.projectedWaterL.toFixed(2)} L` : '0.00 L'}</strong>
+          <span>Pump State: <b>{state.pumpOn ? 'ON' : 'STANDBY'}</b></span>
         </div>
       </div>
     </article>
