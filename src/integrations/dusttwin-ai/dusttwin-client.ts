@@ -27,36 +27,30 @@ export class DustTwinApiError extends Error {
 }
 
 export function getApiBaseUrl(): string {
-  const envUrl = typeof import.meta !== 'undefined' && import.meta.env
-    ? (import.meta.env.VITE_DUSTTWIN_API_URL as string | undefined)
+  const envUrl = typeof import.meta !== 'undefined'
+    ? import.meta.env?.VITE_DUSTTWIN_API_URL
     : undefined;
 
-  if (envUrl !== undefined && envUrl.trim()) {
-    // When running inside a remote browser (e.g. cloud preview proxy), browser localhost
-    // points to the user's local machine, not the dev sandbox. A relative URL routes
-    // through the Vite dev server proxy to the internal backend.
-    if (
-      typeof window !== 'undefined' &&
-      window.location &&
-      window.location.hostname !== 'localhost' &&
-      window.location.hostname !== '127.0.0.1' &&
-      (envUrl.includes('127.0.0.1') || envUrl.includes('localhost'))
-    ) {
-      return '';
+  if (typeof window !== 'undefined' && import.meta.env.DEV) {
+    if (envUrl !== undefined && envUrl.trim()) {
+      // In a remote Vite preview, browser localhost is the user's machine. Let the
+      // dev-server proxy handle local backend URLs instead.
+      if (
+        typeof window !== 'undefined' &&
+        window.location &&
+        window.location.hostname !== 'localhost' &&
+        window.location.hostname !== '127.0.0.1' &&
+        (envUrl.includes('127.0.0.1') || envUrl.includes('localhost'))
+      ) {
+        return '';
+      }
+      return envUrl.trim().replace(/\/$/, '');
     }
-    return envUrl.trim().replace(/\/$/, '');
+
+    return 'http://127.0.0.1:8000';
   }
 
-  if (
-    typeof window !== 'undefined' &&
-    window.location &&
-    window.location.hostname !== 'localhost' &&
-    window.location.hostname !== '127.0.0.1'
-  ) {
-    return '';
-  }
-
-  return 'http://127.0.0.1:8000';
+  return envUrl?.trim() ? envUrl.trim().replace(/\/$/, '') : '';
 }
 
 export function verifyForecast(forecast: Forecast, second: number): Forecast {
