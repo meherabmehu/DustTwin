@@ -107,35 +107,60 @@ export interface Health {
 export interface ModelEvidence {
   metadata: {
     model_id: string;
-    experiment_id: string;
+    experiment_id?: string;
     task_id: string;
     trained_at_utc: string;
     artifact_file: string;
     artifact_sha256: string;
-    artifact_bytes: number;
+    artifact_bytes?: number;
     feature_names: string[];
     python_version: string;
-    python_major_minor: [number, number];
-    dependencies: Record<string, string>;
-    host: {
+    python_major_minor?: [number, number];
+    dependencies?: Record<string, string>;
+    host?: {
       cpu: string;
       architecture: string;
       platform: string;
     };
   };
   test: {
-    dataset_doi: string;
-    episodes: number;
-    windows: number;
-    metrics: {
-      model: { mae: number; rmse: number; r2: number };
-      persistence: { mae: number; rmse: number; r2: number };
-      trailing_mean: { mae: number; rmse: number; r2: number };
+    task_id?: string;
+    model_id?: string;
+    evaluated_at_utc?: string;
+    partition?: string;
+    group?: number;
+    condition_label?: string;
+    samples: number;
+    units?: string;
+    artifact_sha256?: string;
+    models: {
+      persistence: {
+        samples: number;
+        mae_ug_m3: number;
+        rmse_ug_m3: number;
+        mean_error_ug_m3: number;
+      };
+      trailing_mean: {
+        samples: number;
+        mae_ug_m3: number;
+        rmse_ug_m3: number;
+        mean_error_ug_m3: number;
+      };
+      selected_model: {
+        samples: number;
+        mae_ug_m3: number;
+        rmse_ug_m3: number;
+        mean_error_ug_m3: number;
+      };
     };
+    by_recording?: Record<string, unknown>;
   };
   training: {
-    selected_model: string;
-    validation_metrics: Record<string, unknown>;
+    task_id?: string;
+    selection_partition?: string;
+    selected_model_id?: string;
+    validation_metrics?: Record<string, unknown>;
+    candidates?: Record<string, unknown>;
   };
 }
 

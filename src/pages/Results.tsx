@@ -6,6 +6,7 @@ import { CheckList } from '../components/Cards';
 import { ComparisonBars, Sparkline } from '../components/Charts';
 import { DustMap } from '../components/Visuals';
 import { computeResultsSummary } from '../features/results/resultsEngine';
+import { ModelEvidenceSection } from '../features/results/ModelEvidenceSection';
 
 function formatReductionDisplay(percent: number): string {
   if (percent > 0) return `${percent}%`;
@@ -158,6 +159,8 @@ export default function Results() {
           </article>
         </div>
       </section>
+
+      <ModelEvidenceSection />
 
       <section className="benefits-section section-wrap">
         <div><SectionHeading title="Potential" highlight="Benefits" note="Outcomes to evaluate in future field studies; not established results." /><div className="benefit-cards">
