@@ -1,9 +1,25 @@
 /* AI Model Validation Evidence Section Styling */
+.evidence-bridge-wrap {
+  padding-top: 18px;
+  padding-bottom: 0;
+}
+
+.evidence-bridge-text {
+  margin: 0;
+  padding: 8px 14px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #9cb4be;
+  background: rgba(14, 46, 68, 0.35);
+  border-left: 3px solid #16d9ed;
+  border-radius: 0 6px 6px 0;
+}
+
 .model-evidence-section {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 .evidence-badge-wrap {
