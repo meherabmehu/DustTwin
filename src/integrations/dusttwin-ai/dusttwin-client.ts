@@ -30,7 +30,33 @@ export function getApiBaseUrl(): string {
   const envUrl = typeof import.meta !== 'undefined' && import.meta.env
     ? (import.meta.env.VITE_DUSTTWIN_API_URL as string | undefined)
     : undefined;
-  return (envUrl && envUrl.trim()) ? envUrl.trim().replace(/\/$/, '') : 'http://127.0.0.1:8000';
+
+  if (envUrl !== undefined && envUrl.trim()) {
+    // When running inside a remote browser (e.g. cloud preview proxy), browser localhost
+    // points to the user's local machine, not the dev sandbox. A relative URL routes
+    // through the Vite dev server proxy to the internal backend.
+    if (
+      typeof window !== 'undefined' &&
+      window.location &&
+      window.location.hostname !== 'localhost' &&
+      window.location.hostname !== '127.0.0.1' &&
+      (envUrl.includes('127.0.0.1') || envUrl.includes('localhost'))
+    ) {
+      return '';
+    }
+    return envUrl.trim().replace(/\/$/, '');
+  }
+
+  if (
+    typeof window !== 'undefined' &&
+    window.location &&
+    window.location.hostname !== 'localhost' &&
+    window.location.hostname !== '127.0.0.1'
+  ) {
+    return '';
+  }
+
+  return 'http://127.0.0.1:8000';
 }
 
 export function verifyForecast(forecast: Forecast, second: number): Forecast {
