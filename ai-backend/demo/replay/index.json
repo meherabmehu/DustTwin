@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "task_id": "construction_pm10_30s_v1",
+  "model_id": "hist_gb_depth3_iter100",
+  "artifact_sha256": "d78f1b37269f72af45933e01722968fb13ed82178f6d8b3e4c5584d46cec09c7",
+  "attribution": "Derived from Askarov and Choi (2024), DOI 10.17632/7f22n9v7hp.1, CC BY 4.0. Source files unchanged; causally gridded and forecast. No contributor endorsement.",
+  "source_url": "https://data.mendeley.com/datasets/7f22n9v7hp/1",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "episodes": [
+    {
+      "episode_id": "lab_e3_drill10",
+      "partition": "validation",
+      "group": 3,
+      "label": "Group 3 \u00b7 10 s drilling",
+      "file": "lab_e3_drill10.json",
+      "sha256": "3f0610b656048882fae893bb4e539953b102df5695707f9cc01d3461e293e5b9",
+      "last_second": 3622,
+      "first_issue_second": 120,
+      "last_issue_second": 3592,
+      "suggested_start_second": 120
+    },
+    {
+      "episode_id": "lab_e3_drill50",
+      "partition": "validation",
+      "group": 3,
+      "label": "Group 3 \u00b7 50 s drilling",
+      "file": "lab_e3_drill50.json",
+      "sha256": "80e564d14eb3d72d18de64895dcf5d624d198817e20175ee152ac4c1d83ad488",
+      "last_second": 4094,
+      "first_issue_second": 120,
+      "last_issue_second": 4064,
+      "suggested_start_second": 500
+    },
+    {
+      "episode_id": "lab_e3_drill90",
+      "partition": "validation",
+      "group": 3,
+      "label": "Group 3 \u00b7 90 s drilling",
+      "file": "lab_e3_drill90.json",
+      "sha256": "cb3d4341ba5993cdfeeba0e25e8751610dd1b34ab8f626001a86a8a9de2d3dc4",
+      "last_second": 4844,
+      "first_issue_second": 120,
+      "last_issue_second": 4814,
+      "suggested_start_second": 1152
+    },
+    {
+      "episode_id": "lab_e4_drill10",
+      "partition": "test",
+      "group": 4,
+      "label": "Group 4 \u00b7 10 s drilling",
+      "file": "lab_e4_drill10.json",
+      "sha256": "ff7e8837534cf4c13c93f61820879ff6aa01db4464ece415ecffb0e275e30533",
+      "last_second": 5210,
+      "first_issue_second": 120,
+      "last_issue_second": 5180,
+      "suggested_start_second": 222
+    },
+    {
+      "episode_id": "lab_e4_drill50",
+      "partition": "test",
+      "group": 4,
+      "label": "Group 4 \u00b7 50 s drilling",
+      "file": "lab_e4_drill50.json",
+      "sha256": "58affd0fdf50146b32e1d2e280b570ce5c646bded0f4686869520d4a5c4c8a91",
+      "last_second": 5500,
+      "first_issue_second": 120,
+      "last_issue_second": 5470,
+      "suggested_start_second": 1282
+    },
+    {
+      "episode_id": "lab_e4_drill90",
+      "partition": "test",
+      "group": 4,
+      "label": "Group 4 \u00b7 90 s drilling",
+      "file": "lab_e4_drill90.json",
+      "sha256": "906d69b943e416360bb304e779acea50354a83e1fe8fea0f96dbe7e39fbfe25b",
+      "last_second": 4802,
+      "first_issue_second": 120,
+      "last_issue_second": 4772,
+      "suggested_start_second": 1010
+    }
+  ]
+}

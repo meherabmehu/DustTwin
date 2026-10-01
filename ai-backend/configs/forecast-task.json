@@ -1,0 +1,39 @@
+{
+  "task_id": "construction_pm10_30s_v1",
+  "dataset_id": "7f22n9v7hp",
+  "dataset_version": 1,
+  "dataset_doi": "10.17632/7f22n9v7hp.1",
+  "environment": "laboratory",
+  "monitor": "OPC-N3",
+  "source_column": "PM10(ug/m3)",
+  "units": "ug/m3",
+  "excluded_columns": ["RollMean_PM1", "RollMean_PM2.5", "RollMean_PM10"],
+  "clock_type": "elapsed_seconds_per_recording",
+  "grid_interval_seconds": 1,
+  "grid_origin": "first observed timestamp in each recording",
+  "snapshot_rule": "latest raw observation at or before the grid time",
+  "duplicate_timestamp_rule": "keep the last row in original file order and count the removals",
+  "maximum_observation_age_seconds": 1.5,
+  "stale_snapshot_rule": "unavailable; reject any sample with unavailable lookback or target",
+  "lookback_seconds": 120,
+  "history_endpoint_rule": "include both endpoints, giving 121 grid snapshots",
+  "horizon_seconds": 30,
+  "target_definition": "latest available raw PM10 snapshot at the target grid time",
+  "initial_feature_channels": ["PM10(ug/m3)"],
+  "future_context_rule": "do not use event duration, episode identity, elapsed event time or future activity labels as features",
+  "partition_rule": "hold out whole labelled experiment groups and every recording within them",
+  "partitions": {
+    "train": ["lab_e1_drill10", "lab_e1_drill50", "lab_e1_drill90", "lab_e2_drill10", "lab_e2_drill50", "lab_e2_drill90"],
+    "validation": ["lab_e3_drill10", "lab_e3_drill50", "lab_e3_drill90"],
+    "test": ["lab_e4_drill10", "lab_e4_drill50", "lab_e4_drill90"]
+  },
+  "outdoor_recordings": "excluded from initial task; retained for a later separately declared investigation",
+  "limitations": [
+    "Twelve laboratory recordings from one sensor and one published experimental setup",
+    "Three laboratory OPC files lack a calendar date; a strict global chronological split is not claimed",
+    "Several timestamps are rounded to whole seconds, with duplicates and small gaps",
+    "The final group is labelled temperature increased and tests a different experimental condition",
+    "The latest observed snapshot can be up to 1.5 seconds old",
+    "No claim of calibrated gravimetric accuracy, outdoor boundary accuracy or misting effectiveness"
+  ]
+}

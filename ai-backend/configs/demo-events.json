@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "threshold_pm10_ug_m3": 500.0,
+  "threshold_purpose": "illustrative demo operating setting, not a regulatory or health limit",
+  "minimum_exceedance_seconds": 5,
+  "event_rule": "five consecutive available one-second snapshots at or above threshold; onset is first snapshot; separate runs need a 60-second onset cooldown",
+  "warning_rule": "endpoint forecast at or above threshold while current observed snapshot is below threshold",
+  "warning_cooldown_seconds": 60,
+  "matching_window_seconds": 30,
+  "matching_rule": "greedy one-to-one in time order; event onset must be strictly after warning and at most 30 seconds later",
+  "lead_time_definition": "event onset minus first matched warning issue time",
+  "eligibility_rule": "only events with a complete 30-second preceding set of eligible forecast issue times are scored",
+  "scope": "descriptive event counts only; single endpoint does not estimate exact crossing ETA"
+}

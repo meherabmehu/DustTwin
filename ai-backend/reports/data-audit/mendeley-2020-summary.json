@@ -1,0 +1,170 @@
+{
+  "dataset_doi": "10.17632/6fd493866k.1",
+  "source_sha256": "42c273d1f89c7d57181478334547934a049637f109e31d7f8132f9c29ecdb613",
+  "schema_version": 1,
+  "pollutant": "PM10",
+  "unit": "ug/m3",
+  "independent_experiments": 1,
+  "processing": "10-minute moving average",
+  "smoothing_alignment": "not documented in workbook",
+  "raw_30s_forecast_accepted": false,
+  "sheets": [
+    {
+      "name": "Alpha sensor 10 min moving avg",
+      "stored_dimensions": [
+        1364,
+        10
+      ],
+      "formula_count": 0,
+      "data_rows": 1201,
+      "first_excel_row": 3,
+      "last_excel_row": 1203,
+      "first_clock": "03:20:00",
+      "last_clock": "04:00:00",
+      "elapsed_seconds": 2400,
+      "interval_counts_seconds": {
+        "2": 1200
+      },
+      "duplicate_clock_count": 0,
+      "time_order_increasing": true,
+      "channels": [
+        {
+          "name": "Alphasense-OPC N2 A1",
+          "observed_count": 1201,
+          "missing_count": 0,
+          "nonfinite_nonmissing_count": 0,
+          "negative_count": 0,
+          "zero_count": 0,
+          "unique_observed_values": 1201,
+          "minimum": 195.7399411111111,
+          "maximum": 6532.418879999995,
+          "mean": 3577.8276225515774,
+          "median": 3282.188057777777,
+          "p05": 467.32516000000004,
+          "p95": 6489.31483444444,
+          "missing_runs": []
+        },
+        {
+          "name": "Alphasense-OPC N2 A2",
+          "observed_count": 1201,
+          "missing_count": 0,
+          "nonfinite_nonmissing_count": 0,
+          "negative_count": 0,
+          "zero_count": 0,
+          "unique_observed_values": 1201,
+          "minimum": 344.5646666666666,
+          "maximum": 10931.206099999989,
+          "mean": 5018.231867749097,
+          "median": 4041.306000000002,
+          "p05": 669.4591666666668,
+          "p95": 10690.008233333325,
+          "missing_runs": []
+        },
+        {
+          "name": "Alphasense-OPC N2 A3",
+          "observed_count": 931,
+          "missing_count": 270,
+          "nonfinite_nonmissing_count": 0,
+          "negative_count": 0,
+          "zero_count": 0,
+          "unique_observed_values": 931,
+          "minimum": 246.12476666666663,
+          "maximum": 3288.9050333333344,
+          "mean": 2211.8358342284287,
+          "median": 2399.4021000000016,
+          "p05": 563.3116666666667,
+          "p95": 3245.4163333333345,
+          "missing_runs": [
+            {
+              "first_excel_row": 3,
+              "last_excel_row": 272,
+              "count": 270
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sharp sensor 10 min moving avg",
+      "stored_dimensions": [
+        1364,
+        4
+      ],
+      "formula_count": 0,
+      "data_rows": 1201,
+      "first_excel_row": 3,
+      "last_excel_row": 1203,
+      "first_clock": "03:20:00",
+      "last_clock": "04:00:00",
+      "elapsed_seconds": 2400,
+      "interval_counts_seconds": {
+        "2": 1200
+      },
+      "duplicate_clock_count": 0,
+      "time_order_increasing": true,
+      "channels": [
+        {
+          "name": "Sharp_D1",
+          "observed_count": 1201,
+          "missing_count": 0,
+          "nonfinite_nonmissing_count": 0,
+          "negative_count": 0,
+          "zero_count": 0,
+          "unique_observed_values": 1040,
+          "minimum": 40.03333333333333,
+          "maximum": 349.53333333333336,
+          "mean": 228.04915348320844,
+          "median": 216.6,
+          "p05": 77.53333333333333,
+          "p95": 343.1666666666667,
+          "missing_runs": []
+        },
+        {
+          "name": "Sharp_D2",
+          "observed_count": 1201,
+          "missing_count": 0,
+          "nonfinite_nonmissing_count": 0,
+          "negative_count": 0,
+          "zero_count": 0,
+          "unique_observed_values": 1054,
+          "minimum": 25.333333333333332,
+          "maximum": 295.7,
+          "mean": 167.85423258395784,
+          "median": 166.23333333333332,
+          "p05": 43.4,
+          "p95": 277.56666666666666,
+          "missing_runs": []
+        },
+        {
+          "name": "Sharp_D3",
+          "observed_count": 1201,
+          "missing_count": 0,
+          "nonfinite_nonmissing_count": 0,
+          "negative_count": 0,
+          "zero_count": 0,
+          "unique_observed_values": 854,
+          "minimum": 0.5,
+          "maximum": 195.93333333333334,
+          "mean": 81.7624202053844,
+          "median": 73.26666666666667,
+          "p05": 1.7666666666666666,
+          "p95": 188.23333333333332,
+          "missing_runs": []
+        }
+      ]
+    },
+    {
+      "name": "Description of dataset",
+      "stored_dimensions": [
+        20,
+        21
+      ],
+      "formula_count": 0,
+      "evidence_cells": [
+        "B3",
+        "B8",
+        "B14"
+      ]
+    }
+  ]
+}

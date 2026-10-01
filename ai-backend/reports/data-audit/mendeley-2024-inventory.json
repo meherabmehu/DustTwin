@@ -1,0 +1,282 @@
+[
+  {
+    "path": "Data/Laboratory experiments data/Experiment 1/10 sec drilling/Analysed/summary of 10 sec drilling from lab experiment.xlsx",
+    "size_bytes": 153755,
+    "sha256": "2ddfaae82f1be0acd78d79875d5c31a1af0497acfe921eb94b7af9ca8b96bc70"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 1/10 sec drilling/Raw data/opc-n3 lab experiment from 10 sec drilling.csv",
+    "size_bytes": 1113729,
+    "sha256": "948ab9c3e4c296b035f98f9ddeef89f21c30f45636eb003fe7a1f0111303e34e"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 1/10 sec drilling/Raw data/PMS5003 lab experiment from 10 sec drilling.log",
+    "size_bytes": 261634,
+    "sha256": "c7c9a22c1543b1e1ea5c2365b1245609305aa08e340e192d3c827b83f97d4ddf"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 1/10 sec drilling/Raw data/Sniffer4d lab experiment from 10 sec drilling.CSV",
+    "size_bytes": 569706,
+    "sha256": "862e029b559ea4d78260c8bde2de4f46a873e333871bf4b6ead3f860428cbcea"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 1/50 sec drilling/Analysed/Summury of results from 50 sec drilling lab experiment.xlsx",
+    "size_bytes": 107921,
+    "sha256": "2af90af3a97861dc770dd2362a3c007953bc6fa8748236fa4ebd705f4e009489"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 1/50 sec drilling/Raw/OPC-N3 lab experiment from 50 seconds drilling.csv",
+    "size_bytes": 1136380,
+    "sha256": "5256e6827c80a50084940a1757dffe72fd44b3ec4f06baae444c462a22b1d932"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 1/50 sec drilling/Raw/PMS_5003 from 50 second drilling in lab.log",
+    "size_bytes": 328019,
+    "sha256": "6593bac62604632290b6f89d57725c9d91aa16d631cc34df95db5e94f09610cb"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 1/50 sec drilling/Raw/Sniffer4d from 50 second drilling in lab.CSV",
+    "size_bytes": 601247,
+    "sha256": "c806484230ac7515236b1a301e9a3f2d1eb4120728ea93d495f4382a332186fd"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 1/90 sec drilling/Analysed/Summary of 90 sec drilling data from lab experiment.xlsx",
+    "size_bytes": 80936,
+    "sha256": "8007caa1a9be634cb0978b7b08f50daf2dc7f8008b327604d98ce9208a248575"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 1/90 sec drilling/Raw/OPC-N3  from 90 sec drilling in lab experiment.csv",
+    "size_bytes": 1032602,
+    "sha256": "228ee619b6748b05ee278cf8f051548117e3d9abcf8ded19bbf34917eb6d513d"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 1/90 sec drilling/Raw/PMS5003 from 90 sec drilling in lab experiment.xlsx",
+    "size_bytes": 54712,
+    "sha256": "6bb771c7e65faf9a32024b63c6ca9eb93e5b696e256c811811a430a29fcfa216"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 1/90 sec drilling/Raw/Sniffer4d from 90 sec drilling in lab experiment.CSV",
+    "size_bytes": 525243,
+    "sha256": "d2d87467c4ba8932fe529e0bd6ef7e3cdde0f1aca17706abd9d0864e8257a591"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 2/10 sec drilling/Analysed/Summary of analysed 10 sec drilling data from lab experiment 2.xlsx",
+    "size_bytes": 96738,
+    "sha256": "9ad650613d2b6bdff437d441d41ec63b887576cabc7f2935555648956925de8a"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 2/10 sec drilling/Raw/opc-n3 from 10 sec drilling in lab experiment 2.csv",
+    "size_bytes": 1215949,
+    "sha256": "8a2a914dc88460fc71acb8d5f3540e636b948a8988436bd33e92a9429d146a63"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 2/10 sec drilling/Raw/PMS5003 from 10 sec drilling in lab experiment 2.log",
+    "size_bytes": 260453,
+    "sha256": "f404b908963072a8ac1d62b5b61fc2b5b08313a7d77ff162216a26e898fdb885"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 2/10 sec drilling/Raw/Sniffer4d from 10 sec drilling in lab experiment 2.CSV",
+    "size_bytes": 671760,
+    "sha256": "b2584b427faf856e3dba537e676d64fdfcb6b07453819d40e4e4df70093463d5"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 2/50 sec drilling/Analysed/summary of 50 sec analysed drilling data.xlsx",
+    "size_bytes": 99704,
+    "sha256": "89e49c3f2d24d1d32a1fff4d42c87ab25ca3b14e235c9b1c54fce185a5dcd0ee"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 2/50 sec drilling/Raw/OPC_N3 from 50 sec drilling in lab experiment 2.csv",
+    "size_bytes": 1407848,
+    "sha256": "ffcc35f5a44a3a6de38838aecb9fb55be37633d958746cab3d6340513f4be79d"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 2/50 sec drilling/Raw/PMS5003 from 50 sec drilling in lab experiment 2.log",
+    "size_bytes": 356104,
+    "sha256": "3d153d466f8ab9938c577e2280d372291437d53896ec1f522be8d8d67e038813"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 2/50 sec drilling/Raw/Sniffer4d from 50 sec drilling in lab experiment 2.CSV",
+    "size_bytes": 872117,
+    "sha256": "ebe4953e029b6b2fbad43835c15a74f0627fba604e1e85bce39c694b42788fef"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 2/90 sec drilling/Analysed/Summary of analysed from 90 sec drilling in lab experiment 2.xlsx",
+    "size_bytes": 99458,
+    "sha256": "485bdf112747ae5ea880330e227f878337207756a3253701ad087649ab68d7be"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 2/90 sec drilling/Raw/OPC-N3 90 sec drilling data from lab experiment 2.csv",
+    "size_bytes": 1195274,
+    "sha256": "20bcfd024894d0355708dc90421fbf7ea957b2673bdd4990b64da37aa86d540e"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 2/90 sec drilling/Raw/PMS5003 90 sec drilling data from lab experiment 2.log",
+    "size_bytes": 263738,
+    "sha256": "e5bb140f2c1ca5e6dbc4951e9f8d869231c02e34e378437129a39f2095d8a790"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 2/90 sec drilling/Raw/Sniffer4d 90 sec drilling data from lab experiment 2.CSV",
+    "size_bytes": 714956,
+    "sha256": "b0720229823a68461782db4ab9fd4d7c418e4b7a0de6981a25c39872fde77057"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 3/10 sec drilling/Analysed/summary of anylised from 10 sec drilling from lab experiment 3.xlsx",
+    "size_bytes": 92504,
+    "sha256": "642ec208e4a3b134cab11f1f7715d44328d132f068b0a8051437b0797547b384"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 3/10 sec drilling/Raw/OPC-N3 10 sec drilling data  from lab experiment  3.csv",
+    "size_bytes": 686503,
+    "sha256": "ac2839f0dfee37d4615fde3f2bda7681feed709900abca3cd642c4fb96708b45"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 3/10 sec drilling/Raw/PMS5003 10 sec drilling data  from lab experiment  3.log",
+    "size_bytes": 188267,
+    "sha256": "67df49220e9bab932f10ec5ae7b2368ec8f5483e4836901b812dad1c43eb7cfa"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 3/10 sec drilling/Raw/Sniffer4d 10 sec drilling data  from lab experiment  3.CSV",
+    "size_bytes": 777585,
+    "sha256": "bd0455529d5f156341925e7471e7c0f2010ed65ead11a3fbb3b7aa3d2d18dcd2"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 3/50 sec drilling/Analysed/summary of analysed 50 sec drilling data from experiment lab 3.xlsx",
+    "size_bytes": 97012,
+    "sha256": "b07f44f1f092590f3a66398a56d5539ff3ce51d7d94140a3b2ddb311d0e76ded"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 3/50 sec drilling/Raw/opc-n3  50 sec drilling data from lab experiment 3.csv",
+    "size_bytes": 1135747,
+    "sha256": "d726d42301a06ee05bdb8df1552a4866c6d24917c6fb8918b8c8d3b3213afea9"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 3/50 sec drilling/Raw/PMS5003 50 sec drilling data from lab experiment 3.log",
+    "size_bytes": 237053,
+    "sha256": "43d0e5dc52176a8489496f6f069bd38389a3fbcee77524c12c6af1da25167aad"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 3/50 sec drilling/Raw/Sniffer4d  50 sec drilling data from lab experiment 3.CSV",
+    "size_bytes": 690035,
+    "sha256": "b8836bcbba1362bf46235405aec5c490ac00c782bab65c488964a23a199b84ee"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 3/90 sec drilling/Analysed/summary of analysed 90 sec drilling from lab experiment 3.xlsx",
+    "size_bytes": 100149,
+    "sha256": "3102970eb7ebb6e1ea209ecc2cc7c666d4af81d74f2d9109227696b7abd83942"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 3/90 sec drilling/Raw/OPC-N3 90 sec drilling data from lab experiment 3.csv",
+    "size_bytes": 1355100,
+    "sha256": "8929dbc95a73562f170042c950aacceb89f18360775287ca9fea572455a0a270"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 3/90 sec drilling/Raw/PMS5003  90 sec drilling data from lab experiment 3.log",
+    "size_bytes": 312295,
+    "sha256": "5bd680d6933429587f8e8e6af9ac41bb04a97ee0510f667c7a8f43bb35be2067"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 3/90 sec drilling/Raw/Sniffer4d  90 sec drilling data from lab experiment 3.CSV",
+    "size_bytes": 831839,
+    "sha256": "5217204cd6e429c3a725c13b0ad3cca6abe4592b7bafa8d8a6d590f627747ba8"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 4/10 sec drilling/Analysed/Summary of analysed from 10 sec drilling results from temperature increased.xlsx",
+    "size_bytes": 101593,
+    "sha256": "a43f54dedc3964270c3f80c37e62fe5b706dac81887093ff4ba86cf94eecff68"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 4/10 sec drilling/Raw/10 sec drilling from OPC-N3 temperature increased.csv",
+    "size_bytes": 1371421,
+    "sha256": "6be87868d8b5d0a018d5bec6cb31ebd7aae6a04b247cbd86f090fc9616230e69"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 4/10 sec drilling/Raw/10 sec drilling from PMS5003 temperature increased.log",
+    "size_bytes": 279498,
+    "sha256": "f20b1f32861ba8a1aab83c3fc2c1c233cc0987e049a7a6611112dc89e9d3e205"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 4/10 sec drilling/Raw/10 sec drilling from Sniffer4d temperature increased.CSV",
+    "size_bytes": 793714,
+    "sha256": "a045cbac68f3bec5038bd9c303d20a2a6ad31fdc5fbd8403428ef6e895ee1356"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 4/50 sec drilling/Analysed/Summary of analysed 50 sec drilling data  from temperature increased data.xlsx",
+    "size_bytes": 110946,
+    "sha256": "0b624c52d2a68cbf8088c4ab1682a6df30d2cbde73e7ea87c9e2a4ecd0da68e2"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 4/50 sec drilling/Raw/50 sec drilling OPC-N3 temperature increased.csv",
+    "size_bytes": 1088538,
+    "sha256": "da0cffc7e61aa0ac80e54aa360d9d438115d6441496d1fb2880f7c719e8ed65e"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 4/50 sec drilling/Raw/PMS5003 50 sec drilling temperature increased.log",
+    "size_bytes": 359319,
+    "sha256": "119d664165c9ee9e3e52f70f8b30407f12ffc1f3a033154b8542a5ed6552af96"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 4/50 sec drilling/Raw/Sniffer4d 50 sec drilling temperature increased.CSV",
+    "size_bytes": 718841,
+    "sha256": "73ddb136161c862d429e0622bb895e13e7587f2862488b741c991a7f86b3c4fe"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 4/90 sec drilling/Analysed/Summary of analysed 90 sec drilling from temperature increased.xlsx",
+    "size_bytes": 121215,
+    "sha256": "8a6ad07a8b19328a8cfaa42760bc032c61782fe82a91d06c52be63f281e90cad"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 4/90 sec drilling/Raw/OPC_N3 PMS5003 from 90 sec drilling data temperature increased.csv",
+    "size_bytes": 991902,
+    "sha256": "7626af4d5bcb4b6a677accbfb7e090d660ea9f0f83ff2451b24e15953c2f749b"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 4/90 sec drilling/Raw/PMS5003 from 90 sec drilling data temperature increased.log",
+    "size_bytes": 381623,
+    "sha256": "e351d6ed11153373e60b7fc8b754530e5b1b23fdf2c7a398a20018a1f3703a57"
+  },
+  {
+    "path": "Data/Laboratory experiments data/Experiment 4/90 sec drilling/Raw/Sniffer4d  from 90 sec drilling data temperature increased.CSV",
+    "size_bytes": 809113,
+    "sha256": "303ae97760beb51b32f636281c662f5fc7bb8c288d9044dc6d2e11a9b8da42fd"
+  },
+  {
+    "path": "Data/Outdoor experiment data/Day 1/Analysed/summary from analysed data in outdoor monitoring experiment day 1.xlsx",
+    "size_bytes": 87536,
+    "sha256": "af7d7e540db522bf11ee96867e5ec78d2838f06f7df4b363fad02f0c72167923"
+  },
+  {
+    "path": "Data/Outdoor experiment data/Day 1/Raw/OPC-N3 outdoor monitoring from experiment day 1.csv",
+    "size_bytes": 570876,
+    "sha256": "bb5a475832292d5da57cc912d8b0e8b2e126ee4f8fbcb19b91ea8946dcf24528"
+  },
+  {
+    "path": "Data/Outdoor experiment data/Day 1/Raw/PMS5003 outdoor monitoring from experiment day 1.log",
+    "size_bytes": 71407,
+    "sha256": "b28702f7ec778959a4bc2e055a066bc4c67cd9e53ce7bd88c55e59f408ea86cc"
+  },
+  {
+    "path": "Data/Outdoor experiment data/Day 1/Raw/Sniffer4d  outdoor monitoring from experiment day 1.xlsx",
+    "size_bytes": 256092,
+    "sha256": "466803e8e18d1ab49db537fd5b6df834424f89780875a0d8a09a167aae238998"
+  },
+  {
+    "path": "Data/Outdoor experiment data/Day 2/Analysed/Summary of analysed data from outdoor monitoring day 2.xlsx",
+    "size_bytes": 87591,
+    "sha256": "6305cd8515ac11214867cb2f74944365e6a76b7410d8b78dc252140aaf561904"
+  },
+  {
+    "path": "Data/Outdoor experiment data/Day 2/Raw/OPC-N3 outdoor monitoring experiment day 2.csv",
+    "size_bytes": 1027831,
+    "sha256": "d121ef5a9ed1249600c2dddb1ff06817563bfb9d3d00087349620868d2bcb7ec"
+  },
+  {
+    "path": "Data/Outdoor experiment data/Day 2/Raw/PMS5003 from outdoor monitoring experiment day 2.log",
+    "size_bytes": 497090,
+    "sha256": "3c7f0c36aa96ee401ec92362d4f15a1106c4de2ed4fdc780b1a6ea590f720bce"
+  },
+  {
+    "path": "Data/Outdoor experiment data/Day 2/Raw/Sniffer4d outdoor monitoring experiment day 2.CSV",
+    "size_bytes": 567916,
+    "sha256": "45c142d07d44a49d5a77f8cea52fa102ee84022c29a612741c01d5f19e9de8af"
+  }
+]

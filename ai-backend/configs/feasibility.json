@@ -1,0 +1,19 @@
+{
+  "checked_date": "2026-10-01",
+  "basis": "Illustrative five-monitor pilot: one source and four boundary nodes, one controller per node, one wind pair and four valve zones. Listed unit prices without quantity discounts; hardware not purchased or approved.",
+  "currencies": {"USD": 369.0, "BDT": 3440.28},
+  "minimal_three_monitor_listed_subtotal": {"USD": 257.4, "BDT": 3440.28},
+  "items": [
+    {"name": "Candidate laser PM monitor SEN0177", "quantity": 5, "unit_price": 46.90, "currency": "USD", "source_url": "https://www.dfrobot.com/product-1272.html", "note": "Listed out of stock. 0–1000 µg/m³ and ≤10 s response differ from training OPC-N3; unsuitable for replay peaks without range/cadence revalidation."},
+    {"name": "FireBeetle 2 ESP32-E DFR0654", "quantity": 5, "unit_price": 8.90, "currency": "USD", "source_url": "https://www.dfrobot.com/product-2195.html", "note": "Candidate acquisition/link nodes; the Python model stays on a local laptop/hub, not this microcontroller."},
+    {"name": "RS485 wind speed SEN0483", "quantity": 1, "unit_price": 45, "currency": "USD", "source_url": "https://www.dfrobot.com/product-2339.html", "note": "Siting, interface adapter and independent calibration required."},
+    {"name": "RS485 wind direction SEN0482", "quantity": 1, "unit_price": 45, "currency": "USD", "source_url": "https://www.dfrobot.com/product-2340.html", "note": "Align meteorological wind-from with A north/B east/C south/D west."},
+    {"name": "12 V diaphragm pump set", "quantity": 1, "unit_price": 1360.04, "currency": "BDT", "source_url": "https://techshopbd.com/product/high-pressure-single-motor-water-pump-set-fl-4200", "note": "Listing includes adapter/pipe/spray gun, not four calibrated mist heads. Conflicting power/pressure specifications need supplier confirmation."},
+    {"name": "12 V 3/4-inch normally closed valve", "quantity": 4, "unit_price": 450.05, "currency": "BDT", "source_url": "https://techshopbd.com/product/solenoid-valve-12v-34-inch/", "note": "Listed out of stock. Pressure compatibility and actual operation need confirmation."},
+    {"name": "Four-channel 12 V relay module", "quantity": 1, "unit_price": 280.04, "currency": "BDT", "source_url": "https://techshopbd.com/product/relay-module-4-channel-12v", "note": "Logic-level compatibility, isolation, load protection and wiring not verified."},
+    {"name": "Misting heads, manifold and flow meter", "quantity": 1, "unit_price": null, "currency": "BDT", "source_url": "", "note": "Quote and pressure/flow test needed. Nozzle count/coverage chosen after pilot design."},
+    {"name": "Protection, enclosure, links and mounting", "quantity": 1, "unit_price": null, "currency": "BDT", "source_url": "", "note": "Emergency stop, fuses, suitable supply, RS485 adapter and weather protection need sizing and quotes."},
+    {"name": "Reference calibration and installation", "quantity": 1, "unit_price": null, "currency": "BDT", "source_url": "", "note": "Reference instrument access, independent sensor comparison, labour and maintenance need local quotes."}
+  ],
+  "exclusions": ["Mixed currencies are not converted or added", "Shipping, import duties, local tax and supplier quotations excluded", "Unpriced parts, reference monitoring and installation excluded", "Listed subtotal is not the complete installed-system cost", "No daily savings or payback claimed"]
+}

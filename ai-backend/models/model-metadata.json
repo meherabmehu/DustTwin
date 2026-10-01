@@ -1,0 +1,68 @@
+{
+  "model_id": "hist_gb_depth3_iter100",
+  "experiment_id": "pm10_initial_group_holdout_v1",
+  "task_id": "construction_pm10_30s_v1",
+  "trained_at_utc": "2026-10-01T04:05:12.732864+00:00",
+  "artifact_file": "models/artifacts/pm10-initial.joblib",
+  "artifact_sha256": "d78f1b37269f72af45933e01722968fb13ed82178f6d8b3e4c5584d46cec09c7",
+  "artifact_bytes": 54679,
+  "feature_names": [
+    "pm10_lag_0s",
+    "pm10_lag_1s",
+    "pm10_lag_5s",
+    "pm10_lag_10s",
+    "pm10_lag_30s",
+    "pm10_lag_60s",
+    "pm10_lag_120s",
+    "pm10_mean_30s",
+    "pm10_std_30s",
+    "pm10_slope_30s",
+    "pm10_mean_60s",
+    "pm10_std_60s",
+    "pm10_slope_60s",
+    "pm10_mean_120s",
+    "pm10_std_120s",
+    "pm10_slope_120s"
+  ],
+  "python_version": "3.14.6",
+  "python_major_minor": [
+    3,
+    14
+  ],
+  "dependencies": {
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "joblib": "1.6.0",
+    "threadpoolctl": "3.7.0"
+  },
+  "host": {
+    "cpu": "Apple M4",
+    "architecture": "arm64",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O"
+  },
+  "maximum_native_threads": 4,
+  "config_sha256": {
+    "forecast-task": "0785753ad8d30b6b3c0d1946fa9a87b1a597b21bc44ab1d54ceaf5ccd0bbe74c",
+    "features": "5140334951e74728ea39c0de5585f0ee99d47bc59164abec0324c429eac443f7",
+    "training": "148a0a2c306414207664ef609bb133e7000a725a910085a8feed88c3945c2ced",
+    "demo-events": "99a90547f95a15f4b0a698b8fd8922baa4594c854d048e2d5c23d64f0f773709"
+  },
+  "source_sha256": {
+    "src/dusttwin/data.py": "df9eb36b1dafda0ff679ba3adecda89fe3e1a5be97525e761ad05cc26b830add",
+    "src/dusttwin/preparation.py": "1abb1242a92c2443be9ac3c2a74d3f99602aacc2fe51ff38c71fd5ba05ef295f",
+    "src/dusttwin/model.py": "b36da72af2413c1fde60a8533681649c69808175da85c464429799dbe631a47e",
+    "scripts/train_models.py": "9720448e2b9748e628daf02c6711e10c644acc2cccfa64769e7e67d2bb06e953"
+  },
+  "training_git_parent_commit": "5050bb25478d7b0f8bf2a1c6db927ade919aab08",
+  "training_worktree_had_changes": true,
+  "prepared_manifest_sha256": "62e95275df8afe4ee7cedb078f98970ead0b42dfab48429a499a41bcade6a6a6",
+  "training_array_sha256": "35170c9c14a4d030b04923e3136ca79b9a9abbd930cb1243b96df774192128b6",
+  "validation_array_sha256": "0c8b30f29a47f1f5dbff089f7a215209fbf74bc4d4d5ec81d42c65bc16e5c1e4",
+  "trained_partitions": [
+    "train"
+  ],
+  "selection_partition": "validation",
+  "test_used_for_training_or_selection": false,
+  "prediction_postprocessing": "clip below zero; no upper clipping; applies to all reported learned predictions"
+}

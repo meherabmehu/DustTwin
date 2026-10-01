@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "lookback_seconds": 120,
+  "history_snapshots": 121,
+  "lag_seconds": [0, 1, 5, 10, 30, 60, 120],
+  "statistic_window_seconds": [30, 60, 120],
+  "window_endpoints": "inclusive: duration + 1 one-second snapshots",
+  "statistics": ["mean", "std", "slope"],
+  "std_ddof": 0,
+  "slope_definition": "ordinary least squares against elapsed seconds, with an intercept",
+  "baseline_mean_window_seconds": 60,
+  "channel": "PM10(ug/m3)",
+  "concentration_units": "ug/m3",
+  "slope_units": "ug/m3/second"
+}

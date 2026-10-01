@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "datasets": [
+    {
+      "key": "mendeley-6fd493866k-v1",
+      "id": "6fd493866k",
+      "version": 1,
+      "title": "Data on different sized particulate matter concentration produced from a construction activity",
+      "contributors": [
+        "Daniel Cheriyan"
+      ],
+      "doi": "10.17632/6fd493866k.1",
+      "source_url": "https://data.mendeley.com/datasets/6fd493866k/1",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "accessed_at_utc": "2026-09-30T19:13:24.650778+00:00",
+      "listing_url": "https://data.mendeley.com/public-api/datasets/6fd493866k/files?folder_id=root&version=1&%24start=0&%24limit=1000",
+      "files": [
+        {
+          "id": "0e90751d-092d-4dfa-8b2d-a2db0a44b0a0",
+          "filename": "DIB -data.xlsx",
+          "size_bytes": 189414,
+          "sha256": "42c273d1f89c7d57181478334547934a049637f109e31d7f8132f9c29ecdb613",
+          "download_url": "https://data.mendeley.com/public-files/datasets/6fd493866k/files/0e90751d-092d-4dfa-8b2d-a2db0a44b0a0/file_downloaded",
+          "local_path": "data/raw/mendeley-6fd493866k-v1/DIB -data.xlsx",
+          "verified_sha256": "42c273d1f89c7d57181478334547934a049637f109e31d7f8132f9c29ecdb613"
+        }
+      ],
+      "alterations_to_original_files": "none",
+      "reuse_note": "Attribute the contributors and DOI, link the license, and identify derived changes."
+    },
+    {
+      "key": "mendeley-7f22n9v7hp-v1",
+      "id": "7f22n9v7hp",
+      "version": 1,
+      "title": "Data on different particulate matter profiles produced in laboratory from construction activity and outdoor monitoring",
+      "contributors": [
+        "Komiljon Askarov",
+        "Jae-ho Choi"
+      ],
+      "doi": "10.17632/7f22n9v7hp.1",
+      "source_url": "https://data.mendeley.com/datasets/7f22n9v7hp/1",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "accessed_at_utc": "2026-09-30T19:22:35.745326+00:00",
+      "listing_url": "https://data.mendeley.com/public-api/datasets/7f22n9v7hp/files?folder_id=root&version=1&%24start=0&%24limit=1000",
+      "files": [
+        {
+          "id": "07e65063-2634-47ee-92aa-c73cf71d5168",
+          "filename": "Data on different particulate matter profiles produced in laboratory from construction activity  and outdoor monitoring.zip",
+          "size_bytes": 5312710,
+          "sha256": "7aa66322a8440e1e353440616685ece43d9abb2af9d6a63971f224896816eadb",
+          "download_url": "https://data.mendeley.com/public-files/datasets/7f22n9v7hp/files/07e65063-2634-47ee-92aa-c73cf71d5168/file_downloaded",
+          "local_path": "data/raw/mendeley-7f22n9v7hp-v1/Data on different particulate matter profiles produced in laboratory from construction activity  and outdoor monitoring.zip",
+          "verified_sha256": "7aa66322a8440e1e353440616685ece43d9abb2af9d6a63971f224896816eadb"
+        }
+      ],
+      "alterations_to_original_files": "none",
+      "reuse_note": "Attribute the contributors and DOI, link the license, and identify derived changes."
+    }
+  ]
+}

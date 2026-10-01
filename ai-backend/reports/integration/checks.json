@@ -1,0 +1,88 @@
+{
+  "verified_at": "2026-10-01T12:27:49.357422+06:00",
+  "repository": "https://github.com/arifshekhk8/DustTwin-Model-Integration",
+  "verified_runtime_commit": "6c924e4d2e8d07ef0b849e5fdc7cf721c2e9f52b",
+  "upstream_commit": "ea5c9c5b9b3833a9f645bd431806fd75cd621770",
+  "platform": {
+    "python": "3.14.6",
+    "cpu": "Apple M4",
+    "os": "macOS 26.6.2 arm64",
+    "node": "v25.2.1"
+  },
+  "model": {
+    "id": "hist_gb_depth3_iter100",
+    "bytes": 54679,
+    "sha256": "d78f1b37269f72af45933e01722968fb13ed82178f6d8b3e4c5584d46cec09c7",
+    "fixture_predictions": 5,
+    "absolute_tolerance": 1e-08,
+    "trained_again": false
+  },
+  "checks": [
+    {
+      "command": ".venv/bin/python -m pip install -r requirements-service.txt",
+      "result": "passed in a newly created environment from a fresh GitHub clone"
+    },
+    {
+      "command": ".venv/bin/python -m pip check",
+      "result": "passed"
+    },
+    {
+      "command": ".venv/bin/python scripts/verify_handoff.py",
+      "result": "passed; 75 upstream files match SHA-256 and size"
+    },
+    {
+      "command": ".venv/bin/python scripts/verify_model.py",
+      "result": "passed; five fixtures agree from both features and histories"
+    },
+    {
+      "command": ".venv/bin/python -m unittest discover -s tests -v",
+      "result": "23 passed in 2.451 seconds in the fresh clone"
+    },
+    {
+      "command": "npm ci --ignore-scripts --no-audit --no-fund",
+      "result": "passed in the fresh clone"
+    },
+    {
+      "command": "npm run check:types",
+      "result": "passed; optional React hook and declarations type-checked"
+    },
+    {
+      "command": "npm run test:client",
+      "result": "3 passed in the fresh clone"
+    },
+    {
+      "command": "npm run test:browser",
+      "result": "3 Chromium journeys passed in 2.4 seconds in the fresh clone"
+    },
+    {
+      "command": "scripts/verify_simulation.py (pinned Python)",
+      "result": "passed in the main handoff checkout; 20 runs / 9600 intervals"
+    },
+    {
+      "command": "local Markdown link existence check and git diff --check",
+      "result": "passed"
+    }
+  ],
+  "browser_checks": [
+    "different-origin live artifact/API/display equality",
+    "real POST with native observation timestamps",
+    "future actual hidden until target matures",
+    "old response rejected after selecting a new clock",
+    "service loss clears live outputs and reconnect restores the forecast"
+  ],
+  "fresh_clone": {
+    "depends_on_original_workspace_checkout": false,
+    "raw_training_data_present": false,
+    "processed_training_arrays_present": false,
+    "model_available_directly_from_git": true,
+    "dependency_install_used_cached_wheels": true,
+    "browser_used_preinstalled_Chromium_runtime": true
+  },
+  "resolved_issue": "The initial browser check exposed native fetch bound to the client object; binding fetch to globalThis fixed the connection. All browser journeys then passed.",
+  "limits": [
+    "Existing teammate frontend was not edited or tested; the included connection example was tested.",
+    "Optional React hook was type-checked, not mounted in the teammate website.",
+    "Backend hosting and other operating systems are not verified.",
+    "Laboratory forecast and uncalibrated site simulation remain separate; hardware not built."
+  ]
+}

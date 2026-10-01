@@ -1,0 +1,637 @@
+{
+  "task_id": "construction_pm10_30s_v1",
+  "model_id": "hist_gb_depth3_iter100",
+  "evaluated_at_utc": "2026-10-01T04:10:30.029402+00:00",
+  "partition": "test",
+  "group": 4,
+  "condition_label": "temperature increased",
+  "samples": 15065,
+  "units": "ug/m3",
+  "artifact_sha256": "d78f1b37269f72af45933e01722968fb13ed82178f6d8b3e4c5584d46cec09c7",
+  "selection_frozen_at_git_commit": "435c93afa649e3af6e73872c04fd908815083fcc",
+  "models": {
+    "persistence": {
+      "samples": 15065,
+      "mae_ug_m3": 95.70167474278128,
+      "rmse_ug_m3": 199.38422373835175,
+      "mean_error_ug_m3": 0.2780969133753731
+    },
+    "trailing_mean": {
+      "samples": 15065,
+      "mae_ug_m3": 81.56502755817687,
+      "rmse_ug_m3": 200.71346663945317,
+      "mean_error_ug_m3": 0.635602911971621
+    },
+    "selected_model": {
+      "samples": 15065,
+      "mae_ug_m3": 88.40467510847934,
+      "rmse_ug_m3": 179.27205253712694,
+      "mean_error_ug_m3": 9.450305680513264
+    }
+  },
+  "by_recording": {
+    "lab_e4_drill10": {
+      "persistence": {
+        "samples": 5061,
+        "mae_ug_m3": 56.53814858723572,
+        "rmse_ug_m3": 97.35488320529291,
+        "mean_error_ug_m3": 0.2683797668444972
+      },
+      "trailing_mean": {
+        "samples": 5061,
+        "mae_ug_m3": 43.61473472812021,
+        "rmse_ug_m3": 79.95041425938668,
+        "mean_error_ug_m3": 0.46849206889068
+      },
+      "selected_model": {
+        "samples": 5061,
+        "mae_ug_m3": 81.58763908868919,
+        "rmse_ug_m3": 130.75150822582506,
+        "mean_error_ug_m3": 55.88432133412452
+      },
+      "worst_selected_forecast": {
+        "issue_second": 1322,
+        "target_second": 1352,
+        "actual_pm10_ug_m3": 155.88,
+        "predicted_pm10_ug_m3": 1173.3596507612126,
+        "absolute_error_ug_m3": 1017.4796507612126
+      }
+    },
+    "lab_e4_drill50": {
+      "persistence": {
+        "samples": 5351,
+        "mae_ug_m3": 88.74595963371333,
+        "rmse_ug_m3": 159.49480377125698,
+        "mean_error_ug_m3": 0.4270061670715745
+      },
+      "trailing_mean": {
+        "samples": 5351,
+        "mae_ug_m3": 74.074379509269,
+        "rmse_ug_m3": 150.78800545203688,
+        "mean_error_ug_m3": 0.9851594768558648
+      },
+      "selected_model": {
+        "samples": 5351,
+        "mae_ug_m3": 70.0273960892681,
+        "rmse_ug_m3": 135.28340414497728,
+        "mean_error_ug_m3": 5.8820021390972235
+      },
+      "worst_selected_forecast": {
+        "issue_second": 1302,
+        "target_second": 1332,
+        "actual_pm10_ug_m3": 1915.68,
+        "predicted_pm10_ug_m3": 73.9655559706906,
+        "absolute_error_ug_m3": 1841.7144440293096
+      }
+    },
+    "lab_e4_drill90": {
+      "persistence": {
+        "samples": 4653,
+        "mae_ug_m3": 146.29841607565012,
+        "rmse_ug_m3": 298.5764324828619,
+        "mean_error_ug_m3": 0.11741886954653115
+      },
+      "trailing_mean": {
+        "samples": 4653,
+        "mae_ug_m3": 131.45733138852776,
+        "rmse_ug_m3": 311.9825441384001,
+        "mean_error_ug_m3": 0.41537312433719764
+      },
+      "selected_model": {
+        "samples": 4653,
+        "mae_ug_m3": 116.95353376482089,
+        "rmse_ug_m3": 253.79625165597378,
+        "mean_error_ug_m3": -36.95170613397403
+      },
+      "worst_selected_forecast": {
+        "issue_second": 1124,
+        "target_second": 1154,
+        "actual_pm10_ug_m3": 5368.87,
+        "predicted_pm10_ug_m3": 1749.6967642890072,
+        "absolute_error_ug_m3": 3619.1732357109927
+      }
+    }
+  },
+  "descriptive_warnings_by_recording": {
+    "lab_e4_drill10": {
+      "events": {
+        "qualified_onsets_seconds": [
+          1356
+        ],
+        "scorable_onsets_seconds": [
+          1356
+        ],
+        "unscored_onsets_without_complete_warning_window": []
+      },
+      "models": {
+        "persistence": {
+          "warning_issue_seconds": [],
+          "matches": [],
+          "false_alert_issue_seconds": [],
+          "unscored_alert_issue_seconds": [],
+          "missed_event_onsets_seconds": [
+            1356
+          ],
+          "scorable_events": 1,
+          "scored_warnings": 0,
+          "matched_events": 0,
+          "precision": null,
+          "recall": 0.0,
+          "mean_matched_lead_seconds": null
+        },
+        "trailing_mean": {
+          "warning_issue_seconds": [
+            1389
+          ],
+          "matches": [],
+          "false_alert_issue_seconds": [
+            1389
+          ],
+          "unscored_alert_issue_seconds": [],
+          "missed_event_onsets_seconds": [
+            1356
+          ],
+          "scorable_events": 1,
+          "scored_warnings": 1,
+          "matched_events": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "mean_matched_lead_seconds": null
+        },
+        "selected_model": {
+          "warning_issue_seconds": [
+            217,
+            278,
+            1323,
+            1383,
+            1443,
+            1504
+          ],
+          "matches": [],
+          "false_alert_issue_seconds": [
+            217,
+            278,
+            1323,
+            1383,
+            1443,
+            1504
+          ],
+          "unscored_alert_issue_seconds": [],
+          "missed_event_onsets_seconds": [
+            1356
+          ],
+          "scorable_events": 1,
+          "scored_warnings": 6,
+          "matched_events": 0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "mean_matched_lead_seconds": null
+        }
+      }
+    },
+    "lab_e4_drill50": {
+      "events": {
+        "qualified_onsets_seconds": [
+          1327,
+          1826,
+          1915,
+          1984,
+          2045,
+          2108
+        ],
+        "scorable_onsets_seconds": [
+          1327,
+          1826,
+          1915,
+          1984,
+          2045,
+          2108
+        ],
+        "unscored_onsets_without_complete_warning_window": []
+      },
+      "models": {
+        "persistence": {
+          "warning_issue_seconds": [],
+          "matches": [],
+          "false_alert_issue_seconds": [],
+          "unscored_alert_issue_seconds": [],
+          "missed_event_onsets_seconds": [
+            1327,
+            1826,
+            1915,
+            1984,
+            2045,
+            2108
+          ],
+          "scorable_events": 6,
+          "scored_warnings": 0,
+          "matched_events": 0,
+          "precision": null,
+          "recall": 0.0,
+          "mean_matched_lead_seconds": null
+        },
+        "trailing_mean": {
+          "warning_issue_seconds": [
+            1358,
+            1825,
+            1911,
+            1983,
+            2044,
+            2104,
+            2166
+          ],
+          "matches": [
+            {
+              "warning_issue_second": 1825,
+              "event_onset_second": 1826,
+              "lead_seconds": 1
+            },
+            {
+              "warning_issue_second": 1911,
+              "event_onset_second": 1915,
+              "lead_seconds": 4
+            },
+            {
+              "warning_issue_second": 1983,
+              "event_onset_second": 1984,
+              "lead_seconds": 1
+            },
+            {
+              "warning_issue_second": 2044,
+              "event_onset_second": 2045,
+              "lead_seconds": 1
+            },
+            {
+              "warning_issue_second": 2104,
+              "event_onset_second": 2108,
+              "lead_seconds": 4
+            }
+          ],
+          "false_alert_issue_seconds": [
+            1358,
+            2166
+          ],
+          "unscored_alert_issue_seconds": [],
+          "missed_event_onsets_seconds": [
+            1327
+          ],
+          "scorable_events": 6,
+          "scored_warnings": 7,
+          "matched_events": 5,
+          "precision": 0.7142857142857143,
+          "recall": 0.8333333333333334,
+          "mean_matched_lead_seconds": 2.2
+        },
+        "selected_model": {
+          "warning_issue_seconds": [
+            1341,
+            1825,
+            1911,
+            1983,
+            2044,
+            2104,
+            2166,
+            2241,
+            2315
+          ],
+          "matches": [
+            {
+              "warning_issue_second": 1825,
+              "event_onset_second": 1826,
+              "lead_seconds": 1
+            },
+            {
+              "warning_issue_second": 1911,
+              "event_onset_second": 1915,
+              "lead_seconds": 4
+            },
+            {
+              "warning_issue_second": 1983,
+              "event_onset_second": 1984,
+              "lead_seconds": 1
+            },
+            {
+              "warning_issue_second": 2044,
+              "event_onset_second": 2045,
+              "lead_seconds": 1
+            },
+            {
+              "warning_issue_second": 2104,
+              "event_onset_second": 2108,
+              "lead_seconds": 4
+            }
+          ],
+          "false_alert_issue_seconds": [
+            1341,
+            2166,
+            2241,
+            2315
+          ],
+          "unscored_alert_issue_seconds": [],
+          "missed_event_onsets_seconds": [
+            1327
+          ],
+          "scorable_events": 6,
+          "scored_warnings": 9,
+          "matched_events": 5,
+          "precision": 0.5555555555555556,
+          "recall": 0.8333333333333334,
+          "mean_matched_lead_seconds": 2.2
+        }
+      }
+    },
+    "lab_e4_drill90": {
+      "events": {
+        "qualified_onsets_seconds": [
+          1068,
+          1865,
+          2044,
+          2142,
+          2242,
+          2314,
+          2398,
+          2482,
+          2554,
+          2644,
+          2708
+        ],
+        "scorable_onsets_seconds": [
+          1068,
+          1865,
+          2044,
+          2142,
+          2242,
+          2314,
+          2398,
+          2482,
+          2554,
+          2644,
+          2708
+        ],
+        "unscored_onsets_without_complete_warning_window": []
+      },
+      "models": {
+        "persistence": {
+          "warning_issue_seconds": [],
+          "matches": [],
+          "false_alert_issue_seconds": [],
+          "unscored_alert_issue_seconds": [],
+          "missed_event_onsets_seconds": [
+            1068,
+            1865,
+            2044,
+            2142,
+            2242,
+            2314,
+            2398,
+            2482,
+            2554,
+            2644,
+            2708
+          ],
+          "scorable_events": 11,
+          "scored_warnings": 0,
+          "matched_events": 0,
+          "precision": null,
+          "recall": 0.0,
+          "mean_matched_lead_seconds": null
+        },
+        "trailing_mean": {
+          "warning_issue_seconds": [
+            1116,
+            1859,
+            2043,
+            2141,
+            2236,
+            2308,
+            2378,
+            2442,
+            2504,
+            2565,
+            2626,
+            2687,
+            2747
+          ],
+          "matches": [
+            {
+              "warning_issue_second": 1859,
+              "event_onset_second": 1865,
+              "lead_seconds": 6
+            },
+            {
+              "warning_issue_second": 2043,
+              "event_onset_second": 2044,
+              "lead_seconds": 1
+            },
+            {
+              "warning_issue_second": 2141,
+              "event_onset_second": 2142,
+              "lead_seconds": 1
+            },
+            {
+              "warning_issue_second": 2236,
+              "event_onset_second": 2242,
+              "lead_seconds": 6
+            },
+            {
+              "warning_issue_second": 2308,
+              "event_onset_second": 2314,
+              "lead_seconds": 6
+            },
+            {
+              "warning_issue_second": 2378,
+              "event_onset_second": 2398,
+              "lead_seconds": 20
+            },
+            {
+              "warning_issue_second": 2626,
+              "event_onset_second": 2644,
+              "lead_seconds": 18
+            },
+            {
+              "warning_issue_second": 2687,
+              "event_onset_second": 2708,
+              "lead_seconds": 21
+            }
+          ],
+          "false_alert_issue_seconds": [
+            1116,
+            2442,
+            2504,
+            2565,
+            2747
+          ],
+          "unscored_alert_issue_seconds": [],
+          "missed_event_onsets_seconds": [
+            1068,
+            2482,
+            2554
+          ],
+          "scorable_events": 11,
+          "scored_warnings": 13,
+          "matched_events": 8,
+          "precision": 0.6153846153846154,
+          "recall": 0.7272727272727273,
+          "mean_matched_lead_seconds": 9.875
+        },
+        "selected_model": {
+          "warning_issue_seconds": [
+            1059,
+            1859,
+            2043,
+            2141,
+            2236,
+            2308,
+            2378,
+            2442,
+            2504,
+            2565,
+            2630,
+            2716,
+            2831
+          ],
+          "matches": [
+            {
+              "warning_issue_second": 1059,
+              "event_onset_second": 1068,
+              "lead_seconds": 9
+            },
+            {
+              "warning_issue_second": 1859,
+              "event_onset_second": 1865,
+              "lead_seconds": 6
+            },
+            {
+              "warning_issue_second": 2043,
+              "event_onset_second": 2044,
+              "lead_seconds": 1
+            },
+            {
+              "warning_issue_second": 2141,
+              "event_onset_second": 2142,
+              "lead_seconds": 1
+            },
+            {
+              "warning_issue_second": 2236,
+              "event_onset_second": 2242,
+              "lead_seconds": 6
+            },
+            {
+              "warning_issue_second": 2308,
+              "event_onset_second": 2314,
+              "lead_seconds": 6
+            },
+            {
+              "warning_issue_second": 2378,
+              "event_onset_second": 2398,
+              "lead_seconds": 20
+            },
+            {
+              "warning_issue_second": 2630,
+              "event_onset_second": 2644,
+              "lead_seconds": 14
+            }
+          ],
+          "false_alert_issue_seconds": [
+            2442,
+            2504,
+            2565,
+            2716,
+            2831
+          ],
+          "unscored_alert_issue_seconds": [],
+          "missed_event_onsets_seconds": [
+            2482,
+            2554,
+            2708
+          ],
+          "scorable_events": 11,
+          "scored_warnings": 13,
+          "matched_events": 8,
+          "precision": 0.6153846153846154,
+          "recall": 0.7272727272727273,
+          "mean_matched_lead_seconds": 7.875
+        }
+      }
+    }
+  },
+  "event_configuration": {
+    "schema_version": 1,
+    "threshold_pm10_ug_m3": 500.0,
+    "threshold_purpose": "illustrative demo operating setting, not a regulatory or health limit",
+    "minimum_exceedance_seconds": 5,
+    "event_rule": "five consecutive available one-second snapshots at or above threshold; onset is first snapshot; separate runs need a 60-second onset cooldown",
+    "warning_rule": "endpoint forecast at or above threshold while current observed snapshot is below threshold",
+    "warning_cooldown_seconds": 60,
+    "matching_window_seconds": 30,
+    "matching_rule": "greedy one-to-one in time order; event onset must be strictly after warning and at most 30 seconds later",
+    "lead_time_definition": "event onset minus first matched warning issue time",
+    "eligibility_rule": "only events with a complete 30-second preceding set of eligible forecast issue times are scored",
+    "scope": "descriptive event counts only; single endpoint does not estimate exact crossing ETA"
+  },
+  "target_range_ug_m3": {
+    "minimum": 0.47,
+    "maximum": 5368.87
+  },
+  "maximum_target_age_seconds": 1.1350007057189941,
+  "limitations": [
+    "Only three test recordings in one related experimental group",
+    "Overlapping windows are dependent",
+    "Changed temperature condition",
+    "One laboratory setup/instrument",
+    "No calibrated uncertainty, boundary or suppression evidence"
+  ],
+  "mae_improvement_over_persistence_percent": 7.6247355690631196,
+  "mae_improvement_over_trailing_mean_percent": -8.385514913758893,
+  "by_target_operating_setting": {
+    "below_demo_setting": {
+      "persistence": {
+        "samples": 12500,
+        "mae_ug_m3": 57.0214136,
+        "rmse_ug_m3": 86.22866313290494,
+        "mean_error_ug_m3": 8.5541288
+      },
+      "trailing_mean": {
+        "samples": 12500,
+        "mae_ug_m3": 42.73514009180328,
+        "rmse_ug_m3": 63.51347211871679,
+        "mean_error_ug_m3": 11.321323934426228
+      },
+      "selected_model": {
+        "samples": 12500,
+        "mae_ug_m3": 58.88223956326265,
+        "rmse_ug_m3": 93.01064164741986,
+        "mean_error_ug_m3": 29.394384826689492
+      }
+    },
+    "at_or_above_demo_setting": {
+      "persistence": {
+        "samples": 2565,
+        "mae_ug_m3": 284.2019727095516,
+        "rmse_ug_m3": 444.1312194270805,
+        "mean_error_ug_m3": -40.0534424951267
+      },
+      "trailing_mean": {
+        "samples": 2565,
+        "mae_ug_m3": 270.7944986418688,
+        "rmse_ug_m3": 465.781325730494,
+        "mean_error_ug_m3": -51.43906094014635
+      },
+      "selected_model": {
+        "samples": 2565,
+        "mae_ug_m3": 232.2761933600227,
+        "rmse_ug_m3": 382.8836872335728,
+        "mean_error_ug_m3": -87.7430624782403
+      }
+    }
+  },
+  "trace_file": "reports/evaluation/test-forecast-traces.csv.gz",
+  "evidence_sha256": {
+    "reports/evaluation/test-forecast-traces.csv.gz": "3ac4e7dadf8d9058d792b6df18fec728d22b11fe48d46d2f8046eb5423a73113",
+    "reports/evaluation/test-full-profiles.png": "2f6668f44a5d6a268c805cedc0491e85de7ea79a04c4884f17c5ad91b3a4c9a9",
+    "reports/evaluation/test-failure-windows.png": "90d453ecfc5ca2ac03d3bb61aede19927d14ef9c8b035af12164bbf6075bf5ca",
+    "reports/evaluation/test-residuals.png": "95de9c2538ff5e52509e0a23d1d1b952e3aa30555c28534c3f7d15c71458115c",
+    "reports/training/validation-selection.json": "ca6fb8ebfdf73f1fee354316ce641e0606bfd93f87df77c647ea6384b4bf9205",
+    "models/model-metadata.json": "b2dd1779a93908d314991bcc6b97a6c3b8d9c8391d5730a4bcadbf1f088c1a17"
+  }
+}

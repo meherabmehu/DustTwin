@@ -1,0 +1,316 @@
+{
+  "scope": "Uncalibrated illustrative site-control simulation; no field suppression claim",
+  "aggregation": "maximum across four boundaries at each one-second interval end",
+  "scenarios": {
+    "low-risk": {
+      "no_control": {
+        "water_litres": 0.0,
+        "mean_max_boundary_pm10_ug_m3": 56.36948828890971,
+        "peak_boundary_pm10_ug_m3": 74.73024090468667,
+        "exceedance_seconds": 0,
+        "integrated_max_boundary_exposure_ug_s_m3": 27057.35437867666,
+        "zone_switches": 0,
+        "zone_duty_seconds": {
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "D": 0
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "continuous": {
+        "water_litres": 15.999999999999954,
+        "mean_max_boundary_pm10_ug_m3": 45.774008401118394,
+        "peak_boundary_pm10_ug_m3": 52.155585877471665,
+        "exceedance_seconds": 0,
+        "integrated_max_boundary_exposure_ug_s_m3": 21971.52403253683,
+        "zone_switches": 4,
+        "zone_duty_seconds": {
+          "A": 480,
+          "B": 480,
+          "C": 480,
+          "D": 480
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "reactive": {
+        "water_litres": 0.0,
+        "mean_max_boundary_pm10_ug_m3": 56.36948828890971,
+        "peak_boundary_pm10_ug_m3": 74.73024090468667,
+        "exceedance_seconds": 0,
+        "integrated_max_boundary_exposure_ug_s_m3": 27057.35437867666,
+        "zone_switches": 0,
+        "zone_duty_seconds": {
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "D": 0
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "predictive": {
+        "water_litres": 0.0,
+        "mean_max_boundary_pm10_ug_m3": 56.36948828890971,
+        "peak_boundary_pm10_ug_m3": 74.73024090468667,
+        "exceedance_seconds": 0,
+        "integrated_max_boundary_exposure_ug_s_m3": 27057.35437867666,
+        "zone_switches": 0,
+        "zone_duty_seconds": {
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "D": 0
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      }
+    },
+    "east": {
+      "no_control": {
+        "water_litres": 0.0,
+        "mean_max_boundary_pm10_ug_m3": 294.6344986242139,
+        "peak_boundary_pm10_ug_m3": 749.8561341107875,
+        "exceedance_seconds": 203,
+        "integrated_max_boundary_exposure_ug_s_m3": 141424.55933962268,
+        "zone_switches": 0,
+        "zone_duty_seconds": {
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "D": 0
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "continuous": {
+        "water_litres": 15.999999999999954,
+        "mean_max_boundary_pm10_ug_m3": 129.16676201847483,
+        "peak_boundary_pm10_ug_m3": 288.4496484996067,
+        "exceedance_seconds": 86,
+        "integrated_max_boundary_exposure_ug_s_m3": 62000.04576886792,
+        "zone_switches": 4,
+        "zone_duty_seconds": {
+          "A": 480,
+          "B": 480,
+          "C": 480,
+          "D": 480
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "reactive": {
+        "water_litres": 1.249999999999998,
+        "mean_max_boundary_pm10_ug_m3": 175.95179129966036,
+        "peak_boundary_pm10_ug_m3": 424.4234443535355,
+        "exceedance_seconds": 122,
+        "integrated_max_boundary_exposure_ug_s_m3": 84456.85982383697,
+        "zone_switches": 4,
+        "zone_duty_seconds": {
+          "A": 0,
+          "B": 150,
+          "C": 0,
+          "D": 0
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "predictive": {
+        "water_litres": 1.8416666666666626,
+        "mean_max_boundary_pm10_ug_m3": 149.96229826845828,
+        "peak_boundary_pm10_ug_m3": 288.45086212035756,
+        "exceedance_seconds": 86,
+        "integrated_max_boundary_exposure_ug_s_m3": 71981.90316885998,
+        "zone_switches": 2,
+        "zone_duty_seconds": {
+          "A": 0,
+          "B": 221,
+          "C": 0,
+          "D": 0
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      }
+    },
+    "diagonal": {
+      "no_control": {
+        "water_litres": 0.0,
+        "mean_max_boundary_pm10_ug_m3": 172.4435209844014,
+        "peak_boundary_pm10_ug_m3": 394.92806705539374,
+        "exceedance_seconds": 139,
+        "integrated_max_boundary_exposure_ug_s_m3": 82772.89007251267,
+        "zone_switches": 0,
+        "zone_duty_seconds": {
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "D": 0
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "continuous": {
+        "water_litres": 15.999999999999954,
+        "mean_max_boundary_pm10_ug_m3": 86.37757609454049,
+        "peak_boundary_pm10_ug_m3": 164.22482424980336,
+        "exceedance_seconds": 0,
+        "integrated_max_boundary_exposure_ug_s_m3": 41461.236525379434,
+        "zone_switches": 4,
+        "zone_duty_seconds": {
+          "A": 480,
+          "B": 480,
+          "C": 480,
+          "D": 480
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "reactive": {
+        "water_litres": 1.0833333333333341,
+        "mean_max_boundary_pm10_ug_m3": 145.8900158888656,
+        "peak_boundary_pm10_ug_m3": 335.5431024865489,
+        "exceedance_seconds": 68,
+        "integrated_max_boundary_exposure_ug_s_m3": 70027.2076266555,
+        "zone_switches": 12,
+        "zone_duty_seconds": {
+          "A": 65,
+          "B": 65,
+          "C": 0,
+          "D": 0
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "predictive": {
+        "water_litres": 2.5166666666666626,
+        "mean_max_boundary_pm10_ug_m3": 108.7929568791701,
+        "peak_boundary_pm10_ug_m3": 186.959264147268,
+        "exceedance_seconds": 0,
+        "integrated_max_boundary_exposure_ug_s_m3": 52220.61930200165,
+        "zone_switches": 4,
+        "zone_duty_seconds": {
+          "A": 152,
+          "B": 150,
+          "C": 0,
+          "D": 0
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      }
+    },
+    "wind-shift": {
+      "no_control": {
+        "water_litres": 0.0,
+        "mean_max_boundary_pm10_ug_m3": 281.1527914949271,
+        "peak_boundary_pm10_ug_m3": 749.8561341107875,
+        "exceedance_seconds": 196,
+        "integrated_max_boundary_exposure_ug_s_m3": 134953.339917565,
+        "zone_switches": 0,
+        "zone_duty_seconds": {
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "D": 0
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "continuous": {
+        "water_litres": 15.999999999999954,
+        "mean_max_boundary_pm10_ug_m3": 124.44816452136153,
+        "peak_boundary_pm10_ug_m3": 288.4496484996067,
+        "exceedance_seconds": 86,
+        "integrated_max_boundary_exposure_ug_s_m3": 59735.118970253534,
+        "zone_switches": 4,
+        "zone_duty_seconds": {
+          "A": 480,
+          "B": 480,
+          "C": 480,
+          "D": 480
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "reactive": {
+        "water_litres": 1.2833333333333317,
+        "mean_max_boundary_pm10_ug_m3": 173.90603389195212,
+        "peak_boundary_pm10_ug_m3": 424.4234443535355,
+        "exceedance_seconds": 134,
+        "integrated_max_boundary_exposure_ug_s_m3": 83474.89626813702,
+        "zone_switches": 6,
+        "zone_duty_seconds": {
+          "A": 44,
+          "B": 110,
+          "C": 0,
+          "D": 0
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "predictive": {
+        "water_litres": 2.024999999999996,
+        "mean_max_boundary_pm10_ug_m3": 143.84974698027872,
+        "peak_boundary_pm10_ug_m3": 288.45086212035756,
+        "exceedance_seconds": 86,
+        "integrated_max_boundary_exposure_ug_s_m3": 69047.87855053379,
+        "zone_switches": 4,
+        "zone_duty_seconds": {
+          "A": 108,
+          "B": 135,
+          "C": 0,
+          "D": 0
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      }
+    },
+    "data-loss": {
+      "no_control": {
+        "water_litres": 0.0,
+        "mean_max_boundary_pm10_ug_m3": 294.6344986242139,
+        "peak_boundary_pm10_ug_m3": 749.8561341107875,
+        "exceedance_seconds": 203,
+        "integrated_max_boundary_exposure_ug_s_m3": 141424.55933962268,
+        "zone_switches": 0,
+        "zone_duty_seconds": {
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "D": 0
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "continuous": {
+        "water_litres": 15.999999999999954,
+        "mean_max_boundary_pm10_ug_m3": 129.16676201847483,
+        "peak_boundary_pm10_ug_m3": 288.4496484996067,
+        "exceedance_seconds": 86,
+        "integrated_max_boundary_exposure_ug_s_m3": 62000.04576886792,
+        "zone_switches": 4,
+        "zone_duty_seconds": {
+          "A": 480,
+          "B": 480,
+          "C": 480,
+          "D": 480
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "reactive": {
+        "water_litres": 1.9999999999999971,
+        "mean_max_boundary_pm10_ug_m3": 175.95179129966036,
+        "peak_boundary_pm10_ug_m3": 424.4234443535355,
+        "exceedance_seconds": 122,
+        "integrated_max_boundary_exposure_ug_s_m3": 84456.85982383697,
+        "zone_switches": 10,
+        "zone_duty_seconds": {
+          "A": 30,
+          "B": 150,
+          "C": 30,
+          "D": 30
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      },
+      "predictive": {
+        "water_litres": 2.4666666666666637,
+        "mean_max_boundary_pm10_ug_m3": 156.97264345033417,
+        "peak_boundary_pm10_ug_m3": 325.2958938895067,
+        "exceedance_seconds": 104,
+        "integrated_max_boundary_exposure_ug_s_m3": 75346.8688561604,
+        "zone_switches": 10,
+        "zone_duty_seconds": {
+          "A": 30,
+          "B": 206,
+          "C": 30,
+          "D": 30
+        },
+        "metric_rule": "Maximum of four simulated boundary concentrations at each one-second interval end; average/integral/exceedance over 480 intervals"
+      }
+    }
+  }
+}

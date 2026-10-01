@@ -1,0 +1,19 @@
+{
+  "task_id": "construction_pm10_30s_v1",
+  "partition": "validation",
+  "units": "ug/m3",
+  "models": {
+    "persistence": {
+      "samples": 12113,
+      "mae_ug_m3": 150.4931197886568,
+      "rmse_ug_m3": 392.60848927963514,
+      "mean_error_ug_m3": 0.29253859489804374
+    },
+    "trailing_mean": {
+      "samples": 12113,
+      "mae_ug_m3": 132.72473877814514,
+      "rmse_ug_m3": 407.9648063868173,
+      "mean_error_ug_m3": 0.5734989639907252
+    }
+  }
+}

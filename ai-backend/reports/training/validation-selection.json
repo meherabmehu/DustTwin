@@ -1,0 +1,397 @@
+{
+  "experiment_id": "pm10_initial_group_holdout_v1",
+  "task_id": "construction_pm10_30s_v1",
+  "selection_partition": "validation",
+  "training_samples": 24818,
+  "validation_samples": 12113,
+  "selected_model_id": "hist_gb_depth3_iter100",
+  "artifact_sha256": "d78f1b37269f72af45933e01722968fb13ed82178f6d8b3e4c5584d46cec09c7",
+  "baselines": {
+    "persistence": {
+      "samples": 12113,
+      "mae_ug_m3": 150.4931197886568,
+      "rmse_ug_m3": 392.60848927963514,
+      "mean_error_ug_m3": 0.29253859489804374
+    },
+    "trailing_mean": {
+      "samples": 12113,
+      "mae_ug_m3": 132.72473877814514,
+      "rmse_ug_m3": 407.9648063868173,
+      "mean_error_ug_m3": 0.5734989639907252
+    }
+  },
+  "candidates": [
+    {
+      "candidate_order": 0,
+      "model_id": "ridge_alpha0.1",
+      "fit_seconds": 0.010503584002435673,
+      "validation": {
+        "samples": 12113,
+        "mae_ug_m3": 129.26584537720646,
+        "rmse_ug_m3": 331.8588115780318,
+        "mean_error_ug_m3": -1.457803576136067
+      },
+      "validation_by_recording": {
+        "lab_e3_drill10": {
+          "samples": 3473,
+          "mae_ug_m3": 61.31216964136288,
+          "rmse_ug_m3": 77.09593741726846,
+          "mean_error_ug_m3": 51.53840165567178
+        },
+        "lab_e3_drill50": {
+          "samples": 3945,
+          "mae_ug_m3": 148.42908612068308,
+          "rmse_ug_m3": 421.1235775384885,
+          "mean_error_ug_m3": -5.454856429435066
+        },
+        "lab_e3_drill90": {
+          "samples": 4695,
+          "mae_ug_m3": 163.43072953004344,
+          "rmse_ug_m3": 361.5547184077305,
+          "mean_error_ug_m3": -37.30177530431585
+        }
+      },
+      "validation_negative_predictions_clipped": 0,
+      "estimator_parameters": {
+        "scaler": {
+          "copy": true,
+          "with_mean": true,
+          "with_std": true
+        },
+        "ridge": {
+          "alpha": 0.1,
+          "copy_X": true,
+          "fit_intercept": true,
+          "max_iter": null,
+          "positive": false,
+          "random_state": 20261001,
+          "solver": "svd",
+          "tol": 0.0001
+        }
+      }
+    },
+    {
+      "candidate_order": 1,
+      "model_id": "ridge_alpha1",
+      "fit_seconds": 0.005463792003865819,
+      "validation": {
+        "samples": 12113,
+        "mae_ug_m3": 129.1974002006845,
+        "rmse_ug_m3": 331.7103140057041,
+        "mean_error_ug_m3": -1.4615901707452976
+      },
+      "validation_by_recording": {
+        "lab_e3_drill10": {
+          "samples": 3473,
+          "mae_ug_m3": 61.27563547188391,
+          "rmse_ug_m3": 77.00059356643509,
+          "mean_error_ug_m3": 51.534143111001576
+        },
+        "lab_e3_drill50": {
+          "samples": 3945,
+          "mae_ug_m3": 148.27413365291576,
+          "rmse_ug_m3": 420.782334377571,
+          "mean_error_ug_m3": -5.455273242351045
+        },
+        "lab_e3_drill90": {
+          "samples": 4695,
+          "mae_ug_m3": 163.41136727929418,
+          "rmse_ug_m3": 361.55201073925355,
+          "mean_error_ug_m3": -37.30804426446675
+        }
+      },
+      "validation_negative_predictions_clipped": 0,
+      "estimator_parameters": {
+        "scaler": {
+          "copy": true,
+          "with_mean": true,
+          "with_std": true
+        },
+        "ridge": {
+          "alpha": 1.0,
+          "copy_X": true,
+          "fit_intercept": true,
+          "max_iter": null,
+          "positive": false,
+          "random_state": 20261001,
+          "solver": "svd",
+          "tol": 0.0001
+        }
+      }
+    },
+    {
+      "candidate_order": 2,
+      "model_id": "ridge_alpha10",
+      "fit_seconds": 0.005914542001846712,
+      "validation": {
+        "samples": 12113,
+        "mae_ug_m3": 128.95350766396362,
+        "rmse_ug_m3": 331.1910410635302,
+        "mean_error_ug_m3": -1.4605223596456913
+      },
+      "validation_by_recording": {
+        "lab_e3_drill10": {
+          "samples": 3473,
+          "mae_ug_m3": 61.208039654871904,
+          "rmse_ug_m3": 76.73678343303315,
+          "mean_error_ug_m3": 51.59721597620565
+        },
+        "lab_e3_drill50": {
+          "samples": 3945,
+          "mae_ug_m3": 147.6088404115406,
+          "rmse_ug_m3": 419.37696261950435,
+          "mean_error_ug_m3": -5.438337055703418
+        },
+        "lab_e3_drill90": {
+          "samples": 4695,
+          "mae_ug_m3": 163.3911482830018,
+          "rmse_ug_m3": 361.73730837959323,
+          "mean_error_ug_m3": -37.36617651608105
+        }
+      },
+      "validation_negative_predictions_clipped": 0,
+      "estimator_parameters": {
+        "scaler": {
+          "copy": true,
+          "with_mean": true,
+          "with_std": true
+        },
+        "ridge": {
+          "alpha": 10.0,
+          "copy_X": true,
+          "fit_intercept": true,
+          "max_iter": null,
+          "positive": false,
+          "random_state": 20261001,
+          "solver": "svd",
+          "tol": 0.0001
+        }
+      }
+    },
+    {
+      "candidate_order": 3,
+      "model_id": "hist_gb_depth2_iter50",
+      "fit_seconds": 0.05164395800238708,
+      "validation": {
+        "samples": 12113,
+        "mae_ug_m3": 125.51292201392587,
+        "rmse_ug_m3": 315.467964026748,
+        "mean_error_ug_m3": -19.387169367024594
+      },
+      "validation_by_recording": {
+        "lab_e3_drill10": {
+          "samples": 3473,
+          "mae_ug_m3": 59.83814645726528,
+          "rmse_ug_m3": 81.38327201282053,
+          "mean_error_ug_m3": 46.543336335330494
+        },
+        "lab_e3_drill50": {
+          "samples": 3945,
+          "mae_ug_m3": 140.0316080992857,
+          "rmse_ug_m3": 379.1018506692156,
+          "mean_error_ug_m3": -19.4073260378908
+        },
+        "lab_e3_drill90": {
+          "samples": 4695,
+          "mae_ug_m3": 161.89466405898185,
+          "rmse_ug_m3": 362.07758894627807,
+          "mean_error_ug_m3": -68.14055131328912
+        }
+      },
+      "validation_negative_predictions_clipped": 0,
+      "estimator_parameters": {
+        "categorical_features": null,
+        "early_stopping": false,
+        "interaction_cst": null,
+        "l2_regularization": 0.0,
+        "learning_rate": 0.1,
+        "loss": "squared_error",
+        "max_bins": 255,
+        "max_depth": 2,
+        "max_features": 1.0,
+        "max_iter": 50,
+        "max_leaf_nodes": 31,
+        "min_samples_leaf": 20,
+        "monotonic_cst": null,
+        "n_iter_no_change": 10,
+        "quantile": null,
+        "random_state": 20261001,
+        "scoring": "loss",
+        "tol": 1e-07,
+        "validation_fraction": null,
+        "verbose": 0,
+        "warm_start": false
+      }
+    },
+    {
+      "candidate_order": 4,
+      "model_id": "hist_gb_depth2_iter100",
+      "fit_seconds": 0.0478860410003108,
+      "validation": {
+        "samples": 12113,
+        "mae_ug_m3": 120.6595823725754,
+        "rmse_ug_m3": 307.7389580731188,
+        "mean_error_ug_m3": -20.933339022857165
+      },
+      "validation_by_recording": {
+        "lab_e3_drill10": {
+          "samples": 3473,
+          "mae_ug_m3": 49.15762198178621,
+          "rmse_ug_m3": 73.75377961961178,
+          "mean_error_ug_m3": 32.17082005506551
+        },
+        "lab_e3_drill50": {
+          "samples": 3945,
+          "mae_ug_m3": 141.2493597792419,
+          "rmse_ug_m3": 376.37147857152775,
+          "mean_error_ug_m3": -17.922921346174302
+        },
+        "lab_e3_drill90": {
+          "samples": 4695,
+          "mae_ug_m3": 156.25055927734886,
+          "rmse_ug_m3": 348.25533733332395,
+          "mean_error_ug_m3": -62.74523299775371
+        }
+      },
+      "validation_negative_predictions_clipped": 0,
+      "estimator_parameters": {
+        "categorical_features": null,
+        "early_stopping": false,
+        "interaction_cst": null,
+        "l2_regularization": 0.0,
+        "learning_rate": 0.1,
+        "loss": "squared_error",
+        "max_bins": 255,
+        "max_depth": 2,
+        "max_features": 1.0,
+        "max_iter": 100,
+        "max_leaf_nodes": 31,
+        "min_samples_leaf": 20,
+        "monotonic_cst": null,
+        "n_iter_no_change": 10,
+        "quantile": null,
+        "random_state": 20261001,
+        "scoring": "loss",
+        "tol": 1e-07,
+        "validation_fraction": null,
+        "verbose": 0,
+        "warm_start": false
+      }
+    },
+    {
+      "candidate_order": 5,
+      "model_id": "hist_gb_depth3_iter50",
+      "fit_seconds": 0.036901291998219676,
+      "validation": {
+        "samples": 12113,
+        "mae_ug_m3": 119.18537126890102,
+        "rmse_ug_m3": 306.9703213288025,
+        "mean_error_ug_m3": -21.65228439416611
+      },
+      "validation_by_recording": {
+        "lab_e3_drill10": {
+          "samples": 3473,
+          "mae_ug_m3": 50.19008427134697,
+          "rmse_ug_m3": 73.40168928867602,
+          "mean_error_ug_m3": 32.01629711749642
+        },
+        "lab_e3_drill50": {
+          "samples": 3945,
+          "mae_ug_m3": 136.19266248712034,
+          "rmse_ug_m3": 366.83046222121,
+          "mean_error_ug_m3": -22.9634220325122
+        },
+        "lab_e3_drill90": {
+          "samples": 4695,
+          "mae_ug_m3": 155.93230798596812,
+          "rmse_ug_m3": 355.0482602876348,
+          "mean_error_ug_m3": -60.25048367142458
+        }
+      },
+      "validation_negative_predictions_clipped": 0,
+      "estimator_parameters": {
+        "categorical_features": null,
+        "early_stopping": false,
+        "interaction_cst": null,
+        "l2_regularization": 0.0,
+        "learning_rate": 0.1,
+        "loss": "squared_error",
+        "max_bins": 255,
+        "max_depth": 3,
+        "max_features": 1.0,
+        "max_iter": 50,
+        "max_leaf_nodes": 31,
+        "min_samples_leaf": 20,
+        "monotonic_cst": null,
+        "n_iter_no_change": 10,
+        "quantile": null,
+        "random_state": 20261001,
+        "scoring": "loss",
+        "tol": 1e-07,
+        "validation_fraction": null,
+        "verbose": 0,
+        "warm_start": false
+      }
+    },
+    {
+      "candidate_order": 6,
+      "model_id": "hist_gb_depth3_iter100",
+      "fit_seconds": 0.054984208996756934,
+      "validation": {
+        "samples": 12113,
+        "mae_ug_m3": 117.18583757689927,
+        "rmse_ug_m3": 305.2172434835912,
+        "mean_error_ug_m3": -21.748678358896477
+      },
+      "validation_by_recording": {
+        "lab_e3_drill10": {
+          "samples": 3473,
+          "mae_ug_m3": 44.825871536345446,
+          "rmse_ug_m3": 72.23367518506177,
+          "mean_error_ug_m3": 23.339530353887483
+        },
+        "lab_e3_drill50": {
+          "samples": 3945,
+          "mae_ug_m3": 137.8949286961533,
+          "rmse_ug_m3": 365.7655334057167,
+          "mean_error_ug_m3": -18.3319895235737
+        },
+        "lab_e3_drill90": {
+          "samples": 4695,
+          "mae_ug_m3": 153.31124707495812,
+          "rmse_ug_m3": 352.2382259289195,
+          "mean_error_ug_m3": -57.97236021509392
+        }
+      },
+      "validation_negative_predictions_clipped": 0,
+      "estimator_parameters": {
+        "categorical_features": null,
+        "early_stopping": false,
+        "interaction_cst": null,
+        "l2_regularization": 0.0,
+        "learning_rate": 0.1,
+        "loss": "squared_error",
+        "max_bins": 255,
+        "max_depth": 3,
+        "max_features": 1.0,
+        "max_iter": 100,
+        "max_leaf_nodes": 31,
+        "min_samples_leaf": 20,
+        "monotonic_cst": null,
+        "n_iter_no_change": 10,
+        "quantile": null,
+        "random_state": 20261001,
+        "scoring": "loss",
+        "tol": 1e-07,
+        "validation_fraction": null,
+        "verbose": 0,
+        "warm_start": false
+      }
+    }
+  ],
+  "selected_mae_improvement_over_persistence_percent": 22.132096310138433,
+  "sum_fit_seconds": 0.2132974180058227,
+  "run_seconds_excluding_imports": 0.316324583000096,
+  "test_scored": false,
+  "refitted_with_validation": false
+}
