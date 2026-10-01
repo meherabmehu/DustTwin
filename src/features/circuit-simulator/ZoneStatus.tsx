@@ -22,7 +22,7 @@ const ZONE_METADATA = [
     gpio: ZONE_GPIO_MAP.zone2,
     relay: 'Relay 2 - Valve B',
     subtitle: 'Misting Valve',
-    icon: <Settings size={14} />,
+    icon: <Droplet size={14} />,
   },
   {
     id: 'C',
