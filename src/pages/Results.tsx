@@ -7,6 +7,12 @@ import { ComparisonBars, Sparkline } from '../components/Charts';
 import { DustMap } from '../components/Visuals';
 import { computeResultsSummary } from '../features/results/resultsEngine';
 
+function formatReductionDisplay(percent: number): string {
+  if (percent > 0) return `${percent}%`;
+  if (percent === 0) return '0%';
+  return `${Math.abs(percent)}% increase`;
+}
+
 export default function Results() {
   const { prediction, strategyResults, summary } = useMemo(() => computeResultsSummary(), []);
 
@@ -57,24 +63,24 @@ export default function Results() {
     {
       icon: <Activity />,
       title: 'PM Reduction',
-      subtitle: 'Highest-risk boundary PM2.5 vs No Control',
-      value: `−${summary.pmReductionPercent}%`,
+      subtitle: 'vs No Control',
+      value: formatReductionDisplay(summary.pmReductionPercent),
       foot: `${summary.noControlPm25.toFixed(1)} → ${summary.predictivePm25.toFixed(1)} µg/m³ modeled response`,
       base: 35,
     },
     {
       icon: <ShieldCheck />,
-      title: 'Boundary Exceedance Time',
-      subtitle: 'Time above threshold vs No Control',
-      value: `−${summary.exceedanceReductionPercent}%`,
+      title: 'Boundary Exceedance Reduction',
+      subtitle: 'vs No Control',
+      value: formatReductionDisplay(summary.exceedanceReductionPercent),
       foot: `${summary.noControlExceedance.toFixed(1)} min → ${summary.predictiveExceedance.toFixed(1)} min modeled window`,
       base: 10,
     },
     {
       icon: <Droplets />,
       title: 'Water Use Reduction',
-      subtitle: 'Targeted misting vs Continuous',
-      value: `−${summary.waterReductionPercent}%`,
+      subtitle: 'vs Continuous Spraying',
+      value: formatReductionDisplay(summary.waterReductionPercent),
       foot: `${summary.continuousWater.toFixed(1)} L → ${summary.predictiveWater.toFixed(1)} L modeled usage`,
       base: 15,
     },
