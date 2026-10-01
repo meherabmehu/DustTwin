@@ -102,6 +102,23 @@ function buildChart(
 }
 
 /**
+ * Pure mapping helper converting an AI predicted PM10 magnitude (+30s)
+ * into a normalized site simulation dust intensity (10 - 100%).
+ * 
+ * Concept:
+ * The trained AI predicts future PM10 particulate mass concentration.
+ * Higher forecasted PM10 scales modeled site dust generation so physical
+ * advection and perimeter risk respond proactively to predicted spikes.
+ */
+export function mapAiPm10ToDustIntensity(predictedPm10: number): number {
+  if (!Number.isFinite(predictedPm10) || predictedPm10 <= 0) {
+    return 10;
+  }
+  const scaled = Math.round(predictedPm10 / 5);
+  return Math.min(100, Math.max(10, scaled));
+}
+
+/**
  * Deterministic explanation of the scenario result for judges and operators.
  */
 function buildDecision(

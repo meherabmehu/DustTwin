@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import '../features/simulation/simulationPage.css';
 import {
@@ -31,6 +31,7 @@ import {
   directionLabel,
   generateScenarioTrendPoints,
   predictSimulation,
+  mapAiPm10ToDustIntensity,
 } from '../features/simulation/simulationEngine';
 import type {
   BoundaryId,
@@ -188,18 +189,31 @@ export default function Simulation() {
   const health = useDustTwinHealth();
   const replay = useDustTwinReplay(getApiBaseUrl(), selectedEpisodeId, replaySecond);
 
+  const isAiActive =
+    simulationSource === 'replay' &&
+    (replay.status === 'live' || replay.status === 'saved') &&
+    replay.snapshot?.forecast != null;
+  const aiForecast = isAiActive ? replay.snapshot!.forecast : null;
+
   // Synchronize AI Replay with hybrid simulation prediction
   useEffect(() => {
-    if (simulationSource === 'replay' && replay.snapshot?.forecast) {
-      const forecastPm10 = replay.snapshot.forecast.predicted_pm10_ug_m3;
-      // Map AI forecast magnitude to simulation dust intensity (10-100 range)
-      const mappedIntensity = Math.min(100, Math.max(10, Math.round(forecastPm10 / 5)));
-      const hybridInput: SimulationInput = { ...appliedInput, dustIntensity: mappedIntensity };
-      const nextPrediction = predictSimulation(hybridInput, undefined, appliedStrategy);
-      setPrediction(nextPrediction);
-      setTrendHistory(generateScenarioTrendPoints(nextPrediction.sensors, nextPrediction.activeZoneIds));
+    if (simulationSource === 'replay') {
+      if (replay.snapshot?.forecast) {
+        const forecastPm10 = replay.snapshot.forecast.predicted_pm10_ug_m3;
+        // Pure helper mapping AI PM10 forecast magnitude to simulation dust intensity (10-100 range)
+        const mappedIntensity = mapAiPm10ToDustIntensity(forecastPm10);
+        const hybridInput: SimulationInput = { ...appliedInput, dustIntensity: mappedIntensity };
+        const nextPrediction = predictSimulation(hybridInput, undefined, appliedStrategy);
+        setPrediction(nextPrediction);
+        setTrendHistory(generateScenarioTrendPoints(nextPrediction.sensors, nextPrediction.activeZoneIds));
+      } else if (replay.status === 'unavailable') {
+        // Fall back gracefully to deterministic applied scenario without fake numbers
+        const nextPrediction = predictSimulation(appliedInput, undefined, appliedStrategy);
+        setPrediction(nextPrediction);
+        setTrendHistory(generateScenarioTrendPoints(nextPrediction.sensors, nextPrediction.activeZoneIds));
+      }
     }
-  }, [simulationSource, replay.snapshot, appliedInput, appliedStrategy]);
+  }, [simulationSource, replay.snapshot, replay.status, appliedInput, appliedStrategy]);
 
   const handleToggleSource = (source: 'deterministic' | 'replay') => {
     setSimulationSource(source);
@@ -320,9 +334,35 @@ export default function Simulation() {
   const mistingIsOn = prediction.flowRateLpm > 0 && prediction.activeZoneIds.length > 0;
   const decisionTitle = appliedStrategy === 'continuous'
     ? 'Continuous suppression — all four zones'
-    : prediction.activeZoneIds.length
-      ? `Targeted suppression — ${activeZonesLabel}`
-      : prediction.decision;
+    : isAiActive
+      ? prediction.activeZoneIds.length
+        ? `AI forecast + ${directionLabel(appliedInput.windDirection)} wind → Zones ${prediction.activeZoneIds.join(' & ')}`
+        : `AI forecast + ${directionLabel(appliedInput.windDirection)} wind → Standby (Low Risk)`
+      : prediction.activeZoneIds.length
+        ? `Targeted suppression — ${activeZonesLabel}`
+        : prediction.decision;
+
+  const decisionReasons = useMemo(() => {
+    if (isAiActive && aiForecast) {
+      const pmLevel =
+        aiForecast.predicted_pm10_ug_m3 >= 250
+          ? 'elevated'
+          : aiForecast.predicted_pm10_ug_m3 >= 100
+          ? 'moderate'
+          : 'low';
+      const zonesText = prediction.activeZoneIds.length
+        ? `Zones ${prediction.activeZoneIds.join(' & ')} activated`
+        : 'misting remains on standby';
+      return [
+        `AI forecasts ${pmLevel} PM10 at ${aiForecast.predicted_pm10_ug_m3.toFixed(1)} µg/m³ (+30s horizon via hist_gb_depth3_iter100), influencing modeled site dust load.`,
+        `${directionLabel(appliedInput.windDirection)} wind (${appliedInput.windSpeed.toFixed(1)} m/s) directs plume toward ${prediction.predictedEscapeBoundary}; ${zonesText}.`,
+        prediction.activeZoneIds.length
+          ? `Hybrid control: AI predicts PM10 magnitude; physical wind and site geometry determine targeted zone suppression (${prediction.flowRateLpm.toFixed(2)} L/min total flow).`
+          : 'Water flow is 0.00 L/min to prevent unnecessary water usage while risk is low.',
+      ];
+    }
+    return prediction.decisionReasons;
+  }, [isAiActive, aiForecast, appliedInput, prediction]);
 
   return (
     <div className="simulation-page">
@@ -660,16 +700,22 @@ export default function Simulation() {
           <div className="analytics-grid">
             <MetricTile
               icon={<Gauge />}
-              title="Projected PM2.5"
+              title="Simulated PM2.5"
               value={`${prediction.projectedPm25} µg/m³`}
               detail="Highest-risk boundary reading"
               tone="cyan"
             />
             <MetricTile
               icon={<Activity />}
-              title="Projected PM10"
+              title="Simulated Boundary PM10"
               value={`${prediction.projectedPm10} µg/m³`}
-              detail="Highest-risk boundary · Derived (1.65×)"
+              detail={
+                isAiActive && aiForecast
+                  ? `AI (+30s): ${aiForecast.predicted_pm10_ug_m3.toFixed(1)} µg/m³ · Derived (1.65×)`
+                  : simulationSource === 'replay' && !isAiActive
+                  ? 'AI Forecast: Unavailable · Physical Fallback'
+                  : 'Highest-risk boundary · Derived (1.65×)'
+              }
             />
             <MetricTile
               icon={<ShieldCheck />}
@@ -742,6 +788,12 @@ export default function Simulation() {
             </div>
             <div><span>Strategy</span><strong>{strategyOptions.find((option) => option.value === appliedStrategy)?.label}</strong></div>
             <div>
+              <span>AI influence</span>
+              <strong className={isAiActive ? 'ai-active' : ''}>
+                {isAiActive ? 'AI IMPACT: ACTIVE' : 'AI IMPACT: STANDBY'}
+              </strong>
+            </div>
+            <div>
               <span>Pump output</span>
               <strong className={prediction.flowRateLpm > 0 ? 'pump-on' : ''}>
                 {prediction.flowRateLpm > 0 ? `MISTING (${prediction.flowRateLpm.toFixed(2)} L/min)` : 'OFF (0.00 L/min)'}
@@ -752,7 +804,7 @@ export default function Simulation() {
           <section className="why-decision" aria-label="Decision explanation">
             <h3><CircleHelp aria-hidden="true" />Why this decision?</h3>
             <ul>
-              {prediction.decisionReasons.map((item) => (
+              {decisionReasons.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
