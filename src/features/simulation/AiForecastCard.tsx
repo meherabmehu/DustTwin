@@ -155,7 +155,7 @@ export function AiForecastCard({
       {/* Two-Column PM10 Data Grid */}
       <div className="ai-two-col-grid">
         {/* Left Column: Current PM10 */}
-        <div className="ai-col">
+        <div className="ai-col ai-left-col">
           <span className="ai-col-label">Current PM10</span>
           <span className="ai-col-sublabel">(at boundary)</span>
           <div className="ai-col-val">
@@ -170,7 +170,7 @@ export function AiForecastCard({
         </div>
 
         {/* Right Column: Predicted PM10 with Mini Sparkline */}
-        <div className="ai-col">
+        <div className="ai-col ai-right-col">
           <span className="ai-col-label">Predicted PM10</span>
           <span className="ai-col-sublabel">(+ 30 seconds)</span>
           <div className="ai-col-val-row">
