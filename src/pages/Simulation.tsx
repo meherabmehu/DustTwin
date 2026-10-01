@@ -195,6 +195,17 @@ export default function Simulation() {
     replay.snapshot?.forecast != null;
   const aiForecast = isAiActive ? replay.snapshot!.forecast : null;
 
+  // Effective simulation input reflecting hybrid AI dust intensity when active
+  const effectiveInput: SimulationInput = useMemo(() => {
+    if (isAiActive && aiForecast) {
+      return {
+        ...appliedInput,
+        dustIntensity: mapAiPm10ToDustIntensity(aiForecast.predicted_pm10_ug_m3),
+      };
+    }
+    return appliedInput;
+  }, [isAiActive, aiForecast, appliedInput]);
+
   // Synchronize AI Replay with hybrid simulation prediction
   useEffect(() => {
     if (simulationSource === 'replay') {
@@ -632,7 +643,7 @@ export default function Simulation() {
           <div className="sim-map-panel">
             <SimulationMap
               prediction={prediction}
-              input={appliedInput}
+              input={effectiveInput}
               view={mapView}
               onViewChange={updateMapView}
             />
@@ -711,7 +722,7 @@ export default function Simulation() {
               value={`${prediction.projectedPm10} µg/m³`}
               detail={
                 isAiActive && aiForecast
-                  ? `AI (+30s): ${aiForecast.predicted_pm10_ug_m3.toFixed(1)} µg/m³ · Derived (1.65×)`
+                  ? `Observed: ${aiForecast.current_pm10_ug_m3.toFixed(1)} µg/m³ · AI (+30s): ${aiForecast.predicted_pm10_ug_m3.toFixed(1)} µg/m³`
                   : simulationSource === 'replay' && !isAiActive
                   ? 'AI Forecast: Unavailable · Physical Fallback'
                   : 'Highest-risk boundary · Derived (1.65×)'
