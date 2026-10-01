@@ -257,9 +257,9 @@
 }
 .circuit-ai-subtitle {
   margin: 0;
-  color: #94a3b8;
-  font-size: 7px;
-  line-height: 1.2;
+  color: #a8b8c8;
+  font-size: 8px;
+  line-height: 1.25;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -566,14 +566,15 @@
 }
 .output-metrics-grid .output-metric span {
   display: block !important;
-  color: #4ade80 !important;
-  font-size: 7px !important;
-  line-height: 1.2 !important;
+  color: #5bf092 !important;
+  font-size: 7.8px !important;
+  line-height: 1.25 !important;
   white-space: normal !important;
   overflow: hidden !important;
 }
 .output-metrics-grid .output-metric span b {
-  color: #22d3ee;
+  color: #38e1ff;
+  font-weight: 700;
 }
 
 /* ==========================================================
