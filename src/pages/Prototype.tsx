@@ -15,10 +15,10 @@ const parts = [
 ];
 const steps = [
   { icon: <Wind />, title: 'Sense', body: 'PM and weather sensors capture site conditions.' },
-  { icon: <Activity />, title: 'Predict', body: 'DustTwin estimates short-term dust movement and boundary risk.' },
-  { icon: <Settings />, title: 'Decide', body: 'The controller selects the required misting zone(s).' },
-  { icon: <Droplet />, title: 'Act', body: 'The ESP32 activates the corresponding relay, valve and pump response.' },
-  { icon: <Monitor />, title: 'Visualize', body: 'The dashboard shows sensor values, decisions and system status.' },
+  { icon: <Activity />, title: 'Predict', body: 'AI forecasts PM10 approximately 30 seconds ahead, providing an early dust-risk signal.' },
+  { icon: <Settings />, title: 'Decide', body: 'Deterministic site logic combines the AI PM10 forecast with wind direction and site geometry to select the required misting zone(s).' },
+  { icon: <Droplet />, title: 'Act', body: 'The ESP32 activates the corresponding relay, valve, and pump response.' },
+  { icon: <Monitor />, title: 'Visualize', body: 'The dashboard shows sensor values, AI forecast, control decisions, and system status.' },
 ];
 
 export default function Prototype() {
@@ -49,7 +49,7 @@ export default function Prototype() {
         <div className="hero-copy">
           <Eyebrow><span>▱</span> PROTOTYPE DEMO <span>›</span> TABLE-TOP MODEL <span>›</span> JUDGE EXPERIENCE</Eyebrow>
           <h1 className="hero-title">The prototype judges<br /><span>will experience.</span></h1>
-          <p className="hero-description">A working table-top model that demonstrates how DustTwin senses dust, predicts risk, and automatically activates misting in real time. Experience the complete closed-loop system in a compact, hands-on demonstration.</p>
+          <p className="hero-description">A working table-top model that demonstrates how DustTwin senses dust, forecasts PM10 risk, and automatically activates targeted misting in real time. Experience the complete closed-loop system in a compact, hands-on demonstration.</p>
           <div className="hero-actions"><CTAButton to="#model-overview" icon={<span className="play-disc">▶</span>}>Watch Prototype Video</CTAButton><CTAButton to="/circuit-simulation" variant="outline" icon={<Box size={20} />}>View Circuit Details</CTAButton></div>
           <div className="prototype-features"><FeatureItem icon={<ShieldCheck />} title="Real hardware" detail="Working sensors and actuators" /><FeatureItem icon={<Settings />} title="Live demonstration" detail="See real-time dust control in action" /><FeatureItem icon={<BarChart3 />} title="Same control architecture" detail="Designed to scale to the full DustTwin system" /><FeatureItem icon={<Zap />} title="Hands-on experience" detail="Built for judges to explore" /></div>
         </div>
@@ -81,7 +81,7 @@ export default function Prototype() {
         <article className="prototype-panel flow-panel">
           <h2 className="prototype-panel-title"><span>3</span>How the Prototype Works</h2>
           <p>A simple 5-step closed-loop flow, demonstrated in real time.</p>
-          <small className="prototype-ml-note">Current control is deterministic; the architecture is prepared for later ML integration.</small>
+          <small className="prototype-ml-note">AI-assisted hybrid control: 30s predictive PM10 forecast paired with deterministic site logic.</small>
           <div className="prototype-flow">{steps.map((step, i) => <div className="prototype-flow-item" key={step.title}><span className="prototype-flow-number">{i + 1}</span><span className="prototype-flow-icon">{step.icon}</span><h3>{step.title}</h3><p>{step.body}</p></div>)}</div>
           <button type="button" className="prototype-live-toggle" aria-pressed={demoRunning} aria-label={`Toggle prototype demo status; currently ${demoRunning ? 'ready' : 'paused'}`} onClick={() => setDemoRunning((v) => !v)}><span className={`prototype-live-dot ${demoRunning ? 'live' : ''}`} aria-hidden="true" />{demoRunning ? 'Prototype Demo Ready' : 'Prototype Demo Paused'}</button>
         </article>
