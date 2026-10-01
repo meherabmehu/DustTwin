@@ -8,8 +8,8 @@
     "build": "tsc -b && vite build",
     "test": "tsx --test tests/*.test.ts",
     "preview": "vite preview --host 0.0.0.0",
-    "verify:model": "cd ai-backend && python3 scripts/verify_model.py",
-    "verify:handoff": "cd ai-backend && python3 scripts/verify_handoff.py"
+    "verify:model": "cd ai-backend && if [ -f .venv/bin/python ]; then .venv/bin/python scripts/verify_model.py; else python3 scripts/verify_model.py; fi",
+    "verify:handoff": "cd ai-backend && if [ -f .venv/bin/python ]; then .venv/bin/python scripts/verify_handoff.py; else python3 scripts/verify_handoff.py; fi"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
