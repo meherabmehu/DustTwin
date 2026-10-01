@@ -53,6 +53,21 @@ export function AiForecastCard({
   const forecast: Forecast | null = replaySnapshot?.forecast ?? null;
   const matured: MaturedForecast | null = replaySnapshot?.matured_forecast ?? null;
 
+  const [isPlaying, setIsPlaying] = React.useState(false);
+
+  // Auto-step timeline when playing
+  React.useEffect(() => {
+    if (!isPlaying || simulationSource !== 'replay') return;
+    const interval = setInterval(() => {
+      const nextSecond =
+        replaySecond >= Math.min(currentEpisode.lastSecond, 2000)
+          ? currentEpisode.firstSecond
+          : replaySecond + 5;
+      onChangeSecond(nextSecond);
+    }, 1200);
+    return () => clearInterval(interval);
+  }, [isPlaying, simulationSource, replaySecond, currentEpisode, onChangeSecond]);
+
   const currentPm10 = forecast?.current_pm10_ug_m3 ?? null;
   const predictedPm10 = forecast?.predicted_pm10_ug_m3 ?? null;
 
@@ -98,7 +113,10 @@ export function AiForecastCard({
           role="tab"
           aria-selected={simulationSource === 'deterministic'}
           className={`ai-tab-btn ${simulationSource === 'deterministic' ? 'is-active' : ''}`}
-          onClick={() => onToggleSource('deterministic')}
+          onClick={() => {
+            setIsPlaying(false);
+            onToggleSource('deterministic');
+          }}
         >
           Deterministic Scenario
         </button>
@@ -156,7 +174,10 @@ export function AiForecastCard({
               <select
                 id="ai-episode-select"
                 value={selectedEpisodeId}
-                onChange={(e) => onSelectEpisode(e.target.value)}
+                onChange={(e) => {
+                  setIsPlaying(false);
+                  onSelectEpisode(e.target.value);
+                }}
               >
                 {EPISODES.map((ep) => (
                   <option key={ep.id} value={ep.id}>
@@ -182,6 +203,32 @@ export function AiForecastCard({
                 onChange={(e) => onChangeSecond(Number(e.target.value))}
                 aria-label="Replay timeline scrubber"
               />
+            </div>
+
+            <div className="ai-quick-jumps">
+              <button
+                type="button"
+                className="ai-jump-btn"
+                onClick={() => onChangeSecond(currentEpisode.suggestedSecond)}
+                title="Jump to peak drilling dust event"
+              >
+                ⚡ Jump to Peak ({currentEpisode.suggestedSecond}s)
+              </button>
+              <button
+                type="button"
+                className="ai-jump-btn"
+                onClick={() => onChangeSecond(currentEpisode.firstSecond)}
+                title="Jump to episode start"
+              >
+                ↺ Start (120s)
+              </button>
+              <button
+                type="button"
+                className={`ai-jump-btn play ${isPlaying ? 'is-playing' : ''}`}
+                onClick={() => setIsPlaying(!isPlaying)}
+              >
+                {isPlaying ? '⏸ Pause' : '▶ Step (+5s)'}
+              </button>
             </div>
           </div>
 
@@ -223,9 +270,17 @@ export function AiForecastCard({
                 <div className="ai-forecast-tile">
                   <small>Target Horizon</small>
                   <strong>+30 sec</strong>
-                  <span>OPC-N3 particulate sensor</span>
+                  <span>Mode: {forecast?.mode ?? 'live_inference'}</span>
                 </div>
               </div>
+
+              {forecast?.baselines && (
+                <div className="ai-baseline-bar">
+                  <span>Baselines:</span>
+                  <span>Persistence: <b>{forecast.baselines.persistence_pm10_ug_m3.toFixed(1)} µg/m³</b></span>
+                  <span>Trailing Mean: <b>{forecast.baselines.trailing_mean_pm10_ug_m3.toFixed(1)} µg/m³</b></span>
+                </div>
+              )}
 
               {matured && (
                 <div className="ai-matured-box" aria-label="Matured forecast verification">
@@ -249,6 +304,9 @@ export function AiForecastCard({
                       </b>
                     </div>
                   </div>
+                  <small className="ai-matured-note">
+                    Verified against causally matured OPC-N3 sensor ground truth at {matured.target_time_seconds}s.
+                  </small>
                 </div>
               )}
             </>

@@ -426,6 +426,52 @@
 .simulation-page .ai-matured-values .ai-error-val {
   color: #ffca2f;
 }
+.simulation-page .ai-matured-note {
+  display: block;
+  margin-top: 4px;
+  color: #8da4ae;
+  font-size: 5.8px;
+}
+.simulation-page .ai-quick-jumps {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
+}
+.simulation-page .ai-jump-btn {
+  flex: 1;
+  padding: 3px 5px;
+  background: rgba(16, 75, 99, 0.45);
+  border: 1px solid rgba(25, 217, 236, 0.3);
+  border-radius: 4px;
+  color: #c4e9f3;
+  font-size: 6.5px;
+  font-weight: 650;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.simulation-page .ai-jump-btn:hover {
+  background: rgba(25, 217, 236, 0.25);
+  color: #ffffff;
+}
+.simulation-page .ai-jump-btn.play.is-playing {
+  background: rgba(255, 202, 47, 0.25);
+  border-color: rgba(255, 202, 47, 0.6);
+  color: #ffca2f;
+}
+.simulation-page .ai-baseline-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 6px;
+  background: rgba(3, 19, 32, 0.6);
+  border-radius: 4px;
+  font-size: 6.2px;
+  color: #8ea5af;
+}
+.simulation-page .ai-baseline-bar b {
+  color: #cde6ef;
+}
 .simulation-page .analytics-status-heading { padding-bottom:4px; border-bottom:1px solid rgba(51,100,116,.39); }
 .simulation-page .analytics-status-heading span { display:inline-flex; align-items:center; gap:5px; color:#e0ecef; font-size:7px; font-weight:750; text-transform:uppercase; letter-spacing:.04em; }
 .simulation-page .analytics-status-heading i { width:6px; height:6px; border-radius:50%; background:#f2c45e; }
