@@ -1040,3 +1040,106 @@
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
+
+/* Dedicated visual hardware inputs for the existing windSpeed / windDirection state. */
+.anemometer-board,
+.wind-vane-board,
+.pm-sensor,
+.pm-sensor2,
+.dht-board {
+  left: 5%;
+  width: 23%;
+  height: 10%;
+}
+.anemometer-board { top: 8%; }
+.wind-vane-board { top: 21%; }
+.pm-sensor { top: 36%; }
+.pm-sensor2 { top: 51%; }
+.dht-board { top: 66%; }
+.wind-sensor-readout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  height: 100%;
+  padding: 0 26px 0 8px;
+}
+.wind-sensor-readout > svg {
+  width: 25px;
+  height: 25px;
+  flex: 0 0 auto;
+  color: #37e0f1;
+}
+.wind-sensor-readout > span {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+.wind-sensor-readout strong {
+  color: #e9fbff;
+  font-size: 10px;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+.wind-sensor-readout small {
+  color: #9ab7c3;
+  font-size: 7px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.sensor-control-title {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+}
+.sensor-control-source {
+  color: #43d8e8;
+  font-size: 6.8px;
+  font-weight: 650;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sensor-note {
+  display: block;
+  margin-top: 3px;
+  color: #89a5b2;
+  font-size: 7px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+/* Keep the Circuit Simulation title and feedback feature row compact on desktop. */
+@media (min-width: 1100px) {
+  .circuit-page .circuit-intro {
+    height: 124px;
+    min-height: 124px;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+    gap: 18px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  .circuit-page .circuit-title h1 {
+    margin: 5px 0 4px;
+    font-size: clamp(34px, 2.7vw, 42px);
+    letter-spacing: -1.65px;
+    white-space: nowrap;
+  }
+  .circuit-page .circuit-title p {
+    font-size: 11.5px;
+    line-height: 1.28;
+  }
+  .circuit-page .circuit-feature > span {
+    width: 46px;
+    height: 46px;
+    margin-bottom: 4px;
+  }
+  .circuit-page .circuit-feature svg { width: 25px; height: 25px; }
+  .circuit-page .circuit-feature strong { font-size: 11px; }
+  .circuit-page .circuit-feature small { font-size: 8px; }
+}

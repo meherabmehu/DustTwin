@@ -24,8 +24,11 @@ export const SIMULATION_PIN_MAP = Object.freeze({
   pmSensor1: Object.freeze({ rx: 16, tx: 17 }),
   pmSensor2: Object.freeze({ rx: 25, tx: 26 }),
   dht22: 4,
+  anemometer: 32,
+  windVane: 33,
   relayZones: ZONE_GPIO_MAP,
-  ledZones: Object.freeze({ zone1: 32, zone2: 33, zone3: 27, zone4: 14 }),
+  // Keep status LEDs off GPIO32/33, now assigned to the wind sensor inputs.
+  ledZones: Object.freeze({ zone1: 2, zone2: 13, zone3: 14, zone4: 27 }),
   pump: 22,
   fan: 23,
 });

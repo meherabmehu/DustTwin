@@ -111,14 +111,6 @@ export default function CircuitSimulation() {
         <CodePanel />
       </div>
 
-      <section className="sensor-inputs-section" aria-label="Environmental sensor controls">
-        <SensorInputs
-          state={state}
-          onChange={(key, value) => dispatch({ type: 'SET_SENSOR', key, value })}
-          onResetToDefault={resetSensorsToDefault}
-        />
-      </section>
-
       <section className="circuit-bottom-section" aria-label="Live monitoring, control and diagnostic panels">
         <div className="circuit-four-panels">
           <CircuitAiForecastCard
@@ -149,6 +141,14 @@ export default function CircuitSimulation() {
             onClear={() => dispatch({ type: 'CLEAR_LOGS' })}
           />
         </div>
+      </section>
+
+      <section className="sensor-inputs-section" aria-label="Environmental sensor controls">
+        <SensorInputs
+          state={state}
+          onChange={(key, value) => dispatch({ type: 'SET_SENSOR', key, value })}
+          onResetToDefault={resetSensorsToDefault}
+        />
       </section>
     </div>
   );

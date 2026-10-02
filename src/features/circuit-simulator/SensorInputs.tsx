@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { CloudFog, Droplet, Gauge, RotateCcw, Thermometer, Wind } from 'lucide-react';
 import { SIMULATION_INPUT_LIMITS } from '../../config/simulationThresholds';
 import type { SensorInputKey, SimulatorState } from './simulatorTypes';
@@ -10,6 +11,8 @@ type Props = {
 
 type SensorControlProps = {
   label: string;
+  source?: string;
+  note?: string;
   sensorKey: SensorInputKey;
   value: number;
   min: number;
@@ -17,13 +20,15 @@ type SensorControlProps = {
   step: number;
   unit: string;
   onChange: Props['onChange'];
-  icon: React.ReactNode;
+  icon: ReactNode;
   derivedValue?: number;
   derivedLabel?: string;
 };
 
 function SensorControl({
   label,
+  source,
+  note,
   sensorKey,
   value,
   min,
@@ -48,7 +53,10 @@ function SensorControl({
     <div className="sensor-control-card">
       <div className="sensor-control-heading">
         <span className="sensor-control-icon" aria-hidden="true">{icon}</span>
-        <label htmlFor={`${id}-number`}>{label}</label>
+        <span className="sensor-control-title">
+          <label htmlFor={`${id}-number`}>{label}</label>
+          {source && <small className="sensor-control-source">{source}</small>}
+        </span>
       </div>
       <div className="sensor-value-row">
         <input
@@ -79,6 +87,7 @@ function SensorControl({
         <span>{min}</span>
         <span>{max} {unit}</span>
       </div>
+      {note && <small className="sensor-note">{note}</small>}
       {derivedValue !== undefined && (
         <small className="sensor-derived-value">
           {derivedLabel}: <b>{derivedValue} µg/m³</b>
@@ -86,6 +95,12 @@ function SensorControl({
       )}
     </div>
   );
+}
+
+function compassDirection(degrees: number) {
+  const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+  const normalized = ((degrees % 360) + 360) % 360;
+  return directions[Math.round(normalized / 45) % directions.length];
 }
 
 export default function SensorInputs({ state, onChange, onResetToDefault }: Props) {
@@ -98,7 +113,7 @@ export default function SensorInputs({ state, onChange, onResetToDefault }: Prop
           <h2 id="sensor-input-title">
             <Gauge aria-hidden="true" /> Sensor Inputs
           </h2>
-          <p>Adjust the deterministic frontend sensor readings. PM10 is derived from PM2.5 for demonstration.</p>
+          <p>Adjust the deterministic sensor readings. PM10 is derived from PM2.5 for demonstration.</p>
         </div>
 
         {onResetToDefault && (
@@ -176,6 +191,7 @@ export default function SensorInputs({ state, onChange, onResetToDefault }: Prop
         />
         <SensorControl
           label="Wind speed"
+          source="Anemometer · GPIO 32"
           sensorKey="windSpeed"
           value={state.windSpeed}
           min={limits.windSpeed.min}
@@ -187,6 +203,8 @@ export default function SensorInputs({ state, onChange, onResetToDefault }: Prop
         />
         <SensorControl
           label="Wind direction"
+          source="Wind Vane · GPIO 33"
+          note={`Compass: ${compassDirection(state.windDirection)}`}
           sensorKey="windDirection"
           value={state.windDirection}
           min={limits.windDirection.min}

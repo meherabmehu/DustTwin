@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import { BatteryCharging, Cpu, Droplet, Fan, Gauge, Power, Search, Settings, Thermometer, Zap } from 'lucide-react';
+import { BatteryCharging, Compass, Cpu, Droplet, Fan, Gauge, Power, Search, Settings, Thermometer, Wind, Zap } from 'lucide-react';
 import { SIMULATION_PIN_MAP } from '../../config/simulationThresholds';
 
 type ComponentGroup = 'Controllers' | 'Sensors' | 'Actuators' | 'Power Modules';
@@ -8,19 +8,20 @@ type InventoryComponent = { group: ComponentGroup; name: string; info: string; i
 
 const p = SIMULATION_PIN_MAP;
 const COMPONENTS: InventoryComponent[] = [
-  { group: 'Controllers', name: 'ESP32 DevKit V1', info: 'WiFi + Bluetooth · 38 GPIO', icon: <Cpu /> },
-  { group: 'Sensors', name: 'PM2.5 Sensor 1', info: `PMS5003 · UART (RX ${p.pmSensor1.rx} / TX ${p.pmSensor1.tx})`, icon: <Gauge /> },
-  { group: 'Sensors', name: 'PM2.5 Sensor 2', info: `PMS5003 · UART (RX ${p.pmSensor2.rx} / TX ${p.pmSensor2.tx})`, icon: <Gauge /> },
+  { group: 'Sensors', name: 'PM2.5 / PM10 Sensors ×2', info: `PMS5003 · UART RX${p.pmSensor1.rx}/TX${p.pmSensor1.tx} + RX${p.pmSensor2.rx}/TX${p.pmSensor2.tx}`, icon: <Gauge /> },
   { group: 'Sensors', name: 'DHT22', info: `Temperature & Humidity · GPIO ${p.dht22}`, icon: <Thermometer /> },
+  { group: 'Sensors', name: 'Anemometer', info: `Wind Speed Sensor · GPIO ${p.anemometer}`, icon: <Wind /> },
+  { group: 'Sensors', name: 'Wind Vane', info: `Wind Direction Sensor · GPIO ${p.windVane}`, icon: <Compass /> },
   { group: 'Actuators', name: '4 Channel Relay Module', info: `12V · GPIO ${Object.values(p.relayZones).join(', ')}`, icon: <Settings /> },
   { group: 'Actuators', name: '12V DC Water Pump', info: `Driver · GPIO ${p.pump}`, icon: <Droplet /> },
   { group: 'Actuators', name: '12V Solenoid Valves × 4', info: 'Normally Closed · Zone outputs', icon: <Power /> },
-  { group: 'Actuators', name: '12V DC Fan', info: `Cooling fan · GPIO ${p.fan}`, icon: <Fan /> },
+  { group: 'Actuators', name: '12V DC Fan', info: `Site wind simulation · GPIO ${p.fan}`, icon: <Fan /> },
   { group: 'Power Modules', name: '12V to 5V Buck Converter', info: 'DC-DC step down · regulated 5V rail', icon: <BatteryCharging /> },
   { group: 'Power Modules', name: '12V Power Supply', info: 'DC adapter · 5A distribution', icon: <Zap /> },
+  { group: 'Controllers', name: 'ESP32 DevKit V1', info: 'WiFi + Bluetooth · 38 GPIO', icon: <Cpu /> },
 ];
 
-const GROUP_ORDER: ComponentGroup[] = ['Controllers', 'Sensors', 'Actuators', 'Power Modules'];
+const GROUP_ORDER: ComponentGroup[] = ['Sensors', 'Actuators', 'Power Modules', 'Controllers'];
 
 function InventoryGroup({ title, items }: { title: ComponentGroup; items: InventoryComponent[] }) {
   return (

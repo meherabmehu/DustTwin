@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
-import { BatteryCharging, Cpu, Droplet, Fan, Gauge, Power, Settings, Thermometer, Zap } from 'lucide-react';
+import { BatteryCharging, Compass, Cpu, Droplet, Fan, Gauge, Power, Settings, Thermometer, Wind, Zap } from 'lucide-react';
+import { SIMULATION_PIN_MAP } from '../../config/simulationThresholds';
 import { getRiskLevel } from './simulatorEngine';
 import type { SimulatorState } from './simulatorTypes';
 import OutputStateBadge from './OutputStateBadge';
@@ -15,17 +16,18 @@ type PartProps = {
   active?: boolean;
   showState?: boolean;
   stateLabel?: string;
+  accessibleLabel?: string;
 };
 
 const ZONE_LETTERS = ['Zone A (North)', 'Zone B (East)', 'Zone C (South)', 'Zone D (West)'];
 
-function CircuitPart({ className, icon, name, children, active = false, showState = false, stateLabel }: PartProps) {
+function CircuitPart({ className, icon, name, children, active = false, showState = false, stateLabel, accessibleLabel }: PartProps) {
   return (
     <div
       className={`circuit-part ${className} ${showState ? (active ? 'is-active' : 'is-inactive') : ''}`}
       data-state={showState ? (active ? 'on' : 'off') : undefined}
       role={showState ? 'img' : undefined}
-      aria-label={showState ? `${name}: ${stateLabel ?? (active ? 'ON' : 'OFF')}` : undefined}
+      aria-label={showState ? (accessibleLabel ?? `${name}: ${stateLabel ?? (active ? 'ON' : 'OFF')}`) : undefined}
     >
       {showState && <OutputStateBadge active={active} label={stateLabel} />}
       <div className="part-art">{children ?? icon}</div>
@@ -46,6 +48,12 @@ function WireLegend() {
   );
 }
 
+function compassDirection(degrees: number) {
+  const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+  const normalized = ((degrees % 360) + 360) % 360;
+  return directions[Math.round(normalized / 45) % directions.length];
+}
+
 export default function CircuitCanvas({ state, zoom }: Props) {
   const risk = getRiskLevel(state);
   const anyZoneActive = state.zones.some(Boolean);
@@ -54,6 +62,34 @@ export default function CircuitCanvas({ state, zoom }: Props) {
     <div className="circuit-canvas" aria-label="Interactive DustTwin circuit schematic">
       <div className="circuit-board-inner" style={{ '--board-zoom': zoom / 100 } as CSSProperties}>
         <WiringLayer state={state} />
+
+        <CircuitPart
+          className="sensor-board anemometer-board"
+          icon={<Wind />}
+          name={`Anemometer · GPIO ${SIMULATION_PIN_MAP.anemometer}`}
+          active={state.simulationRunning}
+          showState
+          accessibleLabel={`Anemometer wind speed input ${state.windSpeed.toFixed(1)} meters per second on GPIO ${SIMULATION_PIN_MAP.anemometer}`}
+        >
+          <div className="wind-sensor-readout">
+            <Wind aria-hidden="true" />
+            <span><strong>{state.windSpeed.toFixed(1)} m/s</strong><small>Wind Speed Sensor</small></span>
+          </div>
+        </CircuitPart>
+
+        <CircuitPart
+          className="sensor-board wind-vane-board"
+          icon={<Compass />}
+          name={`Wind Vane · GPIO ${SIMULATION_PIN_MAP.windVane}`}
+          active={state.simulationRunning}
+          showState
+          accessibleLabel={`Wind Vane direction input ${state.windDirection} degrees, ${compassDirection(state.windDirection)}, on GPIO ${SIMULATION_PIN_MAP.windVane}`}
+        >
+          <div className="wind-sensor-readout">
+            <Compass aria-hidden="true" />
+            <span><strong>{state.windDirection}° / {compassDirection(state.windDirection)}</strong><small>Wind Direction Sensor</small></span>
+          </div>
+        </CircuitPart>
 
         <CircuitPart
           className="sensor-board pm-sensor"
@@ -151,7 +187,7 @@ export default function CircuitCanvas({ state, zoom }: Props) {
         <CircuitPart
           className="pump-part"
           icon={<Droplet />}
-          name="12V DC Water Pump · GPIO22"
+          name={`12V DC Water Pump · GPIO ${SIMULATION_PIN_MAP.pump}`}
           active={state.pumpOn}
           showState
         />
@@ -159,9 +195,10 @@ export default function CircuitCanvas({ state, zoom }: Props) {
         <CircuitPart
           className="fan-part"
           icon={<Fan />}
-          name="12V DC Fan · GPIO23"
+          name={`12V DC Fan · GPIO ${SIMULATION_PIN_MAP.fan}`}
           active={state.fanOn}
           showState
+          accessibleLabel={`12V DC Fan simulates site airflow; GPIO ${SIMULATION_PIN_MAP.fan}; ${state.fanOn ? 'ON' : 'OFF'}`}
         />
 
         <div className="circuit-part led-bank" role="img" aria-label={`Zone indicator LEDs, air quality ${risk}`}>
