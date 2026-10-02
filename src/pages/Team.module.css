@@ -153,9 +153,10 @@
 
 .portrait {
   width: 100%;
-  aspect-ratio: 1.86;
+  aspect-ratio: 4 / 5;
+  flex-shrink: 0;
   overflow: hidden;
-  border-radius: 9px;
+  border-radius: 12px;
   background: var(--panel-light);
 }
 
@@ -163,20 +164,28 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
+  transform-origin: center top;
+  transform: translate(var(--portrait-x, 0%), var(--portrait-y, 0%)) scale(var(--portrait-zoom, 1));
 }
 
-/* Individual crop positions keep each supplied portrait's face in view. */
-.memberCard:nth-child(1) .portrait img { object-position: 50% 26%; }
-.memberCard:nth-child(2) .portrait img { object-position: 50% 17%; }
-.memberCard:nth-child(3) .portrait img { object-position: 50% 14%; }
-
-/* Preserve the entire passport portrait, extending its own blue background. */
-.memberCard:nth-child(4) .portrait {
-  background: #1083f8;
+/* Non-destructive crop magnification matches the wider source photos to the
+   passport portrait's head/shoulder framing without changing image proportions. */
+.memberCard:nth-child(1) .portrait img {
+  --portrait-x: 6%;
+  --portrait-y: -36%;
+  --portrait-zoom: 1.75;
 }
 
-.memberCard:nth-child(4) .portrait img {
-  object-fit: contain;
+.memberCard:nth-child(2) .portrait img {
+  --portrait-y: -12%;
+  --portrait-zoom: 1.5;
+}
+
+.memberCard:nth-child(3) .portrait img {
+  --portrait-x: 5.5%;
+  --portrait-y: -15%;
+  --portrait-zoom: 1.85;
 }
 
 .memberName {
