@@ -15,8 +15,8 @@ export default function WiringLayer({ state }: Props) {
 
       {/* Wind, PM and DHT22 sensor data inputs */}
       <g className={isRunning ? 'wire-bundle wire-flowing' : 'wire-bundle'}>
-        <path className="wire-green" d="M280 85 H340 V150 H380"><title>Anemometer wind speed input to ESP32 GPIO {SIMULATION_PIN_MAP.anemometer}</title></path>
-        <path className="wire-green" d="M280 168 H350 V207 H380"><title>Wind Vane direction input to ESP32 GPIO {SIMULATION_PIN_MAP.windVane}</title></path>
+        <path className="wire-green" d="M280 85 H328 V145 H380"><title>Anemometer wind speed input to ESP32 GPIO {SIMULATION_PIN_MAP.anemometer}</title></path>
+        <path className="wire-green" d="M280 168 H358 V210 H380"><title>Wind Vane direction input to ESP32 GPIO {SIMULATION_PIN_MAP.windVane}</title></path>
         <path className="wire-blue" d="M280 255 H318 V238 H380"><title>Sensor 1 TX {SIMULATION_PIN_MAP.pmSensor1.tx} to ESP32 RX {SIMULATION_PIN_MAP.pmSensor1.rx}</title></path>
         <path className="wire-blue" d="M380 255 H348 V280 H280"><title>ESP32 TX {SIMULATION_PIN_MAP.pmSensor1.tx} to Sensor 1 RX {SIMULATION_PIN_MAP.pmSensor1.rx}</title></path>
         <path className="wire-blue" d="M280 353 H328 V297 H380"><title>Sensor 2 TX {SIMULATION_PIN_MAP.pmSensor2.tx} to ESP32 RX {SIMULATION_PIN_MAP.pmSensor2.rx}</title></path>

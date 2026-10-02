@@ -31,7 +31,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.15fr) minmax(190px, .42fr);
   align-items: center;
-  gap: 16px;
+  gap: 22px;
   width: 100%;
   max-width: 1640px;
   height: 100%;
@@ -205,10 +205,11 @@
 .model-dht { left: 74%; top: 18%; }
 .model-nozzles { left: 35%; top: 30%; }
 .model-pm1 { left: 1%; top: 70%; }
-.model-pm2 { right: 1%; top: 56%; }
+.model-pm2 { right: 1%; top: 53%; }
 .model-site { left: 16%; bottom: 2%; }
 .model-tank { left: 74%; top: 42%; }
-.model-pump { left: 75%; top: 66%; }
+.model-pump { left: 73%; top: 70%; }
+.prototype-callout.model-pump { right: auto; bottom: auto; }
 .model-control { right: 1%; bottom: 2%; }
 .prototype-mobile-label-list { display: none; }
 

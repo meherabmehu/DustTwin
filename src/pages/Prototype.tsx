@@ -65,11 +65,11 @@ export default function Prototype() {
                 <path d="M758 137 H672 L592 153" />
                 <path d="M340 190 H313 L286 208" />
                 <path d="M151 408 H180 L211 354" />
-                <path d="M850 331 H820 L783 354" />
+                <path d="M898 317 H842 L783 354" />
                 <path d="M350 527 H405 L450 345" />
                 <path d="M888 256 H908 L925 241" />
-                <path d="M880 392 H913 L943 399" />
-                <path d="M802 520 V486 L751 477" />
+                <path d="M821 412 H876 L943 399" />
+                <path d="M862 532 H805 L751 477" />
               </g>
               <g fill="#20dff3" stroke="#e0fbff" strokeWidth="1" vectorEffect="non-scaling-stroke">
                 <circle cx="77" cy="329" r="3.2" />
