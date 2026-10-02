@@ -1,18 +1,10 @@
 import type { CSSProperties } from 'react';
-import { Activity, CloudFog, TriangleAlert, Wind } from 'lucide-react';
 import './simulationMap.css';
 import { directionLabel } from './simulationEngine';
 import type { BoundaryId, PollutantView, SimulationInput, SimulationPrediction, ZoneId } from './simulationTypes';
 
 const boundaryOrder: BoundaryId[] = ['north', 'east', 'south', 'west'];
-const sensorLetters: Record<BoundaryId, string> = { north: 'N', east: 'E', south: 'S', west: 'W' };
 const zoneForBoundary: Record<BoundaryId, ZoneId> = { north: 'A', east: 'B', south: 'C', west: 'D' };
-const zones: Array<{ id: ZoneId; label: string; boundary: string; tagClass: string }> = [
-  { id: 'A', label: 'North', boundary: 'north', tagClass: 'zone-a' },
-  { id: 'B', label: 'East', boundary: 'east', tagClass: 'zone-b' },
-  { id: 'C', label: 'South', boundary: 'south', tagClass: 'zone-c' },
-  { id: 'D', label: 'West', boundary: 'west', tagClass: 'zone-d' },
-];
 
 function formatLeadTime(seconds: number | null): string {
   if (seconds === null) return '—';
@@ -25,34 +17,38 @@ function SensorCard({ reading, view, activeZone }: {
   view: PollutantView;
   activeZone: boolean;
 }) {
+  const titleId = `map-zone-${reading.zoneId}`;
+  const descriptionId = `map-sensor-${reading.id}-description`;
+  const description = `${reading.sensorName}, ${reading.label} boundary. Simulated estimates. Current risk: ${reading.status}. Forecast risk: ${reading.forecastStatus}.`;
+
   return (
-    <div className={`sim-sensor-card sensor-${reading.id} risk-${reading.status.toLowerCase().replace(' ', '-')}`} data-testid={`sensor-${reading.id}`}>
+    <div
+      className={`sim-sensor-card sensor-${reading.id} risk-${reading.status.toLowerCase().replace(' ', '-')} ${activeZone ? 'is-active' : ''}`}
+      data-testid={`sensor-${reading.id}`}
+      role="group"
+      aria-labelledby={titleId}
+      aria-describedby={descriptionId}
+      title={description}
+    >
+      <span className="sim-zone-sensor-marker" aria-hidden="true" />
       <div className="sim-sensor-heading">
-        <i className={`sim-sensor-status-dot risk-${reading.status.toLowerCase().replace(' ', '-')}`} />
+        <i className="sim-sensor-status-dot" aria-hidden="true" />
         <div className="sim-sensor-identity">
-          <strong className="sim-sensor-name">{reading.sensorName}</strong>
-          <small className="sim-sensor-meta">{reading.label} Boundary · Zone {reading.zoneId}</small>
+          <strong className="sim-sensor-name" id={titleId} data-testid={`zone-${reading.zoneId}`}>Zone {reading.zoneId}</strong>
+          <span className={`sim-sensor-zone-state ${activeZone ? 'is-active' : ''}`}>{activeZone ? 'ACTIVE' : 'STANDBY'}</span>
         </div>
-        <span className={`sim-sensor-zone-state ${activeZone ? 'is-active' : ''}`}>{activeZone ? 'ACTIVE' : 'STANDBY'}</span>
       </div>
       <div className="sim-sensor-readings">
         <span className={`sim-sensor-metric ${view === 'pm25' ? 'is-selected' : ''}`}>
           <small className="metric-tag">PM2.5</small>
-          <b className="metric-val">{reading.pm25}</b>
-          <span className="metric-unit">µg/m³</span>
+          <span className="metric-number"><b className="metric-val">{reading.pm25}</b><span className="metric-unit">µg/m³</span></span>
         </span>
         <span className={`sim-sensor-metric ${view === 'pm10' ? 'is-selected' : ''}`}>
           <small className="metric-tag">PM10</small>
-          <b className="metric-val">{reading.pm10}</b>
-          <span className="metric-unit">µg/m³</span>
+          <span className="metric-number"><b className="metric-val">{reading.pm10}</b><span className="metric-unit">µg/m³</span></span>
         </span>
       </div>
-      {reading.forecastStatus !== reading.status && (
-        <div className="sim-sensor-forecast">
-          <span className="forecast-label">Forecast</span>
-          <b className={`forecast-status risk-${reading.forecastStatus.toLowerCase().replace(' ', '-')}`}>{reading.forecastStatus}</b>
-        </div>
-      )}
+      <small className="sim-sensor-description" id={descriptionId}>{description}</small>
     </div>
   );
 }
@@ -92,22 +88,9 @@ export default function SimulationMap({ prediction, input, view, onViewChange }:
             <button key={value} type="button" aria-pressed={view === value} className={view === value ? 'is-selected' : ''} onClick={() => onViewChange(value)}>{label}</button>
           ))}
         </div>
-        <div className="dust-concentration-scale" aria-label="Dust concentration gradient, low to high">
-          <small>Dust Concentration (µg/m³)</small>
-          <div className="concentration-gradient" />
-          <span><i>Low</i><i>High</i></span>
-        </div>
-        <div className="prediction-hud" aria-label="Predicted escape boundary and lead time">
-          <div className="prediction-hud-heading"><TriangleAlert aria-hidden="true" /><span>Predicted Escape Boundary</span></div>
-          <strong>{predictedBoundaryText}</strong>
-          <div className="prediction-hud-metrics">
-            <span>Risk Level<b className={`risk-text risk-${prediction.risk.toLowerCase().replace(' ', '-')}`}>{prediction.risk}</b></span>
-            <span>Lead Time<b>{formatLeadTime(prediction.leadTimeSeconds)}</b></span>
-          </div>
-        </div>
       </div>
 
-      <svg className={`sim-map-overlay sim-map-overlay-${view}`} viewBox="0 0 1000 600" preserveAspectRatio="none" role="img" aria-label={`Construction site map. Dust source ${input.dustIntensity} percent; modeled wind toward ${directionLabel(input.windDirection)}.`}>
+      <svg className={`sim-map-overlay sim-map-overlay-${view}`} viewBox="0 0 1000 600" preserveAspectRatio="none" role="img" aria-label={`Construction site map. Dust source ${input.dustIntensity} percent; modeled wind ${input.windSpeed.toFixed(1)} meters per second toward ${directionLabel(input.windDirection)}. Predicted escape boundary: ${predictedBoundaryText}. Risk: ${prediction.risk}. Lead time: ${formatLeadTime(prediction.leadTimeSeconds)}.`}>
         <defs>
           {/* Industrial digital twin concentration heatmap: Very High (red) -> High (orange) -> Med (yellow) -> Low (cyan/blue) */}
           <linearGradient id="site-plume-heat" x1="0" x2="1" y1="0" y2="0">
@@ -206,21 +189,7 @@ export default function SimulationMap({ prediction, input, view, onViewChange }:
         <g className="sim-source-mark" transform={`translate(${sourceX} ${sourceY})`}>
           <circle className="source-halo" r="31" fill="url(#site-dust-source)" />
           <circle className="source-core" r="10" />
-          <path d="M-5 3 L0 -7 L5 3 M-8 8 H8" fill="none" stroke="#643a22" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </g>
-
-        {boundaryOrder.map((boundary) => {
-          const reading = prediction.sensors.find((sensor) => sensor.id === boundary);
-          if (!reading) return null;
-          const point = boundary === 'north' ? [515, 109] : boundary === 'east' ? [879, 294] : boundary === 'south' ? [552, 495] : [175, 321];
-          return (
-            <g className={`map-sensor-pin risk-${reading.status.toLowerCase().replace(' ', '-')}`} transform={`translate(${point[0]} ${point[1]})`} key={boundary}>
-              <circle className="sensor-pin-ring" r="13" />
-              <circle className="sensor-pin-core" r="6" />
-              <text x="0" y="-19">{sensorLetters[boundary]}</text>
-            </g>
-          );
-        })}
       </svg>
 
       <div
@@ -236,22 +205,9 @@ export default function SimulationMap({ prediction, input, view, onViewChange }:
         aria-hidden="true"
       />
 
-      <div className="map-wind-card">
-        <Wind aria-hidden="true" />
-        <div><small>Wind</small><strong>{directionLabel(input.windDirection)} ({input.windDirection}°)</strong><span>{input.windSpeed.toFixed(1)} m/s</span></div>
-      </div>
-
-      <div className="map-source-label"><CloudFog aria-hidden="true" /><span>Dust Source<b>{input.dustIntensity}%</b></span></div>
-
-      <div className="sim-zone-labels" aria-label="Misting zone status">
-        {zones.map((zone) => {
-          const active = activeZones.has(zone.id);
-          return (
-            <div className={`map-zone-tag ${zone.tagClass} ${active ? 'is-active' : ''}`} key={zone.id} data-testid={`zone-${zone.id}`}>
-              <strong>Zone {zone.id}</strong><span>({zone.label})</span><b>{active ? 'ACTIVE' : 'STANDBY'}</b>
-            </div>
-          );
-        })}
+      <div className="map-source-label">
+        <i className="source-label-dot" aria-hidden="true" />
+        <span>Dust Source<b>{input.dustIntensity}%</b></span>
       </div>
 
       {boundaryOrder.map((boundary) => {
@@ -264,16 +220,14 @@ export default function SimulationMap({ prediction, input, view, onViewChange }:
         <span className="compass-n">N</span><span className="compass-e">E</span><span className="compass-s">S</span><span className="compass-w">W</span><i style={{ '--compass': `${input.windDirection}deg` } as CSSProperties}>➤</i>
       </div>
 
-      <div className="sim-map-legend" aria-label="Map legend">
-        <span><i className="legend-boundary" />Site Boundary</span>
-        <span><i className="legend-source" />Dust Source</span>
-        <span><i className={`legend-plume pollutant-${view}`} />Dust Plume</span>
-        <span><i className="legend-sensor" />PM Sensor</span>
-        <span><i className="legend-active" />Misting Zone (Active)</span>
-        <span><i className="legend-standby" />Misting Zone (Standby)</span>
-        <span><Activity aria-hidden="true" />Estimates only</span>
+      <div className="sim-map-legend" aria-label="Map legend for simulated estimates">
+        <div className="sim-map-legend-keys">
+          <span><i className="legend-boundary" aria-hidden="true" />Site Boundary</span>
+          <span><i className="legend-source" aria-hidden="true" />Dust Source</span>
+          <span><i className="legend-active" aria-hidden="true" />Active Zone (Misting)</span>
+          <span><i className="legend-standby" aria-hidden="true" />Standby Zone</span>
+        </div>
       </div>
-
     </div>
   );
 }
