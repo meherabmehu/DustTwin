@@ -1,0 +1,385 @@
+/* All Team styling is route-scoped; shared page styles remain unchanged. */
+.page {
+  --team-gutter: clamp(24px, 5.2vw, 96px);
+  min-height: calc(100svh - 111px);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(28px, 2.3vw, 42px) var(--team-gutter) 50px;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, #031421 0%, rgba(3, 20, 33, .97) 33%, rgba(3, 20, 33, .65) 49%, rgba(3, 20, 33, .06) 78%),
+    linear-gradient(0deg, #031421, transparent 32%);
+}
+
+.heroMap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.heroMap :global(.dust-map) {
+  min-height: 0;
+}
+
+.heroMap :global(.map-live),
+.heroMap :global(.sensor-b),
+.heroMap :global(.zone-a) {
+  display: none;
+}
+
+.heroMap :global(.sensor-label) {
+  min-width: 116px;
+  padding: 8px 12px 8px 25px;
+  font-size: 12px;
+}
+
+.heroMap :global(.sensor-label) strong { font-size: 15px; }
+.heroMap :global(.sensor-dot) { left: 10px; top: 17px; width: 10px; height: 10px; }
+
+.heroMap :global(.sensor-a) {
+  left: 54%;
+  top: 25%;
+}
+
+.heroMap :global(.sensor-c) {
+  right: 8%;
+  top: 72%;
+}
+
+.heroMap :global(.zone-label) {
+  left: 62%;
+  top: 53%;
+  gap: 12px;
+  padding: 10px 15px;
+  font-size: 13px;
+}
+
+.heroMap :global(.zone-label) b { font-size: 13px; }
+.heroMap :global(.zone-icon) svg { width: 22px; height: 22px; }
+
+.heroMap :global(.zone-b) {
+  top: 40%;
+  padding: 8px 10px;
+  font-size: 10px;
+}
+
+.heroMap :global(.wind-card) {
+  top: 20%;
+  right: 3%;
+  min-width: 172px;
+  gap: 14px;
+  padding: 13px 16px;
+}
+
+.heroMap :global(.wind-card) > svg { width: 30px; height: 30px; }
+.heroMap :global(.wind-card) small { font-size: 11px; }
+.heroMap :global(.wind-card) b { font-size: 15px; }
+
+.heroCopy {
+  position: relative;
+  z-index: 2;
+  max-width: 880px;
+}
+
+.heroCopy :global(.eyebrow) {
+  max-width: 100%;
+  padding: 7px 13px;
+  color: #e3edf4;
+  font-size: clamp(9px, .72vw, 12px);
+  letter-spacing: .09em;
+}
+
+.heading {
+  margin: 20px 0 10px;
+  color: #f5f8fb;
+  font-size: clamp(40px, 3.9vw, 66px);
+  font-weight: 850;
+  letter-spacing: -.045em;
+  line-height: 1.08;
+}
+
+.heading span {
+  color: var(--cyan);
+  white-space: nowrap;
+}
+
+.description {
+  max-width: 730px;
+  margin: 0;
+  color: #cad7e0;
+  font-size: clamp(16px, 1.3vw, 22px);
+  line-height: 1.45;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--team-gutter);
+}
+
+.memberGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 14px;
+}
+
+.memberCard {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid rgba(33, 210, 238, .62);
+  border-radius: 12px;
+  background: rgba(3, 22, 36, .94);
+  box-shadow: inset 0 0 12px rgba(12, 207, 234, .04), 0 0 12px rgba(19, 209, 238, .05);
+}
+
+.portrait {
+  width: 100%;
+  aspect-ratio: 1.86;
+  overflow: hidden;
+  border-radius: 9px;
+  background: var(--panel-light);
+}
+
+.portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Individual crop positions keep each supplied portrait's face in view. */
+.memberCard:nth-child(1) .portrait img { object-position: 50% 26%; }
+.memberCard:nth-child(2) .portrait img { object-position: 50% 17%; }
+.memberCard:nth-child(3) .portrait img { object-position: 50% 14%; }
+
+/* Preserve the entire passport portrait, extending its own blue background. */
+.memberCard:nth-child(4) .portrait {
+  background: #1083f8;
+}
+
+.memberCard:nth-child(4) .portrait img {
+  object-fit: contain;
+}
+
+.memberName {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.3em;
+  margin: 12px 0 2px;
+  color: #f5f8fb;
+  font-size: clamp(16px, 1.16vw, 21px);
+  font-weight: 750;
+  letter-spacing: -.035em;
+  line-height: 1.3;
+  text-align: center;
+  overflow-wrap: break-word;
+}
+
+.demoCta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border: 1px solid rgba(23, 222, 243, .67);
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(6, 47, 66, .7), rgba(2, 25, 40, .9));
+  box-shadow: 0 0 13px rgba(0, 196, 230, .08);
+}
+
+.demoCopy {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+
+.demoIcon {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  color: var(--cyan);
+  filter: drop-shadow(0 0 7px rgba(23, 220, 239, .3));
+}
+
+.demoCopy h2 {
+  margin: 0 0 4px;
+  color: var(--cyan);
+  font-size: clamp(17px, 1.25vw, 22px);
+  font-weight: 750;
+  letter-spacing: -.025em;
+}
+
+.demoCopy p {
+  margin: 0;
+  color: #cad7e0;
+  font-size: clamp(12px, .9vw, 15px);
+  line-height: 1.45;
+}
+
+.demoCta :global(.cta-button) {
+  flex: 0 0 auto;
+  min-width: 190px;
+  height: 48px;
+  font-size: 15px;
+}
+
+.demoCta :global(.cta-button):focus-visible {
+  outline: 2px solid #eaf5fc;
+  outline-offset: 4px;
+}
+
+.values {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: auto;
+  padding: 22px 0 20px;
+}
+
+.values::before {
+  content: "";
+  grid-column: 1 / -1;
+  height: 1px;
+  margin-bottom: 18px;
+  background: rgba(28, 164, 196, .25);
+}
+
+.values :global(.feature-item) {
+  justify-content: center;
+  gap: 18px;
+  padding: 0 14px;
+  width: auto;
+  min-height: 48px;
+}
+
+.values :global(.feature-item):not(:first-of-type) {
+  border-left: 1px solid rgba(28, 164, 196, .3);
+}
+
+.values :global(.feature-icon) {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  background: none;
+  filter: none;
+}
+
+.values :global(.feature-icon) svg {
+  width: 34px;
+  height: 34px;
+  stroke-width: 1.7;
+}
+
+.values :global(.feature-item) b,
+.values :global(.feature-item) small {
+  font-size: clamp(12px, .95vw, 16px);
+  line-height: 1.35;
+}
+
+.values :global(.feature-item) small {
+  margin-top: 2px;
+  color: #d0dce5;
+}
+
+@media (max-width: 1100px) {
+  .page { min-height: 0; }
+  .hero { padding-bottom: 32px; }
+  .heroCopy { max-width: 760px; }
+  .heroMap :global(.sensor-label),
+  .heroMap :global(.wind-card),
+  .heroMap :global(.zone-label),
+  .heroMap :global(.map-zone),
+  .heroMap :global(.map-stamp) { display: none; }
+  .hero::after {
+    background: linear-gradient(90deg, #031421, rgba(3, 20, 33, .93) 42%, rgba(3, 20, 33, .38)), linear-gradient(0deg, #031421, transparent 45%);
+  }
+  .memberGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .memberName { font-size: 20px; }
+  .demoCta { gap: 16px; }
+  .demoCta :global(.cta-button) { min-width: 160px; font-size: 13px; }
+  .values { margin-top: 0; }
+  .values :global(.feature-item) { gap: 10px; padding: 0 8px; }
+}
+
+/* Only the Team route gets the wrapping needed by the existing footer on tablets. */
+@media (max-width: 1050px) {
+  :global(main):has(> .page) + :global(.site-footer) :global(.footer-inner) {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 18px 24px;
+    padding: 18px clamp(24px, 5.2vw, 96px);
+  }
+  :global(main):has(> .page) + :global(.site-footer) :global(.brand) {
+    display: inline-flex;
+    min-width: 0;
+  }
+  :global(main):has(> .page) + :global(.site-footer) :global(.footer-social) {
+    display: flex;
+  }
+  :global(main):has(> .page) + :global(.site-footer) :global(.footer-nav) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 760px) {
+  .page { --team-gutter: 18px; }
+  .hero { padding-top: 24px; padding-bottom: 26px; }
+  .heroCopy :global(.eyebrow) { flex-wrap: wrap; gap: 5px; padding: 6px 9px; font-size: 8px; }
+  .heading { margin-top: 17px; font-size: clamp(34px, 6.8vw, 48px); }
+  .description { max-width: 560px; font-size: 15px; }
+  .heroMap { opacity: .55; }
+  .memberGrid { gap: 12px; }
+  .memberCard { padding: 11px; }
+  .memberName { margin-top: 11px; font-size: 17px; }
+  .demoCta { align-items: stretch; flex-direction: column; gap: 14px; padding: 16px; }
+  .demoCopy { gap: 12px; }
+  .demoIcon { flex-basis: 30px; width: 30px; height: 30px; }
+  .demoCta :global(.cta-button) { min-height: 44px; width: 100%; }
+  .values { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 0; padding: 18px 0; }
+  .values::before { margin-bottom: 0; }
+  .values :global(.feature-item) { justify-content: flex-start; gap: 9px; padding: 0 8px; }
+  .values :global(.feature-item):nth-of-type(3) { border-left: 0; }
+  .values :global(.feature-icon) { flex-basis: 30px; width: 30px; }
+  .values :global(.feature-icon) svg { width: 28px; height: 28px; }
+
+  :global(main):has(> .page) + :global(.site-footer) :global(.footer-inner) {
+    grid-template-columns: 1fr auto;
+    padding: 18px;
+  }
+  :global(main):has(> .page) + :global(.site-footer) :global(.footer-note) {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    text-align: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .memberGrid { grid-template-columns: minmax(0, 1fr); }
+  .memberName { font-size: 19px; }
+}
