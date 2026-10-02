@@ -233,9 +233,9 @@
 .simulation-site-map .sim-sensor-card {
   position: absolute;
   z-index: 7;
-  width: clamp(132px, 23%, 190px);
+  width: clamp(128px, 22%, 176px);
   box-sizing: border-box;
-  padding: 10px 12px;
+  padding: 7px 10px;
   border: 1px solid rgba(137, 162, 176, .45);
   border-radius: 9px;
   background: rgba(3, 21, 33, .94);
@@ -243,13 +243,17 @@
   backdrop-filter: blur(5px);
 }
 
-.simulation-site-map .sim-sensor-card.is-active { border-color: rgba(44, 219, 230, .7); }
+.simulation-site-map .sim-sensor-card.is-active {
+  border-color: rgba(55, 226, 213, .92);
+  background: rgba(4, 29, 38, .96);
+  box-shadow: 0 5px 16px rgba(0, 0, 0, .25), 0 0 0 1px rgba(44, 219, 230, .12), inset 0 0 10px rgba(57, 233, 152, .06);
+}
 .simulation-site-map .sensor-north { top: 6%; left: 51.5%; transform: translateX(-50%); }
 .simulation-site-map .sensor-east { top: 37%; right: 2%; }
 .simulation-site-map .sensor-south { top: 59%; left: 53%; }
 .simulation-site-map .sensor-west { top: 38%; left: 9%; }
 
-.simulation-site-map .sim-sensor-heading { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.simulation-site-map .sim-sensor-heading { display: flex; align-items: center; gap: 7px; min-width: 0; }
 .simulation-site-map .sim-sensor-status-dot {
   width: 10px;
   height: 10px;
@@ -259,7 +263,7 @@
 }
 
 .simulation-site-map .sim-sensor-card.is-active .sim-sensor-status-dot { background: #39e998; }
-.simulation-site-map .sim-sensor-identity { display: grid; flex: 1; min-width: 0; gap: 2px; }
+.simulation-site-map .sim-sensor-identity { display: grid; flex: 1; min-width: 0; gap: 1px; }
 .simulation-site-map .sim-sensor-name {
   color: #f5fbff;
   font-size: clamp(11px, 1.5cqw, 14px);
@@ -280,16 +284,16 @@
 .simulation-site-map .sim-sensor-readings {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 8px;
-  margin-top: 8px;
-  padding-top: 7px;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 5px;
   border-top: 1px solid rgba(116, 158, 176, .24);
 }
 
-.simulation-site-map .sim-sensor-metric { display: grid; min-width: 0; gap: 3px; white-space: nowrap; }
+.simulation-site-map .sim-sensor-metric { display: grid; min-width: 0; gap: 2px; white-space: nowrap; }
 .simulation-site-map .metric-tag { color: #afc1cc; font-size: clamp(8.5px, 1.2cqw, 10.5px); font-weight: 600; line-height: 1.1; }
-.simulation-site-map .metric-number { display: flex; align-items: baseline; gap: 3px; }
-.simulation-site-map .metric-val { color: #f5fbff; font-size: clamp(12px, 1.8cqw, 16px); font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.simulation-site-map .metric-number { display: flex; align-items: baseline; gap: 2px; }
+.simulation-site-map .metric-val { color: #f5fbff; font-size: clamp(14px, 2.1cqw, 18px); font-weight: 850; font-variant-numeric: tabular-nums; line-height: 1.05; }
 .simulation-site-map .metric-unit { color: #a9bdc8; font-size: clamp(7.5px, 1cqw, 9px); font-weight: 500; line-height: 1; }
 .simulation-site-map .sim-sensor-metric.is-selected .metric-tag { color: #59e4ef; }
 .simulation-site-map .sim-sensor-metric.is-selected .metric-val { color: #c7fbff; }
@@ -443,11 +447,11 @@
 
 /* Adapt to the actual center column, not the overall browser width. */
 @container (max-width: 720px) {
-  .simulation-site-map .sim-sensor-card { padding: 9px; }
+  .simulation-site-map .sim-sensor-card { padding: 7px; }
   .simulation-site-map .sim-sensor-heading { gap: 6px; }
   .simulation-site-map .sim-sensor-status-dot { width: 8px; height: 8px; }
   .simulation-site-map .sim-sensor-identity { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
-  .simulation-site-map .sim-sensor-readings { margin-top: 7px; padding-top: 6px; }
+  .simulation-site-map .sim-sensor-readings { margin-top: 5px; padding-top: 5px; }
   .simulation-site-map .sim-map-legend-keys { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 5px 12px; }
 }
 
@@ -465,7 +469,7 @@
 }
 
 @container (max-width: 480px) {
-  .simulation-site-map .sim-sensor-card { width: clamp(106px, 35%, 132px); padding: 7px; }
+  .simulation-site-map .sim-sensor-card { width: clamp(106px, 35%, 128px); padding: 6px; }
   .simulation-site-map .sensor-north { top: 15%; }
   .simulation-site-map .sensor-west { left: 3%; }
   .simulation-site-map .sensor-east { right: 3%; }
@@ -474,10 +478,10 @@
   .simulation-site-map .sim-sensor-status-dot { width: 7px; height: 7px; }
   .simulation-site-map .sim-sensor-name { font-size: 11px; }
   .simulation-site-map .sim-sensor-zone-state { font-size: 8px; letter-spacing: 0; }
-  .simulation-site-map .sim-sensor-readings { gap: 6px; margin-top: 6px; padding-top: 6px; }
+  .simulation-site-map .sim-sensor-readings { gap: 6px; margin-top: 5px; padding-top: 4px; }
   .simulation-site-map .metric-tag { font-size: 8px; }
   .simulation-site-map .metric-number { gap: 2px; }
-  .simulation-site-map .metric-val { font-size: 12px; }
+  .simulation-site-map .metric-val { font-size: 13px; }
   .simulation-site-map .metric-unit { font-size: 7.5px; }
   .simulation-site-map .sensor-east .sim-zone-sensor-marker { top: -26px; left: 50%; transform: translateX(-50%); }
   .simulation-site-map .sensor-east .sim-zone-sensor-marker::before { top: 20px; left: 50%; width: 1px; height: 9px; }
@@ -493,7 +497,7 @@
 }
 
 @container (max-width: 360px) {
-  .simulation-site-map .sim-sensor-card { width: clamp(110px, 35%, 132px); padding: 6px; }
+  .simulation-site-map .sim-sensor-card { width: clamp(110px, 35%, 128px); padding: 5px; }
   .simulation-site-map .sensor-west { left: 2%; }
   .simulation-site-map .sensor-east { right: 2%; }
   .simulation-site-map .sim-sensor-heading { gap: 4px; }
@@ -501,7 +505,7 @@
   .simulation-site-map .sim-sensor-identity { gap: 2px; }
   .simulation-site-map .sim-sensor-name { font-size: 10px; }
   .simulation-site-map .metric-number { gap: 1px; }
-  .simulation-site-map .metric-val { font-size: 11.5px; }
+  .simulation-site-map .metric-val { font-size: 12px; }
   .simulation-site-map .metric-unit { font-size: 6.5px; }
   .simulation-site-map .map-source-label { width: 66px; gap: 4px; padding: 6px 4px; }
   .simulation-site-map .source-label-dot { width: 6px; height: 6px; }
