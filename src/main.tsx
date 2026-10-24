@@ -14,6 +14,7 @@ const Problem = lazy(() => import('./pages/Problem'));
 const HowItWorks = lazy(() => import('./pages/HowItWorks'));
 const Simulation = lazy(() => import('./pages/Simulation'));
 const CircuitSimulation = lazy(() => import('./pages/CircuitSimulation'));
+const HardwareSimulator = lazy(() => import('./pages/HardwareSimulator'));
 const Prototype = lazy(() => import('./pages/Prototype'));
 const Results = lazy(() => import('./pages/Results'));
 const Team = lazy(() => import('./pages/Team'));
@@ -43,6 +44,7 @@ function App() {
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/simulation" element={<Simulation />} />
             <Route path="/circuit-simulation" element={<CircuitSimulation />} />
+            <Route path="/hardware-simulator" element={<HardwareSimulator />} />
             <Route path="/prototype" element={<Prototype />} />
             <Route path="/results" element={<Results />} />
             <Route path="/team" element={<Team />} />

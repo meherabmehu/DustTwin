@@ -9,6 +9,7 @@ export const navItems = [
   { label: 'How It Works', path: '/how-it-works' },
   { label: 'Simulation', path: '/simulation' },
   { label: 'Circuit Simulation', path: '/circuit-simulation' },
+  { label: 'Hardware Simulator', path: '/hardware-simulator' },
   { label: 'Prototype Demo', path: '/prototype' },
   { label: 'Results', path: '/results' },
   { label: 'Team', path: '/team' },
