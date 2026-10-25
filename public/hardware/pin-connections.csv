@@ -1,0 +1,166 @@
+id,from,fromPin,to,toPin,voltage,currentRequirement,type,interface,isolation,purpose
+w0,piSupply,USB-C,pi,USB-C power,5.1V / 5A,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Dedicated Pi supply
+w1,pi,USB-A sensor,esp1,USB,USB 5V + differential data,Signal only,data,USB/UART,SELV common reference; site EMC/isolation review,USB/UART bridge: bidirectional serial protocol; integrated USB ground. No 5V GPIO UART.
+w2,pi,USB-A actuator,esp2,USB,USB 5V + differential data,Signal only,data,USB/UART,SELV common reference; site EMC/isolation review,USB/UART bridge: bidirectional serial protocol; integrated USB ground. No 5V GPIO UART.
+w3,esp1,GPIO21,mux,SDA,3.3V,Signal only,data,I2C,SELV common reference; site EMC/isolation review,"I²C SDA, 100kHz"
+w4,esp1,GPIO22,mux,SCL,3.3V,Signal only,data,I2C,SELV common reference; site EMC/isolation review,"I²C SCL, 100kHz"
+w5,esp1,3V3,mux,VCC,3.3V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Mux supply
+w6,resetPullup,B,mux,RESET,3.3V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Mux reset held high through10k reference resistor
+w7,esp1,GND,mux,GND,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Address 0x70 and logic return
+w8,esp1,GND,mux,A0,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Address 0x70 and logic return
+w9,esp1,GND,mux,A1,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Address 0x70 and logic return
+w10,esp1,GND,mux,A2,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Address 0x70 and logic return
+w11,mux,SD0,pm0,2 SDA,3.3V,Signal only,data,I2C,SELV common reference; site EMC/isolation review,Exclusive channel 0; upstream 3.3V pull-ups
+w12,mux,SC0,pm0,3 SCL,3.3V,Signal only,data,I2C,SELV common reference; site EMC/isolation review,Exclusive channel 0 clock
+w13,buck,5V,pm0,1 VDD,5V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Sensor supply
+w14,esp1,GND,pm0,5 GND,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Low-voltage common return
+w15,esp1,GND,pm0,4 SEL,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Select I²C before startup
+w16,mux,SD1,pm1,2 SDA,3.3V,Signal only,data,I2C,SELV common reference; site EMC/isolation review,Exclusive channel 1; upstream 3.3V pull-ups
+w17,mux,SC1,pm1,3 SCL,3.3V,Signal only,data,I2C,SELV common reference; site EMC/isolation review,Exclusive channel 1 clock
+w18,buck,5V,pm1,1 VDD,5V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Sensor supply
+w19,esp1,GND,pm1,5 GND,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Low-voltage common return
+w20,esp1,GND,pm1,4 SEL,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Select I²C before startup
+w21,mux,SD2,pm2,2 SDA,3.3V,Signal only,data,I2C,SELV common reference; site EMC/isolation review,Exclusive channel 2; upstream 3.3V pull-ups
+w22,mux,SC2,pm2,3 SCL,3.3V,Signal only,data,I2C,SELV common reference; site EMC/isolation review,Exclusive channel 2 clock
+w23,buck,5V,pm2,1 VDD,5V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Sensor supply
+w24,esp1,GND,pm2,5 GND,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Low-voltage common return
+w25,esp1,GND,pm2,4 SEL,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Select I²C before startup
+w26,mux,SD3,pm3,2 SDA,3.3V,Signal only,data,I2C,SELV common reference; site EMC/isolation review,Exclusive channel 3; upstream 3.3V pull-ups
+w27,mux,SC3,pm3,3 SCL,3.3V,Signal only,data,I2C,SELV common reference; site EMC/isolation review,Exclusive channel 3 clock
+w28,buck,5V,pm3,1 VDD,5V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Sensor supply
+w29,esp1,GND,pm3,5 GND,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Low-voltage common return
+w30,esp1,GND,pm3,4 SEL,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Select I²C before startup
+w31,mux,SD4,sht0,SDA,3.3V,Signal only,data,I2C,SELV common reference; site EMC/isolation review,Exclusive mux channel 4 for the single SHT35
+w32,mux,SC4,sht0,SCL,3.3V,Signal only,data,I2C,SELV common reference; site EMC/isolation review,Exclusive mux channel 4 for the single SHT35
+w33,esp1,3V3,sht0,VDD,3.3V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Sensor supply
+w34,esp1,GND,sht0,GND,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Low-voltage common return
+w35,esp1,GND,sht0,ADDR,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Address select 0x44; separate mux channel
+w36,flow,conditioned OUT,conditioner,flow IN,Field interface TBD,Signal only,data,data,SELV common reference; site EMC/isolation review,Verify exact sensor and conditioner before assembly
+w37,conditioner,flow OUT,esp1,GPIO32,0–3.3V,Signal only,data,data,SELV common reference; site EMC/isolation review,Protected pulse/ADC input
+w38,conditioner,FIELD SUPPLY,flow,SUPPLY,5V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,"Device-specific regulated field supply, not GPIO"
+w39,conditioner,FIELD RETURN,flow,RETURN,Field return,N/A,ground,ground,SELV common reference; site EMC/isolation review,Isolated or common return per chosen conditioner
+w40,pressure,conditioned OUT,conditioner,pressure IN,Field interface TBD,Signal only,data,data,SELV common reference; site EMC/isolation review,Verify exact sensor and conditioner before assembly
+w41,conditioner,pressure OUT,esp1,GPIO35,0–3.3V,Signal only,data,data,SELV common reference; site EMC/isolation review,Protected pulse/ADC input
+w42,conditioner,FIELD SUPPLY,pressure,SUPPLY,5V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,"Device-specific regulated field supply, not GPIO"
+w43,conditioner,FIELD RETURN,pressure,RETURN,Field return,N/A,ground,ground,SELV common reference; site EMC/isolation review,Isolated or common return per chosen conditioner
+w44,esp1,3V3,conditioner,3V3,3.3V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Logic interface reference
+w45,esp1,GND,conditioner,GND,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Logic return; isolation barrier inside driver
+w46,esp1,3V3,drivers,3V3,3.3V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Logic interface reference
+w47,esp1,GND,drivers,GND,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Logic return; isolation barrier inside driver
+w48,esp2,GND,drivers,GND,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Actuator controller logic return
+w49,esp2,GPIO13,drivers,IN1,3.3V,Signal only,control,control,SELV common reference; site EMC/isolation review,Channel 1: damper0; external fail-off pull-down
+w50,drivers,OUT1,damper0,DRIVE+,24V,Signal only,control,control,SELV common reference; site EMC/isolation review,Buffered protected output; never drive a load from GPIO
+w51,fuse,RETURN,damper0,RETURN,Load return,N/A,ground,ground,SELV common reference; site EMC/isolation review,Low-voltage load circuit return
+w52,esp2,GPIO14,drivers,IN2,3.3V,Signal only,control,control,SELV common reference; site EMC/isolation review,Channel 2: damper1; external fail-off pull-down
+w53,drivers,OUT2,damper1,DRIVE+,24V,Signal only,control,control,SELV common reference; site EMC/isolation review,Buffered protected output; never drive a load from GPIO
+w54,fuse,RETURN,damper1,RETURN,Load return,N/A,ground,ground,SELV common reference; site EMC/isolation review,Low-voltage load circuit return
+w55,esp2,GPIO18,drivers,IN3,3.3V,Signal only,control,control,SELV common reference; site EMC/isolation review,Channel 3: damper2; external fail-off pull-down
+w56,drivers,OUT3,damper2,DRIVE+,24V,Signal only,control,control,SELV common reference; site EMC/isolation review,Buffered protected output; never drive a load from GPIO
+w57,fuse,RETURN,damper2,RETURN,Load return,N/A,ground,ground,SELV common reference; site EMC/isolation review,Low-voltage load circuit return
+w58,esp2,GPIO19,drivers,IN4,3.3V,Signal only,control,control,SELV common reference; site EMC/isolation review,Channel 4: damper3; external fail-off pull-down
+w59,drivers,OUT4,damper3,DRIVE+,24V,Signal only,control,control,SELV common reference; site EMC/isolation review,Buffered protected output; never drive a load from GPIO
+w60,fuse,RETURN,damper3,RETURN,Load return,N/A,ground,ground,SELV common reference; site EMC/isolation review,Low-voltage load circuit return
+w61,esp2,GPIO21,drivers,IN5,3.3V,Signal only,control,control,SELV common reference; site EMC/isolation review,Channel 5: valve0; external fail-off pull-down
+w62,drivers,OUT5,valve0,DRIVE+,24V,Signal only,control,control,SELV common reference; site EMC/isolation review,Buffered protected output; never drive a load from GPIO
+w63,fuse,RETURN,valve0,RETURN,Load return,N/A,ground,ground,SELV common reference; site EMC/isolation review,Low-voltage load circuit return
+w64,esp2,GPIO22,drivers,IN6,3.3V,Signal only,control,control,SELV common reference; site EMC/isolation review,Channel 6: valve1; external fail-off pull-down
+w65,drivers,OUT6,valve1,DRIVE+,24V,Signal only,control,control,SELV common reference; site EMC/isolation review,Buffered protected output; never drive a load from GPIO
+w66,fuse,RETURN,valve1,RETURN,Load return,N/A,ground,ground,SELV common reference; site EMC/isolation review,Low-voltage load circuit return
+w67,esp2,GPIO23,drivers,IN7,3.3V,Signal only,control,control,SELV common reference; site EMC/isolation review,Channel 7: valve2; external fail-off pull-down
+w68,drivers,OUT7,valve2,DRIVE+,24V,Signal only,control,control,SELV common reference; site EMC/isolation review,Buffered protected output; never drive a load from GPIO
+w69,fuse,RETURN,valve2,RETURN,Load return,N/A,ground,ground,SELV common reference; site EMC/isolation review,Low-voltage load circuit return
+w70,esp2,GPIO25,drivers,IN8,3.3V,Signal only,control,control,SELV common reference; site EMC/isolation review,Channel 8: valve3; external fail-off pull-down
+w71,drivers,OUT8,valve3,DRIVE+,24V,Signal only,control,control,SELV common reference; site EMC/isolation review,Buffered protected output; never drive a load from GPIO
+w72,fuse,RETURN,valve3,RETURN,Load return,N/A,ground,ground,SELV common reference; site EMC/isolation review,Low-voltage load circuit return
+w73,esp2,GPIO26,drivers,IN9,3.3V,Signal only,control,control,SELV common reference; site EMC/isolation review,Channel 9: pump; external fail-off pull-down
+w74,drivers,OUT9,pump,DRIVE+,12V,Signal only,control,control,SELV common reference; site EMC/isolation review,Buffered protected output; never drive a load from GPIO
+w75,fanSupply,GND,pump,RETURN,Load return,N/A,ground,ground,SELV common reference; site EMC/isolation review,Low-voltage load circuit return
+w76,esp2,GPIO27,drivers,IN10,3.3V,Signal only,control,control,SELV common reference; site EMC/isolation review,Channel 10: contactor; external fail-off pull-down
+w77,drivers,OUT10,contactor,ISOLATED ENABLE,Isolated rated interface,Signal only,control,control,Rated galvanic mains barrier inside enclosure,Buffered protected output; never drive a load from GPIO
+w78,esp2,GPIO32,drivers,IN11,3.3V,Signal only,control,control,SELV common reference; site EMC/isolation review,Channel 11: fan; external fail-off pull-down
+w79,drivers,OUT11,fan,ENABLE,12V driver,Signal only,control,control,SELV common reference; site EMC/isolation review,Buffered protected output; never drive a load from GPIO
+w80,breaker,ENCLOSED OUT,psu,PROTECTED INPUT,Protected subsystem,Size protection from load/inrush/derating,power,power,Rated galvanic mains barrier inside enclosure,Enclosed power conversion; mains internals intentionally omitted
+w81,breaker,ENCLOSED OUT,piSupply,PROTECTED INPUT,Protected subsystem,Size protection from load/inrush/derating,power,power,Rated galvanic mains barrier inside enclosure,Dedicated certified Pi adapter
+w82,breaker,ENCLOSED OUT,contactor,PROTECTED INPUT,Protected 220–240V interface,Size protection from load/inrush/derating,power,power,Rated galvanic mains barrier inside enclosure,No exposed mains wiring; overload and safety chain inside enclosure
+w83,contactor,MOTOR OUTPUT,motor,PROTECTED POWER,Motor rating TBD,Size protection from load/inrush/derating,power,power,Rated galvanic mains barrier inside enclosure,Protected motor power interface
+w84,breaker,ENCLOSED OUT,fanSupply,PROTECTED INPUT,Protected subsystem,Size protection from load/inrush/derating,power,power,Rated galvanic mains barrier inside enclosure,Certified fan supply
+w85,estop,12V OUT,fan,12V+,12V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Separately fused 12V branch downstream of independent hardware safety disconnect
+w86,fanSupply,GND,fan,GND,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Fan supply return
+w87,psu,DC+,fuse,IN+,24V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Protected distribution
+w88,psu,DC−,fuse,IN−,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Load return
+w89,fuse,FUSED+,buck,IN+,24V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Fused buck input
+w90,fuse,RETURN,buck,IN−,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Buck return
+w91,buck,GND,esp1,GND,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Common low-voltage reference
+w92,fuse,FUSED+,estop,IN+,24V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,NC emergency power chain
+w93,estop,SWITCHED+,drivers,LOAD+,24V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Remove actuator energy on emergency stop
+w94,fuse,RETURN,drivers,LOAD−,Load return,N/A,ground,ground,SELV common reference; site EMC/isolation review,Protected load bank return
+w95,inlet0,AIR OUT,damper0,AIR IN,N/A,N/A,air,air,SELV common reference; site EMC/isolation review,Zone A suction inlet
+w96,damper0,AIR OUT,duct,A,N/A,N/A,air,air,SELV common reference; site EMC/isolation review,Zone A air branch
+w97,pipes,A,valve0,IN,Nominal 3 bar model,N/A,water,water,SELV common reference; site EMC/isolation review,Zone A water branch
+w98,valve0,OUT,nozzle0,IN,Nominal 3 bar model,N/A,water,water,SELV common reference; site EMC/isolation review,Spray only with pump and valve active
+w99,inlet1,AIR OUT,damper1,AIR IN,N/A,N/A,air,air,SELV common reference; site EMC/isolation review,Zone B suction inlet
+w100,damper1,AIR OUT,duct,B,N/A,N/A,air,air,SELV common reference; site EMC/isolation review,Zone B air branch
+w101,pipes,B,valve1,IN,Nominal 3 bar model,N/A,water,water,SELV common reference; site EMC/isolation review,Zone B water branch
+w102,valve1,OUT,nozzle1,IN,Nominal 3 bar model,N/A,water,water,SELV common reference; site EMC/isolation review,Spray only with pump and valve active
+w103,inlet2,AIR OUT,damper2,AIR IN,N/A,N/A,air,air,SELV common reference; site EMC/isolation review,Zone C suction inlet
+w104,damper2,AIR OUT,duct,C,N/A,N/A,air,air,SELV common reference; site EMC/isolation review,Zone C air branch
+w105,pipes,C,valve2,IN,Nominal 3 bar model,N/A,water,water,SELV common reference; site EMC/isolation review,Zone C water branch
+w106,valve2,OUT,nozzle2,IN,Nominal 3 bar model,N/A,water,water,SELV common reference; site EMC/isolation review,Spray only with pump and valve active
+w107,inlet3,AIR OUT,damper3,AIR IN,N/A,N/A,air,air,SELV common reference; site EMC/isolation review,Zone D suction inlet
+w108,damper3,AIR OUT,duct,D,N/A,N/A,air,air,SELV common reference; site EMC/isolation review,Zone D air branch
+w109,pipes,D,valve3,IN,Nominal 3 bar model,N/A,water,water,SELV common reference; site EMC/isolation review,Zone D water branch
+w110,valve3,OUT,nozzle3,IN,Nominal 3 bar model,N/A,water,water,SELV common reference; site EMC/isolation review,Spray only with pump and valve active
+w111,duct,OUT,cyclone,AIR IN,N/A,N/A,air,air,SELV common reference; site EMC/isolation review,Dust extraction manifold
+w112,cyclone,DUST OUT,bin,DUST IN,N/A,N/A,air,air,SELV common reference; site EMC/isolation review,Separated collection path
+w113,cyclone,AIR OUT,hepa,AIR IN,N/A,N/A,air,air,SELV common reference; site EMC/isolation review,Filtered extraction
+w114,hepa,AIR OUT,motor,AIR IN,N/A,N/A,air,air,SELV common reference; site EMC/isolation review,Suction outlet
+w115,tank,OUT,pump,IN,N/A,N/A,water,water,SELV common reference; site EMC/isolation review,Water supply
+w116,pump,OUT,pipes,IN,Nominal 3 bar model,N/A,water,water,SELV common reference; site EMC/isolation review,Pressurized water manifold
+w117,feedback0,NO,esp2,GPIO34,3.3V,Signal only,data,data,SELV common reference; site EMC/isolation review,Open limit feedback with external pull-up
+w118,esp2,GND,feedback0,COM,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Dry contact return
+w119,feedback1,NO,esp2,GPIO35,3.3V,Signal only,data,data,SELV common reference; site EMC/isolation review,Open limit feedback with external pull-up
+w120,esp2,GND,feedback1,COM,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Dry contact return
+w121,feedback2,NO,esp2,GPIO36,3.3V,Signal only,data,data,SELV common reference; site EMC/isolation review,Open limit feedback with external pull-up
+w122,esp2,GND,feedback2,COM,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Dry contact return
+w123,feedback3,NO,esp2,GPIO39,3.3V,Signal only,data,data,SELV common reference; site EMC/isolation review,Open limit feedback with external pull-up
+w124,esp2,GND,feedback3,COM,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Dry contact return
+w125,rs485,RO,esp1,GPIO16,3.3V,Signal only,data,RS485/Modbus,SELV common reference; site EMC/isolation review,UART2 RX
+w126,esp1,GPIO17,rs485,DI,3.3V,Signal only,data,RS485/Modbus,SELV common reference; site EMC/isolation review,UART2 TX or direction enable
+w127,esp1,GPIO4,rs485,DE+RE,3.3V,Signal only,data,RS485/Modbus,SELV common reference; site EMC/isolation review,UART2 TX or direction enable
+w128,rs485,A,wind,Yellow A,RS485 differential,Signal only,data,RS485/Modbus,SELV common reference; site EMC/isolation review,Commission distinct addresses; shielded pair and end termination
+w129,rs485,B,wind,Green B,RS485 differential,Signal only,data,RS485/Modbus,SELV common reference; site EMC/isolation review,Commission distinct addresses; shielded pair and end termination
+w130,fuse,FUSED+,wind,Red +,24V,Size protection from load/inrush/derating,power,RS485/Modbus,SELV common reference; site EMC/isolation review,Fused field sensor branch
+w131,fuse,RETURN,wind,Black -,0V,N/A,ground,RS485/Modbus,SELV common reference; site EMC/isolation review,Field common reference; site isolation review
+w132,rs485,A,vane,Yellow A,RS485 differential,Signal only,data,RS485/Modbus,SELV common reference; site EMC/isolation review,Commission distinct addresses; shielded pair and end termination
+w133,rs485,B,vane,Green B,RS485 differential,Signal only,data,RS485/Modbus,SELV common reference; site EMC/isolation review,Commission distinct addresses; shielded pair and end termination
+w134,fuse,FUSED+,vane,Red +,24V,Size protection from load/inrush/derating,power,RS485/Modbus,SELV common reference; site EMC/isolation review,Fused field sensor branch
+w135,fuse,RETURN,vane,Black -,0V,N/A,ground,RS485/Modbus,SELV common reference; site EMC/isolation review,Field common reference; site isolation review
+w136,esp1,3V3,rs485,3V3,3.3V,Size protection from load/inrush/derating,power,RS485/Modbus,SELV common reference; site EMC/isolation review,Named SELV connection; input contacts need external pull-ups
+w137,esp1,GND,rs485,GND,0V,N/A,ground,RS485/Modbus,SELV common reference; site EMC/isolation review,Named SELV connection; input contacts need external pull-ups
+w138,esp1,3V3,dp,VDD,3.3V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Named SELV connection; input contacts need external pull-ups
+w139,esp1,GND,dp,GND,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Named SELV connection; input contacts need external pull-ups
+w140,esp1,GPIO21,dp,SDA,3.3V,Signal only,data,I2C,SELV common reference; site EMC/isolation review,Named SELV connection; input contacts need external pull-ups
+w141,esp1,GPIO22,dp,SCL,3.3V,Signal only,data,I2C,SELV common reference; site EMC/isolation review,Named SELV connection; input contacts need external pull-ups
+w142,level,NC,esp1,GPIO27,3.3V,Signal only,data,data,SELV common reference; site EMC/isolation review,Named SELV connection; input contacts need external pull-ups
+w143,esp1,GND,level,COM,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Named SELV connection; input contacts need external pull-ups
+w144,estopSense,NC,esp2,GPIO33,3.3V,Signal only,data,data,SELV common reference; site EMC/isolation review,Named SELV connection; input contacts need external pull-ups
+w145,esp2,GND,estopSense,COM,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,Named SELV connection; input contacts need external pull-ups
+w146,estop,12V OUT,drivers,12V LOAD+,12V,Size protection from load/inrush/derating,power,power,SELV common reference; site EMC/isolation review,Separately fused 12V branch downstream of independent hardware safety disconnect
+w147,fanSupply,GND,drivers,12V RETURN,0V,N/A,ground,ground,SELV common reference; site EMC/isolation review,12V driver return
+w148,buck,5V,conditioner,FIELD SUPPLY,5V,Verify sensor budget,power,power,SELV common reference; protected conditioning boundary,5V reference field sensor supply; never feed conditioned ADC from 5V directly
+w149,fanSupply,12V+,estop,12V IN,12V,Select power contacts for exact pump/fan inrush,power,power,Protected SELV disconnect; safety relay design requires verification,12V load rail enters rated safety disconnect; NC chain removes pump/fan energy
+w150,esp1,3V3,pullups,3V3,3.3V,Verify exact circuit,power,power,SELV reference; physical verification required,I2C pull-ups never connect to5V
+w151,pullups,UP SDA,esp1,GPIO21,3.3V,Pull-up signal current only,data,I2C,SELV reference; physical verification required,4.7k upstream pull-up reference
+w152,pullups,UP SCL,esp1,GPIO22,3.3V,Pull-up signal current only,data,I2C,SELV reference; physical verification required,4.7k upstream pull-up reference
+w153,pullups,CH0 SDA,mux,SD0,3.3V,Pull-up signal current only,data,I2C,SELV reference; physical verification required,4.7k downstream pull-up reference
+w154,pullups,CH0 SCL,mux,SC0,3.3V,Pull-up signal current only,data,I2C,SELV reference; physical verification required,4.7k downstream pull-up reference
+w155,pullups,CH1 SDA,mux,SD1,3.3V,Pull-up signal current only,data,I2C,SELV reference; physical verification required,4.7k downstream pull-up reference
+w156,pullups,CH1 SCL,mux,SC1,3.3V,Pull-up signal current only,data,I2C,SELV reference; physical verification required,4.7k downstream pull-up reference
+w157,pullups,CH2 SDA,mux,SD2,3.3V,Pull-up signal current only,data,I2C,SELV reference; physical verification required,4.7k downstream pull-up reference
+w158,pullups,CH2 SCL,mux,SC2,3.3V,Pull-up signal current only,data,I2C,SELV reference; physical verification required,4.7k downstream pull-up reference
+w159,pullups,CH3 SDA,mux,SD3,3.3V,Pull-up signal current only,data,I2C,SELV reference; physical verification required,4.7k downstream pull-up reference
+w160,pullups,CH3 SCL,mux,SC3,3.3V,Pull-up signal current only,data,I2C,SELV reference; physical verification required,4.7k downstream pull-up reference
+w161,pullups,CH4 SDA,mux,SD4,3.3V,Pull-up signal current only,data,I2C,SELV reference; physical verification required,4.7k downstream pull-up reference
+w162,pullups,CH4 SCL,mux,SC4,3.3V,Pull-up signal current only,data,I2C,SELV reference; physical verification required,4.7k downstream pull-up reference
+w163,esp1,3V3,resetPullup,A,3.3V,Verify exact circuit,power,power,SELV reference; physical verification required,10k reset pull-up reference
+w164,mains,ENCLOSED OUTPUT,breaker,ENCLOSED IN,Protected mains interface,Verify exact circuit,power,power,SELV reference; physical verification required,Enclosed mains boundary only; no exposed mains circuit guidance

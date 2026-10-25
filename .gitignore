@@ -7,6 +7,12 @@ dist/
 .DS_Store
 .vite/
 *.tsbuildinfo
+.tooling/
+.hardware-qa/
+.npm-cache/
+.pio/
+hardware/runtime/*.jsonl
+hardware/runtime/status.json
 
 # Python & AI backend
 .venv/

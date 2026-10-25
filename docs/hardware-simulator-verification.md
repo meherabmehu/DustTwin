@@ -1,5 +1,7 @@
 # Hardware Simulator verification — 25 October 2026
 
+This records the initial simulator version. The revised four-SPS30/reference-layout upgrade is documented in [hardware-lab-upgrade.md](hardware-lab-upgrade.md).
+
 Implemented in the existing application at `/hardware-simulator`. Only the route import/entry and navigation entry change existing frontend files. All simulator behavior, styling, documentation, tests and the proposed actuator scaffold live in new files. No dependencies, backend content, trained artifact or evaluation data were changed.
 
 ## Completed checks

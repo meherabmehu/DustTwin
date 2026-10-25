@@ -1,0 +1,5 @@
+[wokwi]
+version = 1
+firmware = "../.pio/build/actuator-sim/firmware.bin"
+elf = "../.pio/build/actuator-sim/firmware.elf"
+rfc2217ServerPort = 4002

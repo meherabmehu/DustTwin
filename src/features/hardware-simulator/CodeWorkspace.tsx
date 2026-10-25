@@ -1,40 +1,33 @@
-import { useState } from 'react';
-import { Code2, Download, RotateCcw, Save } from 'lucide-react';
-import sensorSource from '../../../wokwi/dusttwin/sketch.ino?raw';
-import actuatorSource from '../../../wokwi/hybrid-actuator/actuator.ino?raw';
-import piSource from '../../../ai-backend/src/dusttwin/inference.py?raw';
-import engineSource from './engine.ts?raw';
+import { useEffect, useState } from 'react';
+import { Code2, Download, Hammer, RotateCcw, Save } from 'lucide-react';
 import { DEFAULT_CONFIG, validateConfig, type Config } from './engine';
+import { download, zipProject } from './projectExport';
+import { useBuildEvidence } from './buildEvidence';
+export { download } from './projectExport';
 
-export function download(name: string, content: string, mime = 'text/plain') {
-  const url = URL.createObjectURL(new Blob([content], { type: mime }));
-  const anchor = document.createElement('a'); anchor.href = url; anchor.download = name; anchor.click();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-const SOURCES = [
-  { name: 'ESP32 Sensor Controller', filename: 'sensor-reference.ino', source: sensorSource, note: 'Existing wokwi/dusttwin/sketch.ino: legacy two-PM-input / DHT demo. Reference only; this is not firmware for six SPS30 sensors. Hardware acquisition still requires a sensor-controller implementation for the selected field devices.' },
-  { name: 'ESP32 Actuator Controller', filename: 'actuator.ino', source: actuatorSource, note: 'New proposed USB/UART driver scaffold. Eleven channels, fail-off watchdog and emergency inhibit. Not compiled or executed by this website; requires bench validation, selected drivers and independent hardware emergency chain.' },
-  { name: 'Raspberry Pi Controller', filename: 'inference.py', source: piSource, note: 'Actual existing backend inference module. Shared host control rules are shown in the logic tab. This Python source is a reference; no physical serial bridge is installed or running.' },
-  { name: 'Simulation Configuration', filename: 'hardware-config.json', source: JSON.stringify(DEFAULT_CONFIG, null, 2), note: 'Validated JSON is applied to the browser logic when saved: damper travel, nominal airflow and HEPA trip point. These are functional assumptions, not calibrated equipment specifications.' },
-  { name: 'Shared control logic', filename: 'engine.ts', source: engineSource, note: 'Actual TypeScript engine used by this page. Source edits are working copies for export and review. They do not dynamically execute. Configuration changes do affect the simulator.' },
-];
-const STORAGE = 'dusttwin-hardware-workspace-v1';
-function loadCopies(): string[] {
-  try { const saved: unknown = JSON.parse(localStorage.getItem(STORAGE) ?? 'null'); if (Array.isArray(saved) && saved.length === SOURCES.length && saved.every(v => typeof v === 'string')) return saved; } catch { /* defaults if storage is unavailable or corrupt */ }
-  return SOURCES.map(s => s.source);
-}
-export default function CodeWorkspace({ applyConfig }: { applyConfig: (config: Config) => void }) {
-  const [tab, setTab] = useState(0);
-  const [copies, setCopies] = useState(loadCopies);
-  const [message, setMessage] = useState('Working copies stay in this browser. Export to use outside the simulator.');
-  const source = SOURCES[tab];
-  function save() {
-    try {
-      const config = validateConfig(JSON.parse(copies[3]));
-      localStorage.setItem(STORAGE, JSON.stringify(copies));
-      applyConfig(config);
-      setMessage('Working copies saved locally. Validated simulation configuration applied.');
-    } catch (error) { setMessage(`Could not save: ${error instanceof Error ? error.message : 'browser storage unavailable'}`); }
-  }
-  return <section className="hw-panel hw-code"><div className="hw-panel-head"><div><span className="hw-kicker">03 / CODE WORKSPACE</span><h2><Code2 size={19} /> Controller sources</h2></div><span className="hw-chip">Logic simulation · no firmware emulator</span></div><div className="hw-code-tabs" role="tablist" aria-label="Controller source files">{SOURCES.map((s, i) => <button role="tab" aria-selected={tab === i} aria-controls="hw-code-editor" id={`hw-code-tab-${i}`} key={s.name} className={tab === i ? 'selected' : ''} onClick={() => setTab(i)}>{s.name}</button>)}</div><p className="hw-code-note">{source.note}</p><div className="hw-editor-bar"><code>{source.filename}</code><span>{copies[tab].split('\n').length} lines · editable copy</span></div><textarea id="hw-code-editor" role="tabpanel" aria-labelledby={`hw-code-tab-${tab}`} aria-label={`Edit ${source.name}`} spellCheck={false} value={copies[tab]} onChange={e => { const value = e.target.value; setCopies(v => v.map((s, i) => i === tab ? value : s)); }} /><div className="hw-code-actions"><button onClick={save}><Save size={15} /> Save working copies & apply config</button><button onClick={() => { setCopies(v => v.map((s, i) => i === tab ? source.source : s)); if (tab === 3) applyConfig({ ...DEFAULT_CONFIG }); setMessage('Selected working copy reset to project source. Save to persist.'); }}><RotateCcw size={15} /> Reset file</button><button onClick={() => download(source.filename, copies[tab])}><Download size={15} /> Export file</button><button onClick={() => download('dusttwin-workspace.json', JSON.stringify(Object.fromEntries(SOURCES.map((s, i) => [s.filename, copies[i]])), null, 2), 'application/json')}>Export all</button></div><p className="hw-save-message" role="status">{message}</p></section>;
+const raw = import.meta.glob('../../../hardware/{firmware/src/*.cpp,firmware/include/*.h,firmware/platformio.ini,firmware/wokwi-*/*,pi/*.py,pi/config.json,manifest.json,protocol.schema.json,README.md,tools/*.py}', { eager: true, query: '?raw', import: 'default' }) as Record<string, string>;
+const FILES = Object.fromEntries(Object.entries(raw).map(([path, content]) => [path.replace('../../../', ''), content]));
+const CONFIG_PATH = 'simulation-config.json';
+const TABS = [ ['ESP32 Sensor Firmware', 'hardware/firmware/src/sensor.cpp'], ['ESP32 Actuator Firmware', 'hardware/firmware/src/actuator.cpp'], ['Raspberry Pi Application', 'hardware/pi/app.py'], ['Shared Control Protocol', 'hardware/protocol.schema.json'], ['Hardware Configuration','hardware/manifest.json'], ['Simulation Configuration', CONFIG_PATH] ];
+const ORIGINALS: Record<string, string> = { ...FILES, [CONFIG_PATH]: JSON.stringify(DEFAULT_CONFIG, null, 2) };
+const STORAGE = 'dusttwin-hardware-project-v2';
+function copies(): Record<string, string> { try { const saved = JSON.parse(localStorage.getItem(STORAGE) ?? '{}'); return { ...ORIGINALS, ...Object.fromEntries(Object.entries(saved).filter(([k, v]) => k in ORIGINALS && typeof v === 'string')) } as Record<string, string>; } catch { return { ...ORIGINALS }; } }
+
+export default function CodeWorkspace({ applyConfig, requestedFile }: { applyConfig: (value: Config) => void; requestedFile?:string }) {
+  const evidence=useBuildEvidence();
+  const [file, setFile] = useState(TABS[0][1]), [working, setWorking] = useState(copies), [message, setMessage] = useState('Editor changes are saved/exported working copies. Only Simulation Configuration applies to the browser model.');
+  const [build, setBuild] = useState<{ state: string; output: string; report?: { targets: { target: string; compiled: boolean }[] } }>({ state: 'loading', output: '' });
+  useEffect(()=>{if(requestedFile&&requestedFile in ORIGINALS)setFile(requestedFile);},[requestedFile]);
+  useEffect(() => { fetch('/hardware/build-status.json').then(r => r.ok ? r.json() : null).then(report => setBuild({ state: report ? 'recorded' : 'not built', output: 'Recorded compilation evidence; firmware execution and physical testing are separate.', report })).catch(() => setBuild({ state: 'not built', output: '' })); }, []);
+  useEffect(() => { if (build.state !== 'running') return; const timer = setInterval(() => { fetch('http://127.0.0.1:8010/build').then(r => r.json()).then(setBuild).catch(() => setBuild({ state: 'offline', output: 'Local Python build service disconnected.' })); }, 1500); return () => clearInterval(timer); }, [build.state]);
+  function save() { try { if (file === CONFIG_PATH) applyConfig(validateConfig(JSON.parse(working[file]))); localStorage.setItem(STORAGE, JSON.stringify(working)); setMessage(file === CONFIG_PATH ? 'Validated configuration applied and saved.' : 'Working copy saved locally. Source edits execute only after export and an actual firmware build.'); } catch (e) { setMessage(`Could not save: ${e instanceof Error ? e.message : String(e)}`); } }
+  async function compile() { setBuild({ state: 'running', output: 'Requesting build of checked-in firmware…' }); try { const r = await fetch('http://127.0.0.1:8010/build', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }); const data = await r.json(); if (!r.ok) throw new Error(data.error || 'Build rejected'); setBuild(data); } catch (e) { setBuild({ state: 'offline', output: `${e instanceof Error ? e.message : e}. Start: python hardware/pi/app.py serve. Or run python hardware/tools/build.py directly.` }); } }
+  return <section className="hw-panel hw-code"><div className="hw-panel-head"><div><span className="hw-kicker">SHARED FIRMWARE & HOST PROJECT</span><h2><Code2 size={18} />Code workspace</h2></div><span className="hw-chip">Working copies · no in-browser ESP32 emulator</span></div>
+    <div className="hw-code-tabs" role="tablist" aria-label="Controller source files">{TABS.map(([name, path]) => <button role="tab" key={name} aria-selected={file === path} onClick={() => setFile(path)}>{name}</button>)}</div>
+    <p className="hw-code-note">Sensor firmware targets four SPS30s (PM1/PM2.5/PM4/PM10), one SHT35, Modbus wind and protected water inputs. Actuator firmware enforces local feedback, heartbeat and safety interlocks. Python host runs on a PC or Raspberry Pi OS. Wokwi virtual-peripheral targets use the same controller sources. {evidence.message}</p>
+    <div className="hw-editor-bar"><select aria-label="Project source file" value={file} onChange={e => setFile(e.target.value)}>{Object.keys(ORIGINALS).map(path => <option key={path}>{path}</option>)}</select><span>{(working[file] ?? '').split('\n').length} lines · {working[file] === ORIGINALS[file] ? 'project source' : 'edited copy'}</span></div>
+    <textarea id="hw-code-editor" aria-label="Edit selected source" spellCheck={false} value={working[file] ?? ''} onChange={e => { const content = e.target.value; setWorking(v => ({ ...v, [file]: content })); }} />
+    <div className="hw-code-actions"><button onClick={save}><Save size={14} />Save working copy{file === CONFIG_PATH ? ' & apply' : ''}</button><button onClick={() => { setWorking(v => ({ ...v, [file]: ORIGINALS[file] })); if (file === CONFIG_PATH) applyConfig({ ...DEFAULT_CONFIG }); setMessage('Selected working copy restored. Save to persist.'); }}><RotateCcw size={14} />Reset file</button><button onClick={() => download(file.split('/').pop()!, working[file])}><Download size={14} />Export file</button><button onClick={() => download('dusttwin-hardware-project.zip', zipProject(working) as Uint8Array<ArrayBuffer>, 'application/zip')}>Export firmware project ZIP</button><button disabled={build.state === 'running'} onClick={compile}><Hammer size={14} />Build checked-in firmware</button></div><p className="hw-save-message" role="status">{message}</p>
+    <details className="hw-build-output"><summary>Build results · {build.state} · {build.report?.targets.filter(t => t.compiled).length ?? 0}/4 targets compiled</summary><p>Build requests compile repository source, including the two virtual-peripheral variants. Editor changes must be exported first; they are never silently executed.</p><pre>{build.output}</pre>{build.report?.targets.map(t => <p key={t.target}>{t.target}: {t.compiled ? 'COMPILED' : 'NOT COMPILED'}</p>)}<a href="/docs/hardware-simulator.md" target="_blank" rel="noreferrer">External execution, serial ports and Wokwi setup ↗</a></details>
+  </section>;
 }

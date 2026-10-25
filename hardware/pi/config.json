@@ -1,0 +1,11 @@
+{
+  "description": "Proposed commissioning defaults. Verify field activity, wind convention and calibrated hardware before arming.",
+  "activity": "Mixed work",
+  "strategy": "Automatic selection",
+  "dustIntensity": 70,
+  "aiUrl": "http://127.0.0.1:8000",
+  "sensorPort": "/dev/serial/by-id/SELECT_SENSOR_ESP32",
+  "actuatorPort": "/dev/serial/by-id/SELECT_ACTUATOR_ESP32",
+  "logDirectory": "hardware/runtime",
+  "autoArm": false
+}

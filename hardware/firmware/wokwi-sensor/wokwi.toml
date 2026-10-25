@@ -1,0 +1,5 @@
+[wokwi]
+version = 1
+firmware = "../.pio/build/sensor-sim/firmware.bin"
+elf = "../.pio/build/sensor-sim/firmware.elf"
+rfc2217ServerPort = 4001

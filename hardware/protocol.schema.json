@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DustTwin NDJSON envelope v1",
+  "description": "One bounded UTF-8 JSON object per line, max4096 bytes. Device sampleMs records observations; host receive monotonic time drives watchdogs. Four ordered SPS30 PM1/PM2.5/PM4/PM10 channels: North,East,South,West. One SHT35. Runtime validation is in hardware/pi/protocol.py and firmware sources.",
+  "type": "object",
+  "required": [
+    "v",
+    "type",
+    "device",
+    "seq",
+    "ms"
+  ],
+  "properties": {
+    "v": {
+      "const": 1
+    },
+    "type": {
+      "enum": [
+        "hello",
+        "telemetry",
+        "command",
+        "ack",
+        "status",
+        "error",
+        "inject"
+      ]
+    },
+    "device": {
+      "enum": [
+        "sensor-esp32",
+        "actuator-esp32",
+        "raspberry-pi",
+        "hardware-lab"
+      ]
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ms": {
+      "type": "number",
+      "minimum": 0
+    },
+    "session": {
+      "type": "string",
+      "description": "Host command session, echoed in ACK. New session clears outputs and requires arm."
+    },
+    "commandId": {
+      "type": "integer",
+      "description": "ACK references an outstanding command sequence."
+    },
+    "payload": {
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+name: Actuator interlocks and watchdog
+version: 1
+steps:
+  - wait-serial: '"type":"hello"'
+  - write-serial: "{\"v\":1,\"type\":\"command\",\"device\":\"raspberry-pi\",\"session\":\"wokwi-test\",\"seq\":1,\"ms\":1000,\"payload\":{\"arm\":true}}\n"
+  - wait-serial: '"type":"ack"'
+  - write-serial: "{\"v\":1,\"type\":\"command\",\"device\":\"raspberry-pi\",\"session\":\"wokwi-test\",\"seq\":2,\"ms\":2000,\"payload\":{\"safe\":true,\"dampers\":[true,false,false,false],\"valves\":[true,false,false,false],\"motor\":true,\"pump\":true,\"fan\":false}}\n"
+  - delay: 1000ms
+  - write-serial: "{\"v\":1,\"type\":\"command\",\"device\":\"raspberry-pi\",\"session\":\"wokwi-test\",\"seq\":3,\"ms\":3000,\"payload\":{\"safe\":true,\"dampers\":[true,false,false,false],\"valves\":[true,false,false,false],\"motor\":true,\"pump\":true,\"fan\":false}}\n"
+  - delay: 1000ms
+  - write-serial: "{\"v\":1,\"type\":\"command\",\"device\":\"raspberry-pi\",\"session\":\"wokwi-test\",\"seq\":4,\"ms\":4000,\"payload\":{\"safe\":true,\"dampers\":[true,false,false,false],\"valves\":[true,false,false,false],\"motor\":true,\"pump\":true,\"fan\":false}}\n"
+  - delay: 1000ms
+  - write-serial: "{\"v\":1,\"type\":\"command\",\"device\":\"raspberry-pi\",\"session\":\"wokwi-test\",\"seq\":5,\"ms\":5000,\"payload\":{\"safe\":true,\"dampers\":[true,false,false,false],\"valves\":[true,false,false,false],\"motor\":true,\"pump\":true,\"fan\":false}}\n"
+  - delay: 1000ms
+  - expect-pin:
+      part-id: esp
+      name: 27
+      value: 1
+  - delay: 2200ms
+  - wait-serial: 'heartbeat_timeout'
+  - expect-pin:
+      part-id: esp
+      name: 27
+      value: 0
