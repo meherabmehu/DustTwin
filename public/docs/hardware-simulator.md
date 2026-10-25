@@ -10,6 +10,16 @@ The latest requested inventory supersedes the earlier six-PM/two-SHT design: **f
 
 Circuit renderers terminate every wire on a named anchor from the component geometry. Selecting a wire highlights both endpoints and shows its purpose, voltage, current-sizing note, interface and isolation requirement. Clicking a pin filters its connections. Unconnected ESP32 carrier pins remain inspectable; flash pins are marked reserved. USB links are connector-level bundles containing power, ground and differential data, not individual GPIO UART wires. Mechanical ports are labeled AIR/WATER and are not electrical pins.
 
+## Wiring workspace navigation
+
+All 59 components and 165 connections remain represented. The orthogonal router avoids other component cards, reserves clearance around labels, and penalizes congested lanes. Shared source-pin buses are collapsed by default into matching B labels; use a bus button or **Expand shared buses** to reveal every underlying route. Clicking a bus branch expands its exact route. Crossing lines have no junction; connected pins have visible dots. Air and water paths use distinct colors/dashes and follow modeled pump/motor states.
+
+Use the nine subsystem tabs, including Communication and Safety & Protection, for readable focused views. Every view automatically fits its own bounds. External links are listed with both source and destination pins under Cross-subsystem connectors, and marked on affected cards. Selecting one opens the full circuit and its wire inspector; external links are never presented as disconnected wires.
+
+Wheel zoom stays at the pointer and prevents page scroll. Drag empty canvas to pan; the mini-map jumps to a region. **Center selected component** gives a readable component scale. Sidebar search centers the selected part and traces its connections. F fits, C centers, +/− zoom, and Escape clears selection filters/exits fullscreen while the canvas has focus. Fullscreen retains the inspector. Pin, component, wire, category and shared-bus filters all use the authoritative connection model. **Reset wire visibility** restores every category and clears isolation.
+
+The inspector separates live modeled state from configured pin/interface rules and pending physical verification. Reference-rule success is not electrical certification. Exact relay/driver, field-device connector, protection, coil and pump selections still require the commissioning checks below.
+
 The reference image is a visual target. Documented reference interfaces take precedence over its illustrative pin names, voltage labels and device counts. Device SVGs are recognizable vector representations, not scale-certified assembly drawings. Only the selected DevKitC V4/WROOM carrier has the full documented 38-pin header layout; unspecified carriers and driver assemblies use explicitly proposed logical interfaces without invented connector numbers.
 
 ## Controls and workspace

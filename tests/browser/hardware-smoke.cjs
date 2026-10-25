@@ -12,6 +12,7 @@ const fs = require('node:fs');
   async function load(name) { await page.getByLabel('Test scenario', { exact: true }).selectOption(name); await page.getByRole('button', { name: 'Load & run', exact: true }).click(); await page.getByRole('button', { name: 'Pause', exact: true }).first().click(); }
   try {
     await page.goto(`${root}/hardware-simulator`); await page.getByRole('heading', { name: 'Hardware Simulator', exact: true }).waitFor();
+    await page.addStyleTag({content:'html,body,.hw-viewport { scroll-behavior:auto !important; }'});
     assert.equal(await page.locator('.hw-part').count(), 59);
     await page.getByLabel('Search components').fill('Raspberry'); assert.equal(await page.locator('.hw-reference-library button').count(), 1);
     await page.locator('.hw-reference-library button').click(); await page.getByLabel('Search components').fill('');

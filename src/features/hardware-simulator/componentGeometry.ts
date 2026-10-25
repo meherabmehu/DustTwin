@@ -5,7 +5,7 @@ const LEFT = manifest.carrierHeaders.left;
 const RIGHT = manifest.carrierHeaders.right;
 export function geometry(part: Part) {
   const pins = new Map<string, PinAnchor>();
-  let width = 260, height = Math.max(170, Math.ceil(part.pins.length / 2) * 24 + 80);
+  let width = 260, height = Math.max(220, Math.ceil(part.pins.length / 2) * 24 + 80);
   if(part.group==='Sensors'&&!/^pm\d$/.test(part.id))width=235;
   if (part.id === 'pi') {
     width = 430; height = 250;
@@ -30,7 +30,7 @@ export function geometry(part: Part) {
   return { width, height, pins };
 }
 export function wireColor(w: Wire) {
-  if (w.type === 'ground') return '#131a24';
+  if (w.type === 'ground') return '#a3b2c3';
   if(w.from==='drivers'&&w.type==='control')return '#ff972d';
   if (w.type === 'power') return w.from === 'drivers' || /damper|pump|valve|motor/.test(w.to) ? '#ff972d' : '#ff434d';
   if (w.type === 'control') return '#be54fa';
