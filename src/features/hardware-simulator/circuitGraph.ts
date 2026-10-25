@@ -16,6 +16,7 @@ export function sectionName(p: Part) {
   if (/^pm\d$/.test(p.id) || ['mux','pullups','resetPullup'].includes(p.id)) return 'PM Sensors';
   if (p.group === 'Sensors') return 'Environmental Sensors';
   if (['drivers','estop','estopSense','contactor'].includes(p.id)) return 'Drivers & safety';
+  if (['rs485','conditioner'].includes(p.id)) return 'Main Controllers';
   return p.group === 'Raspberry Pi and ESP32' ? 'Main Controllers' : p.group;
 }
 export function layout(parts: Part[]) {
@@ -27,23 +28,32 @@ export function layout(parts: Part[]) {
     let list=parts.filter(p=>sectionName(p)===name); if(!list.length)continue;
     const order=name==='Dry Extraction'?['inlet0','inlet1','inlet2','inlet3','damper0','damper1','damper2','damper3','feedback0','feedback1','feedback2','feedback3','duct','cyclone','hepa','motor','bin']:name==='Water Misting'?['tank','pump','pipes','valve0','valve1','valve2','valve3','nozzle0','nozzle1','nozzle2','nozzle3']:[];
     if(order.length)list=[...list].sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id));
-    const columns=name==='Main Controllers'?3:name==='Power Distribution'?2:4;
+    const columns=name==='Main Controllers'?5:name==='Power Distribution'?3:4;
     let y=110,sectionWidth=0;
     for(let start=0;start<list.length;start+=columns){
       const row=list.slice(start,start+columns);
-      let x=80;row.forEach(p=>{positions.set(p.id,{x,y});x+=geometry(p).width+160;});
+      let x=80;row.forEach(p=>{positions.set(p.id,{x,y});x+=geometry(p).width+140;});
       sectionWidth=Math.max(sectionWidth,x-60);
       y+=Math.max(...row.map(p=>geometry(p).height))+200;
     }
     sections.push({name,x:0,y:0,width:sectionWidth,height:y-55,color:colors[names.indexOf(name)]});
   }
-  const shelfWidth=parts.length===PARTS.length?5200:4000;
-  let x=40,y=40,rowHeight=0;
-  for(const section of sections){
-    if(x>40&&x+section.width>shelfWidth){x=40;y+=rowHeight+140;rowHeight=0;}
-    section.x=x;section.y=y;
-    for(const p of parts.filter(p=>sectionName(p)===section.name)){const pos=positions.get(p.id)!;positions.set(p.id,{x:pos.x+x,y:pos.y+y});}
-    x+=section.width+140;rowHeight=Math.max(rowHeight,section.height);
+  // Architecture rows are deliberate: sensors -> controllers/drivers -> flows/power.
+  // Shelf wrapping previously put controllers beside sensors and power on an isolated tail.
+  let y=40;
+  for(const row of [names.slice(0,2),names.slice(2,4),names.slice(4)]){
+    let x=40,rowHeight=0;
+    for(const name of row){const section=sections.find(s=>s.name===name);if(!section)continue;
+      section.x=x;section.y=y;
+      for(const p of parts.filter(p=>sectionName(p)===name)){const pos=positions.get(p.id)!;positions.set(p.id,{x:pos.x+x,y:pos.y+y});}
+      x+=section.width+120;rowHeight=Math.max(rowHeight,section.height);
+    }
+    if(rowHeight)y+=rowHeight+120;
   }
   return {positions,groups:sections.map(s=>s.name),sections,width:Math.max(...sections.map(s=>s.x+s.width),0)+80,height:Math.max(...sections.map(s=>s.y+s.height),0)+80};
+}
+export function viewForPart(part: Part): CircuitView {
+  if(part.id==='rs485')return 'Communication';
+  const group=sectionName(part);
+  return group==='Main Controllers'?'Raspberry Pi and ESP32':group==='Drivers & safety'?'Safety & Protection':group as CircuitView;
 }
